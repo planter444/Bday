@@ -55,6 +55,7 @@ const HeartbeatAnalysis = ({ onComplete }) => {
 
       showNextLine();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage]);
 
   const fetchMemories = async () => {

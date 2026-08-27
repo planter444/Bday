@@ -4,7 +4,6 @@ import './BirthdayRoom.css';
 const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
-  const [easterEggTaps, setEasterEggTaps] = useState(0);
   const [showEasterEgg, setShowEasterEgg] = useState(false);
   const [easterEggConfig, setEasterEggConfig] = useState(null);
   const containerRef = useRef(null);
