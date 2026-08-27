@@ -1,79 +1,51 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import './TerminalIntro.css';
 
 const TerminalIntro = ({ onComplete }) => {
   const [lines, setLines] = useState([]);
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [currentText, setCurrentText] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [showCursor, setShowCursor] = useState(true);
-  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
 
-  const typeLine = useCallback(() => {
-    const line = lines[currentLineIndex];
-    setIsTyping(true);
-    setCurrentText('');
-    
+  useEffect(() => {
+    const terminalLines = [
+      { text: '> initializing birthday.exe...', delay: 800, typing_speed: 50 },
+      { text: '> loading birthday magic...', delay: 800, typing_speed: 50 },
+      { text: '> ████████████████████ 100%', delay: 1000, typing_speed: 20 },
+      { text: '> happy birthday, BELINDA ❤️', delay: 1000, typing_speed: 50 },
+    ];
+
+    let lineIndex = 0;
     let charIndex = 0;
-    const typingInterval = setInterval(() => {
-      if (charIndex < line.text.length) {
-        setCurrentText(prev => prev + line.text[charIndex]);
-        charIndex++;
-      } else {
-        clearInterval(typingInterval);
-        setIsTyping(false);
+    const typedLines = [];
+
+    const typeNextChar = () => {
+      if (lineIndex < terminalLines.length) {
+        const currentLine = terminalLines[lineIndex];
         
-        // Update loading progress if this is a loading line
-        if (line.text.includes('█')) {
-          setLoadingProgress(100);
+        if (charIndex === 0) {
+          typedLines.push({ text: '', emoji: currentLine.text.includes('❤️') ? '❤️' : '' });
+          setLines([...typedLines]);
         }
-        
-        // Move to next line after delay
+
+        if (charIndex < currentLine.text.length) {
+          typedLines[lineIndex].text += currentLine.text[charIndex];
+          charIndex++;
+          setLines([...typedLines]);
+          setTimeout(typeNextChar, currentLine.typing_speed);
+        } else {
+          charIndex = 0;
+          lineIndex++;
+          setTimeout(typeNextChar, currentLine.delay);
+        }
+      } else {
+        setIsComplete(true);
         setTimeout(() => {
-          setLines(prev => [...prev, { ...line, completed: true }]);
-          setCurrentLineIndex(prev => prev + 1);
-          setCurrentText('');
-        }, line.delay);
+          onComplete();
+        }, 5000);
       }
-    }, line.typing_speed);
-  }, [currentLineIndex, lines]);
+    };
 
-  useEffect(() => {
-    fetchTerminalLines();
-  }, []);
-
-  useEffect(() => {
-    if (lines.length > 0 && currentLineIndex < lines.length) {
-      typeLine();
-    }
-  }, [currentLineIndex, lines, typeLine]);
-
-  const fetchTerminalLines = async () => {
-    // Always use simplified lines
-    setLines([
-      { text: '> initializing birthday.exe...', delay: 500, typing_speed: 40, emoji: '' },
-      { text: '> loading birthday magic...', delay: 500, typing_speed: 40, emoji: '' },
-      { text: '> ████████████████████ 100%', delay: 500, typing_speed: 15, emoji: '' },
-      { text: '> happy birthday, BELINDA ❤️', delay: 500, typing_speed: 40, emoji: '❤️' },
-    ]);
-  };
-
-  useEffect(() => {
-    const cursorInterval = setInterval(() => {
-      setShowCursor(prev => !prev);
-    }, 500);
-
-    return () => clearInterval(cursorInterval);
-  }, []);
-
-  // Trigger completion when all lines are done - wait 5 seconds for the loading screen
-  useEffect(() => {
-    if (currentLineIndex >= lines.length && lines.length > 0) {
-      setTimeout(() => {
-        onComplete();
-      }, 5000);
-    }
-  }, [currentLineIndex, lines.length, onComplete]);
+    typeNextChar();
+  }, [onComplete]);
 
   return (
     <div className="terminal-intro">
@@ -81,27 +53,14 @@ const TerminalIntro = ({ onComplete }) => {
         <div className="scanlines"></div>
         <div className="terminal-content">
           {lines.map((line, index) => (
-            <div key={index} className={`terminal-line ${line.completed ? 'completed' : ''}`}>
-              <span className="terminal-prompt">{line.text.startsWith('>') ? '> ' : ''}</span>
-              <span className="terminal-text">{line.text.replace('> ', '')}</span>
+            <div key={index} className="terminal-line">
+              <span className="terminal-text">{line.text}</span>
               {line.emoji && <span className="terminal-emoji">{line.emoji}</span>}
             </div>
           ))}
-          
-          {isTyping && (
+          {!isComplete && (
             <div className="terminal-line current">
-              <span className="terminal-prompt">> </span>
-              <span className="terminal-text">{currentText}</span>
-              <span className={`cursor ${showCursor ? 'visible' : ''}`}>█</span>
-            </div>
-          )}
-          
-          {loadingProgress > 0 && loadingProgress < 100 && (
-            <div className="loading-bar">
-              <div 
-                className="loading-progress" 
-                style={{ width: `${loadingProgress}%` }}
-              ></div>
+              <span className="cursor">█</span>
             </div>
           )}
         </div>
