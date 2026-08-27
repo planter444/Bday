@@ -49,20 +49,13 @@ const TerminalIntro = ({ onComplete }) => {
   }, [currentLineIndex, lines, typeLine]);
 
   const fetchTerminalLines = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/terminal/lines`);
-      const data = await response.json();
-      setLines(data.filter(line => line.enabled));
-    } catch (error) {
-      console.error('Failed to fetch terminal lines:', error);
-      // Simplified fallback lines - fewer, cooler
-      setLines([
-        { text: '> initializing birthday.exe...', delay: 500, typing_speed: 40, emoji: '' },
-        { text: '> loading birthday magic...', delay: 500, typing_speed: 40, emoji: '' },
-        { text: '> ████████████████████ 100%', delay: 500, typing_speed: 15, emoji: '' },
-        { text: '> happy birthday, BELINDA ❤️', delay: 500, typing_speed: 40, emoji: '❤️' },
-      ]);
-    }
+    // Always use simplified lines
+    setLines([
+      { text: '> initializing birthday.exe...', delay: 500, typing_speed: 40, emoji: '' },
+      { text: '> loading birthday magic...', delay: 500, typing_speed: 40, emoji: '' },
+      { text: '> ████████████████████ 100%', delay: 500, typing_speed: 15, emoji: '' },
+      { text: '> happy birthday, BELINDA ❤️', delay: 500, typing_speed: 40, emoji: '❤️' },
+    ]);
   };
 
   useEffect(() => {

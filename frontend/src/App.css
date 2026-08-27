@@ -5,6 +5,25 @@
   color: var(--text-color);
 }
 
+/* Hide Netlify footer */
+#gatsby-announcer,
+[data-gatsby-wordmark],
+.netlify-identity-widget,
+[data-netlify] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+/* Hide any Netlify branding */
+footer[class*="netlify"],
+div[class*="netlify"],
+a[href*="netlify"] {
+  display: none !important;
+}
+
 /* Global animations */
 @keyframes fadeIn {
   from {
