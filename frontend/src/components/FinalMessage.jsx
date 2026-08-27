@@ -13,6 +13,14 @@ const FinalMessage = ({ config }) => {
     return () => clearInterval(interval);
   }, []);
 
+  // Toggle floating hearts for visual effect
+  useEffect(() => {
+    const toggle = setInterval(() => {
+      setShowFloatingHearts(prev => !prev);
+    }, 5000);
+    return () => clearInterval(toggle);
+  }, []);
+
   return (
     <div className="final-message">
       {showFloatingHearts && (

@@ -115,7 +115,6 @@ const MemoryGallery = ({ onComplete }) => {
           onMouseMove={handleMouseMove}
           onTouchMove={handleTouchMove}
           onMouseLeave={() => setTilt({ x: 0, y: 0 })}
-          onTouchEnd={() => setTilt({ x: 0, y: 0 })}
         >
           <div
             ref={cardRef}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './TerminalIntro.css';
 
 const TerminalIntro = ({ onComplete }) => {
@@ -17,7 +17,7 @@ const TerminalIntro = ({ onComplete }) => {
     if (lines.length > 0 && currentLineIndex < lines.length) {
       typeLine();
     }
-  }, [currentLineIndex, lines]);
+  }, [currentLineIndex, lines, typeLine]);
 
   const fetchTerminalLines = async () => {
     try {
@@ -46,7 +46,7 @@ const TerminalIntro = ({ onComplete }) => {
     }
   };
 
-  const typeLine = () => {
+  const typeLine = useCallback(() => {
     const line = lines[currentLineIndex];
     setIsTyping(true);
     setCurrentText('');
@@ -73,7 +73,7 @@ const TerminalIntro = ({ onComplete }) => {
         }, line.delay);
       }
     }, line.typing_speed);
-  };
+  }, [currentLineIndex, lines]);
 
   useEffect(() => {
     const cursorInterval = setInterval(() => {

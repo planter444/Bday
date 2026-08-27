@@ -69,6 +69,11 @@ const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
       }
       return newTaps;
     });
+    
+    // Reset taps after 5 seconds if not triggered
+    setTimeout(() => {
+      setEasterEggTaps(0);
+    }, 5000);
   };
 
   const position = { ...mousePosition, ...touchPosition };

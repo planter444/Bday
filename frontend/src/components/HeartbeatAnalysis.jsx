@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './HeartbeatAnalysis.css';
 
 const HeartbeatAnalysis = ({ onComplete }) => {
@@ -24,9 +24,9 @@ const HeartbeatAnalysis = ({ onComplete }) => {
 
       return () => clearTimeout(timer);
     }
-  }, [stage]);
+  }, [stage, runTerminalSequence]);
 
-  const runTerminalSequence = () => {
+  const runTerminalSequence = useCallback(() => {
     const lines = [
       { text: '> analyzing memories...', delay: 1000 },
       { text: '> 10 photos found.', delay: 800 },
@@ -54,7 +54,7 @@ const HeartbeatAnalysis = ({ onComplete }) => {
     };
 
     showNextLine();
-  };
+  }, []);
 
   const fetchMemories = async () => {
     try {
