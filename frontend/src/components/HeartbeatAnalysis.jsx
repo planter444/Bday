@@ -7,27 +7,9 @@ const HeartbeatAnalysis = ({ onComplete }) => {
   const [memories, setMemories] = useState([]);
   const [showHeart, setShowHeart] = useState(false);
 
-  const fetchMemories = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/media/memories`);
-      const data = await response.json();
-      setMemories(data.filter(memory => memory.enabled && memory.photo_url));
-      
-      setTimeout(() => {
-        setStage('photos');
-        setTimeout(() => {
-          setShowHeart(true);
-          setTimeout(() => {
-            setStage('final');
-            setTimeout(() => {
-              onComplete();
-            }, 5000);
-          }, 4000);
-        }, 1000);
-      }, 1000);
-    } catch (error) {
-      console.error('Failed to fetch memories:', error);
-      // Continue without photos
+  const showHeartAndComplete = useCallback(() => {
+    setTimeout(() => {
+      setStage('photos');
       setTimeout(() => {
         setShowHeart(true);
         setTimeout(() => {
@@ -37,8 +19,20 @@ const HeartbeatAnalysis = ({ onComplete }) => {
           }, 5000);
         }, 4000);
       }, 1000);
+  }, [onComplete]);
+
+  const fetchMemories = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/media/memories`);
+      const data = await response.json();
+      setMemories(data.filter(memory => memory.enabled && memory.photo_url));
+      showHeartAndComplete();
+    } catch (error) {
+      console.error('Failed to fetch memories:', error);
+      // Continue without photos
+      showHeartAndComplete();
     }
-  };
+  }, [showHeartAndComplete]);
 
   const runTerminalSequence = useCallback(() => {
     const lines = [
@@ -115,7 +109,7 @@ const HeartbeatAnalysis = ({ onComplete }) => {
     };
 
     showNextLine();
-  }, []);
+  }, [fetchMemories]);
 
   const fetchMemories = async () => {
     try {
