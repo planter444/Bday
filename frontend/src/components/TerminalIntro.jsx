@@ -9,6 +9,35 @@ const TerminalIntro = ({ onComplete }) => {
   const [showCursor, setShowCursor] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
 
+  const typeLine = useCallback(() => {
+    const line = lines[currentLineIndex];
+    setIsTyping(true);
+    setCurrentText('');
+    
+    let charIndex = 0;
+    const typingInterval = setInterval(() => {
+      if (charIndex < line.text.length) {
+        setCurrentText(prev => prev + line.text[charIndex]);
+        charIndex++;
+      } else {
+        clearInterval(typingInterval);
+        setIsTyping(false);
+        
+        // Update loading progress if this is a loading line
+        if (line.text.includes('█')) {
+          setLoadingProgress(100);
+        }
+        
+        // Move to next line after delay
+        setTimeout(() => {
+          setLines(prev => [...prev, { ...line, completed: true }]);
+          setCurrentLineIndex(prev => prev + 1);
+          setCurrentText('');
+        }, line.delay);
+      }
+    }, line.typing_speed);
+  }, [currentLineIndex, lines]);
+
   useEffect(() => {
     fetchTerminalLines();
   }, []);
@@ -45,35 +74,6 @@ const TerminalIntro = ({ onComplete }) => {
       ]);
     }
   };
-
-  const typeLine = useCallback(() => {
-    const line = lines[currentLineIndex];
-    setIsTyping(true);
-    setCurrentText('');
-    
-    let charIndex = 0;
-    const typingInterval = setInterval(() => {
-      if (charIndex < line.text.length) {
-        setCurrentText(prev => prev + line.text[charIndex]);
-        charIndex++;
-      } else {
-        clearInterval(typingInterval);
-        setIsTyping(false);
-        
-        // Update loading progress if this is a loading line
-        if (line.text.includes('█')) {
-          setLoadingProgress(100);
-        }
-        
-        // Move to next line after delay
-        setTimeout(() => {
-          setLines(prev => [...prev, { ...line, completed: true }]);
-          setCurrentLineIndex(prev => prev + 1);
-          setCurrentText('');
-        }, line.delay);
-      }
-    }, line.typing_speed);
-  }, [currentLineIndex, lines]);
 
   useEffect(() => {
     const cursorInterval = setInterval(() => {
