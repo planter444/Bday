@@ -1,0 +1,307 @@
+.heartbeat-analysis {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--background);
+  overflow: hidden;
+}
+
+.darkening-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background);
+  z-index: 100;
+}
+
+.fade-to-black {
+  width: 100%;
+  height: 100%;
+  background: black;
+  animation: fadeToBlack 2s ease-out forwards;
+}
+
+@keyframes fadeToBlack {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.heartbeat-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.heartbeat-text {
+  font-family: 'Courier New', monospace;
+  font-size: 1.5rem;
+  color: var(--primary-accent);
+  margin-bottom: 2rem;
+  animation: heartbeatText 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeatText {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.heartbeat-visual {
+  width: 100px;
+  height: 100px;
+}
+
+.heart-beat {
+  width: 100%;
+  height: 100%;
+  background: var(--primary-accent);
+  clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 50% 75%, 18% 100%, 0% 35%);
+  animation: heartbeat 1.5s ease-in-out infinite;
+  box-shadow: 0 0 30px var(--glow-color);
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+}
+
+.terminal-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.terminal-content {
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem;
+  color: #0f0;
+  text-align: center;
+  max-width: 600px;
+  padding: 2rem;
+}
+
+.terminal-line {
+  margin-bottom: 1rem;
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.photos-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  perspective: 1000px;
+}
+
+.floating-photos {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-star {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  opacity: 0;
+  animation: photoAppear 1s ease-out forwards;
+  transition: all 2s ease-in-out;
+  box-shadow: 0 0 20px var(--glow-color);
+}
+
+.photo-star img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-star.in-heart {
+  opacity: 1;
+  transform: rotate(var(--angle)) translateX(var(--distance));
+  animation: photoToHeart 2s ease-in-out forwards;
+}
+
+@keyframes photoAppear {
+  from {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  to {
+    opacity: 0.8;
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+@keyframes photoToHeart {
+  from {
+    transform: rotate(var(--angle)) translateX(var(--distance));
+  }
+  to {
+    transform: rotate(0deg) translateX(0);
+  }
+}
+
+.heart-formation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 0;
+  animation: heartFadeIn 2s ease-out forwards;
+}
+
+@keyframes heartFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.heart-text h2 {
+  font-size: 3rem;
+  color: var(--primary-accent);
+  text-shadow: 0 0 30px var(--glow-color), 0 0 60px var(--glow-color);
+  margin-bottom: 1rem;
+  animation: glow 2s ease-in-out infinite;
+}
+
+.heart-message {
+  font-size: 1.2rem;
+  color: var(--warm-white);
+  font-style: italic;
+  max-width: 400px;
+  line-height: 1.6;
+  opacity: 0;
+  animation: messageFadeIn 1s ease-out 1s forwards;
+}
+
+@keyframes messageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.final-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--deep-purple) 0%, var(--background) 50%, #0d0d1a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.final-content {
+  text-align: center;
+  padding: 2rem;
+  animation: slideUp 1s ease-out;
+}
+
+.final-title {
+  font-size: 2.5rem;
+  color: var(--warm-white);
+  text-shadow: 0 0 30px var(--glow-color), 0 0 60px var(--glow-color);
+  animation: glow 2s ease-in-out infinite;
+  line-height: 1.3;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .heartbeat-text {
+    font-size: 1.2rem;
+  }
+  
+  .terminal-content {
+    font-size: 1rem;
+  }
+  
+  .photo-star {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .heart-text h2 {
+    font-size: 2rem;
+  }
+  
+  .heart-message {
+    font-size: 1rem;
+  }
+  
+  .final-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .heart-text h2 {
+    font-size: 4rem;
+  }
+  
+  .heart-message {
+    font-size: 1.4rem;
+  }
+  
+  .final-title {
+    font-size: 3.5rem;
+  }
+}

@@ -1,0 +1,232 @@
+.love-letter {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, var(--deep-purple) 0%, var(--background) 50%, #0d0d1a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.letter-container {
+  text-align: center;
+  padding: 2rem;
+  max-width: 600px;
+  width: 100%;
+  z-index: 10;
+}
+
+.intro-stage {
+  padding: 2rem;
+}
+
+.intro-text {
+  font-size: 1.3rem;
+  color: var(--warm-white);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.envelope-stage {
+  padding: 2rem;
+}
+
+.envelope-container {
+  margin: 2rem auto;
+  width: 300px;
+  height: 200px;
+  perspective: 1000px;
+}
+
+.envelope {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.envelope:hover {
+  transform: scale(1.02);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  transform-origin: top;
+  transition: transform 0.8s ease;
+  z-index: 3;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.envelope.open .envelope-flap {
+  transform: rotateX(180deg);
+}
+
+.envelope-body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--secondary-accent), var(--violet));
+  z-index: 2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.envelope-pocket {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 70%, 0 100%);
+}
+
+.envelope-seal {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  z-index: 4;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+}
+
+.letter-stage {
+  padding: 2rem;
+}
+
+.letter-paper {
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  background: linear-gradient(135deg, #faf8f5, #f5f0e8);
+  padding: 3rem 2rem;
+  border-radius: 5px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1s ease;
+  position: relative;
+}
+
+.letter-paper.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.letter-paper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 27px,
+    rgba(196, 69, 105, 0.1) 28px
+  );
+  pointer-events: none;
+}
+
+.letter-content {
+  position: relative;
+  z-index: 1;
+}
+
+.letter-title {
+  font-family: 'Georgia', serif;
+  font-size: 1.8rem;
+  color: var(--secondary-accent);
+  margin-bottom: 2rem;
+  text-align: center;
+  font-style: italic;
+}
+
+.letter-body {
+  text-align: left;
+}
+
+.letter-paragraph {
+  font-family: 'Georgia', serif;
+  font-size: 1.1rem;
+  color: #333;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  text-indent: 2rem;
+}
+
+.hint-text {
+  font-size: 0.9rem;
+  color: var(--soft-rose);
+  opacity: 0.8;
+  animation: pulse 2s ease-in-out infinite;
+  margin-top: 1rem;
+}
+
+.continue-button {
+  padding: 0.8rem 2rem;
+  background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 5px 15px var(--glow-color);
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.continue-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--glow-color);
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .intro-text {
+    font-size: 1.1rem;
+  }
+  
+  .envelope-container {
+    width: 250px;
+    height: 170px;
+  }
+  
+  .letter-paper {
+    padding: 2rem 1.5rem;
+  }
+  
+  .letter-title {
+    font-size: 1.5rem;
+  }
+  
+  .letter-paragraph {
+    font-size: 1rem;
+    text-indent: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .letter-paper {
+    padding: 4rem 3rem;
+  }
+  
+  .letter-title {
+    font-size: 2rem;
+  }
+  
+  .letter-paragraph {
+    font-size: 1.2rem;
+  }
+}
