@@ -187,9 +187,8 @@ const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
       {showEasterEgg && (
         <div className="easter-egg-popup">
           <div className="easter-egg-content">
-            <h3>> secret command detected...</h3>
-            <h3>> /belinda/beautiful</h3>
-            <h3>> ACCESS GRANTED ❤️</h3>
+            <div className="easter-egg-icon">❤️</div>
+            <h3>Secret Found!</h3>
             <p>{easterEggConfig?.secret_message || 'You found the secret! I love you more than words can say. ❤️'}</p>
             <button 
               className="close-easter-egg interactive-element"

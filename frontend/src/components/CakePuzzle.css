@@ -58,6 +58,9 @@
   width: 200px;
   height: 180px;
   margin: 0 auto 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .cake-base-puzzle {

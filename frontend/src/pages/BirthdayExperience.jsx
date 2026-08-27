@@ -82,7 +82,7 @@ const BirthdayExperience = () => {
   return (
     <div className="birthday-experience">
       {currentScene === 'terminal' && sceneSettings?.terminal && (
-        <TerminalIntro onComplete={advanceScene} />
+        <TerminalIntro onComplete={advanceScene} config={config} />
       )}
       
       {currentScene === 'birthdayRoom' && sceneSettings?.birthdayRoom && (

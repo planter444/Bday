@@ -42,6 +42,71 @@
   z-index: 10;
 }
 
+/* Loading Screen */
+.loading-screen {
+  text-align: center;
+  z-index: 5;
+}
+
+.heart-emoji {
+  font-size: 5rem;
+  animation: heartbeat 1s ease-in-out infinite;
+  margin-bottom: 2rem;
+}
+
+.loading-text {
+  color: #0f0;
+  font-size: 1.5rem;
+  text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+  margin-bottom: 1rem;
+}
+
+.loading-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.loading-dots span {
+  color: #0f0;
+  font-size: 2rem;
+  animation: wave 1.4s ease-in-out infinite;
+  text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Terminal Content */
 .terminal-content {
   position: relative;
   z-index: 5;
@@ -60,27 +125,12 @@
   animation: fadeIn 0.5s ease-out forwards;
 }
 
-.terminal-line.completed {
-  opacity: 1;
-}
-
 .terminal-line.current {
   opacity: 1;
 }
 
-.terminal-prompt {
-  color: #0f0;
-  margin-right: 0.5rem;
-}
-
 .terminal-text {
   color: #0f0;
-}
-
-.terminal-emoji {
-  margin-left: 0.5rem;
-  font-size: 1.5rem;
-  animation: pulse 1s ease-in-out infinite;
 }
 
 .cursor {
@@ -92,14 +142,6 @@
   vertical-align: text-bottom;
   animation: blink 0.8s step-end infinite;
   box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
-}
-
-.cursor.visible {
-  opacity: 1;
-}
-
-.cursor:not(.visible) {
-  opacity: 0;
 }
 
 @keyframes blink {
@@ -122,32 +164,73 @@
   }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
+/* Progress Bar */
+.progress-container {
+  margin-top: 2rem;
+  text-align: center;
 }
 
-.loading-bar {
-  margin-top: 2rem;
+.progress-bar {
   width: 80%;
   max-width: 400px;
-  height: 4px;
-  border: 1px solid #0f0;
+  height: 8px;
+  border: 2px solid #0f0;
   background: rgba(0, 255, 0, 0.1);
-  border-radius: 2px;
-  margin-left: auto;
-  margin-right: auto;
+  border-radius: 4px;
+  margin: 0 auto 1rem;
+  overflow: hidden;
 }
 
-.loading-progress {
+.progress-fill {
   height: 100%;
   background: #0f0;
   box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
-  transition: width 0.5s ease;
+  transition: width 0.1s linear;
+}
+
+.progress-text {
+  color: #0f0;
+  font-size: 1.2rem;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+}
+
+/* Birthday Screen */
+.birthday-screen {
+  text-align: center;
+  z-index: 5;
+}
+
+.birthday-message {
+  color: #0f0;
+  font-size: 2.5rem;
+  text-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+  animation: glow 2s ease-in-out infinite;
+  margin-bottom: 2rem;
+}
+
+.fireworks {
+  font-size: 3rem;
+  animation: sparkle 1s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+  }
+  50% {
+    text-shadow: 0 0 40px rgba(0, 255, 0, 1), 0 0 60px rgba(0, 255, 0, 0.8);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
 }
 
 /* Subtle CRT flicker effect */
@@ -178,6 +261,18 @@
 
 /* Responsive design */
 @media (max-width: 480px) {
+  .heart-emoji {
+    font-size: 3rem;
+  }
+  
+  .loading-text {
+    font-size: 1.2rem;
+  }
+  
+  .loading-dots span {
+    font-size: 1.5rem;
+  }
+
   .terminal-content {
     font-size: 1rem;
     padding: 1rem;
@@ -191,13 +286,21 @@
     margin-bottom: 0.8rem;
   }
 
-  .terminal-emoji {
-    font-size: 1.2rem;
+  .birthday-message {
+    font-size: 1.5rem;
+  }
+
+  .fireworks {
+    font-size: 2rem;
   }
 }
 
 @media (min-width: 768px) {
   .terminal-content {
     font-size: 1.4rem;
+  }
+
+  .birthday-message {
+    font-size: 3rem;
   }
 }
