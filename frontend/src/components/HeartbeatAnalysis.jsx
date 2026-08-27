@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import './HeartbeatAnalysis.css';
 
 const HeartbeatAnalysis = ({ onComplete }) => {
@@ -6,63 +6,6 @@ const HeartbeatAnalysis = ({ onComplete }) => {
   const [terminalLines, setTerminalLines] = useState([]);
   const [memories, setMemories] = useState([]);
   const [showHeart, setShowHeart] = useState(false);
-
-  const showHeartAndComplete = useCallback(() => {
-    setTimeout(() => {
-      setStage('photos');
-      setTimeout(() => {
-        setShowHeart(true);
-        setTimeout(() => {
-          setStage('final');
-          setTimeout(() => {
-            onComplete();
-          }, 5000);
-        }, 4000);
-      }, 1000);
-  }, [onComplete]);
-
-  const fetchMemories = useCallback(async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/media/memories`);
-      const data = await response.json();
-      setMemories(data.filter(memory => memory.enabled && memory.photo_url));
-      showHeartAndComplete();
-    } catch (error) {
-      console.error('Failed to fetch memories:', error);
-      // Continue without photos
-      showHeartAndComplete();
-    }
-  }, [showHeartAndComplete]);
-
-  const runTerminalSequence = useCallback(() => {
-    const lines = [
-      { text: '> analyzing memories...', delay: 1000 },
-      { text: '> 10 photos found.', delay: 800 },
-      { text: '> 1 beautiful girl found.', delay: 800 },
-      { text: '> calculating how much she means to you...', delay: 1500 },
-      { text: '> ERROR', delay: 500 },
-      { text: '> value exceeds measurable limits.', delay: 2000 },
-      { text: '> trying another method...', delay: 1500 },
-      { text: '> conclusion:', delay: 1000 },
-      { text: '> she\'s one of a kind.', delay: 2000 },
-    ];
-
-    let currentLine = 0;
-    setTerminalLines([]);
-
-    const showNextLine = () => {
-      if (currentLine < lines.length) {
-        setTerminalLines(prev => [...prev, lines[currentLine]]);
-        currentLine++;
-        setTimeout(showNextLine, lines[currentLine - 1].delay);
-      } else {
-        // After terminal sequence, fetch memories and show heart
-        fetchMemories();
-      }
-    };
-
-    showNextLine();
-  }, [fetchMemories]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -76,12 +19,76 @@ const HeartbeatAnalysis = ({ onComplete }) => {
     if (stage === 'heartbeat') {
       const timer = setTimeout(() => {
         setStage('terminal');
-        runTerminalSequence();
       }, 3000);
 
       return () => clearTimeout(timer);
     }
-  }, [stage, runTerminalSequence]);
+  }, [stage]);
+
+  useEffect(() => {
+    if (stage === 'terminal') {
+      const lines = [
+        { text: '> analyzing memories...', delay: 1000 },
+        { text: '> 10 photos found.', delay: 800 },
+        { text: '> 1 beautiful girl found.', delay: 800 },
+        { text: '> calculating how much she means to you...', delay: 1500 },
+        { text: '> ERROR', delay: 500 },
+        { text: '> value exceeds measurable limits.', delay: 2000 },
+        { text: '> trying another method...', delay: 1500 },
+        { text: '> conclusion:', delay: 1000 },
+        { text: '> she\'s one of a kind.', delay: 2000 },
+      ];
+
+      let currentLine = 0;
+      setTerminalLines([]);
+
+      const showNextLine = () => {
+        if (currentLine < lines.length) {
+          setTerminalLines(prev => [...prev, lines[currentLine]]);
+          currentLine++;
+          setTimeout(showNextLine, lines[currentLine - 1].delay);
+        } else {
+          // After terminal sequence, fetch memories and show heart
+          fetchMemories();
+        }
+      };
+
+      showNextLine();
+    }
+  }, [stage]);
+
+  const fetchMemories = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/media/memories`);
+      const data = await response.json();
+      setMemories(data.filter(memory => memory.enabled && memory.photo_url));
+      
+      setTimeout(() => {
+        setStage('photos');
+        setTimeout(() => {
+          setShowHeart(true);
+          setTimeout(() => {
+            setStage('final');
+            setTimeout(() => {
+              onComplete();
+            }, 5000);
+          }, 4000);
+        }, 1000);
+      }, 1000);
+    } catch (error) {
+      console.error('Failed to fetch memories:', error);
+      // Continue without photos
+      setTimeout(() => {
+        setShowHeart(true);
+        setTimeout(() => {
+          setStage('final');
+          setTimeout(() => {
+            onComplete();
+          }, 5000);
+        }, 4000);
+      }, 1000);
+    }
+  };
 
   return (
     <div className="heartbeat-analysis">
