@@ -26,7 +26,7 @@ const TerminalIntro = ({ onComplete }) => {
       setLines(data.filter(line => line.enabled));
     } catch (error) {
       console.error('Failed to fetch terminal lines:', error);
-      // Fallback lines
+      // Fallback lines with emojis
       setLines([
         { text: '> initializing birthday.exe...', delay: 500, typing_speed: 30, emoji: '' },
         { text: '> establishing secure connection...', delay: 300, typing_speed: 30, emoji: '' },

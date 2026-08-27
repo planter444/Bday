@@ -31,7 +31,12 @@ const CakePuzzle = ({ onComplete }) => {
       );
     } catch (error) {
       console.error('Failed to fetch puzzle config:', error);
-      // Fallback
+      // Fallback with emojis
+      setConfig({
+        hint: "There might be something hidden here… 👀",
+        success_message: "Happy Birthday, Belinda! 🎉"
+      });
+      
       setCandles(
         Array.from({ length: 7 }, (_, i) => ({
           id: i,
