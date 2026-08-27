@@ -17,6 +17,7 @@ const TerminalIntro = ({ onComplete, config }) => {
     }, 5000);
 
     return () => clearTimeout(loadingTimer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const startTyping = () => {
