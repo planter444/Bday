@@ -59,15 +59,7 @@ const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
 
   const handleEasterEggStarClick = () => {
     if (!easterEggConfig?.enabled) return;
-
-    setEasterEggTaps(prev => {
-      const newTaps = prev + 1;
-      if (newTaps >= 3) {
-        setShowEasterEgg(true);
-        return 0;
-      }
-      return newTaps;
-    });
+    setShowEasterEgg(true);
   };
 
   const position = { ...mousePosition, ...touchPosition };
