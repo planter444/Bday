@@ -1,0 +1,17 @@
+{
+  "extends": ["react-app"],
+  "rules": {
+    "no-restricted-globals": ["error", {
+      "name": "confirm",
+      "message": "Use window.confirm instead"
+    }]
+  },
+  "overrides": [
+    {
+      "files": ["src/pages/AdminDashboard.jsx"],
+      "rules": {
+        "no-restricted-globals": "off"
+      }
+    }
+  ]
+}
