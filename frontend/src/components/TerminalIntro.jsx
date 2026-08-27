@@ -55,22 +55,12 @@ const TerminalIntro = ({ onComplete }) => {
       setLines(data.filter(line => line.enabled));
     } catch (error) {
       console.error('Failed to fetch terminal lines:', error);
-      // Fallback lines with emojis
+      // Simplified fallback lines - fewer, cooler
       setLines([
-        { text: '> initializing birthday.exe...', delay: 500, typing_speed: 30, emoji: '' },
-        { text: '> establishing secure connection...', delay: 300, typing_speed: 30, emoji: '' },
-        { text: '> scanning...', delay: 300, typing_speed: 20, emoji: '' },
-        { text: '> identifying user...', delay: 500, typing_speed: 30, emoji: '' },
-        { text: '> user identified:', delay: 300, typing_speed: 30, emoji: '' },
-        { text: '> BELINDA', delay: 500, typing_speed: 50, emoji: '' },
-        { text: '> today is your birthday. 🎂', delay: 300, typing_speed: 30, emoji: '🎂' },
-        { text: '> so I made you a little computer program...', delay: 500, typing_speed: 30, emoji: '' },
-        { text: '> preparing something special...', delay: 300, typing_speed: 30, emoji: '' },
-        { text: '> loading memories...', delay: 300, typing_speed: 30, emoji: '' },
-        { text: '> loading music...', delay: 300, typing_speed: 30, emoji: '' },
-        { text: '> loading surprises...', delay: 300, typing_speed: 30, emoji: '' },
-        { text: '> ████████████████████ 100%', delay: 500, typing_speed: 10, emoji: '' },
-        { text: '> welcome, birthday girl. ❤️', delay: 300, typing_speed: 30, emoji: '❤️' },
+        { text: '> initializing birthday.exe...', delay: 500, typing_speed: 40, emoji: '' },
+        { text: '> loading birthday magic...', delay: 500, typing_speed: 40, emoji: '' },
+        { text: '> ████████████████████ 100%', delay: 500, typing_speed: 15, emoji: '' },
+        { text: '> happy birthday, BELINDA ❤️', delay: 500, typing_speed: 40, emoji: '❤️' },
       ]);
     }
   };
@@ -83,12 +73,12 @@ const TerminalIntro = ({ onComplete }) => {
     return () => clearInterval(cursorInterval);
   }, []);
 
-  // Trigger completion when all lines are done
+  // Trigger completion when all lines are done - wait 5 seconds for the loading screen
   useEffect(() => {
     if (currentLineIndex >= lines.length && lines.length > 0) {
       setTimeout(() => {
         onComplete();
-      }, 1500);
+      }, 5000);
     }
   }, [currentLineIndex, lines.length, onComplete]);
 
