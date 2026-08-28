@@ -11,6 +11,7 @@ const terminalRoutes = require('./routes/terminal');
 const sceneRoutes = require('./routes/scenes');
 const puzzleRoutes = require('./routes/puzzle');
 const easterEggRoutes = require('./routes/easterEgg');
+const memoryRoutes = require('./routes/memories');
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/terminal', terminalRoutes);
 app.use('/api/scenes', sceneRoutes);
 app.use('/api/puzzle', puzzleRoutes);
 app.use('/api/easter-egg', easterEggRoutes);
+app.use('/api/memories', memoryRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

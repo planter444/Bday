@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './BirthdayRoom.css';
 
-const BirthdayRoom = ({ config, onComplete, onSceneChange, onBack }) => {
+const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
   const [showEasterEgg, setShowEasterEgg] = useState(false);
@@ -174,20 +174,12 @@ const BirthdayRoom = ({ config, onComplete, onSceneChange, onBack }) => {
           )}
         </div>
 
-        <div className="button-group">
-          <button 
-            className="back-button interactive-element"
-            onClick={onBack}
-          >
-            ← Back
-          </button>
-          <button 
-            className="continue-button interactive-element"
-            onClick={() => onSceneChange('matchingGame')}
-          >
-            {config?.continue_button_text || 'CONTINUE'}
-          </button>
-        </div>
+        <button 
+          className="continue-button interactive-element"
+          onClick={() => onSceneChange('matchingGame')}
+        >
+          {config?.continue_button_text || 'CONTINUE'}
+        </button>
       </div>
 
       {showEasterEgg && (

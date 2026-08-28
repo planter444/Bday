@@ -332,33 +332,6 @@
   }
 }
 
-.button-group {
-  display: flex;
-  gap: 1rem;
-  flex-shrink: 0;
-  animation: slideUp 1.5s ease-out;
-}
-
-.back-button {
-  padding: 1rem 2rem;
-  font-size: clamp(1rem, 3vw, 1.1rem);
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--warm-white);
-  border: 2px solid var(--primary-accent);
-  border-radius: 50px;
-  cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 5px 20px var(--glow-color);
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-}
-
-.back-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px var(--glow-color);
-  background: rgba(255, 255, 255, 0.2);
-}
-
 .continue-button {
   padding: 1rem 2rem;
   font-size: clamp(1rem, 3vw, 1.1rem);
@@ -370,6 +343,7 @@
   font-weight: 600;
   box-shadow: 0 5px 20px var(--glow-color);
   transition: all 0.3s ease;
+  animation: slideUp 1.5s ease-out;
   flex-shrink: 0;
 }
 
