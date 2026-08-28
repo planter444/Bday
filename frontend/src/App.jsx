@@ -34,9 +34,9 @@ const BirthdayExperienceWrapper = () => {
   }, []);
 
   // If on root path, show loading screen
-  if (location.pathname === '/' || location.pathname === '/birthday' || location.pathname === '/birthday/') {
+  if (location.pathname === '' || location.pathname === '/') {
     return <LoadingScreen 
-      onComplete={() => navigate('/birthday/initializing')} 
+      onComplete={() => navigate('initializing')} 
       config={config} 
     />;
   }
@@ -44,15 +44,15 @@ const BirthdayExperienceWrapper = () => {
   return (
     <>
       <Routes>
-        <Route path="/birthday/initializing" element={<div style={{color: 'white', padding: '20px'}}>TEST: Initializing route matched</div>} />
-        <Route path="/birthday/birthday" element={<TerminalIntro onComplete={() => navigate('/birthday/puzzle')} config={config} />} />
-        <Route path="/birthday/puzzle" element={<MatchingGame onComplete={() => navigate('/birthday/memories')} />} />
-        <Route path="/birthday/memories" element={<MemoryGallery onComplete={() => navigate('/birthday/music')} />} />
-        <Route path="/birthday/music" element={<MusicPlayer onComplete={() => navigate('/birthday/videos')} />} />
-        <Route path="/birthday/videos" element={<VideoMemories onComplete={() => navigate('/birthday/letter')} />} />
-        <Route path="/birthday/letter" element={<LoveLetter onComplete={() => navigate('/birthday/heartbeat')} />} />
-        <Route path="/birthday/heartbeat" element={<HeartbeatAnalysis onComplete={() => navigate('/birthday/final')} config={config} />} />
-        <Route path="/birthday/final" element={<FinalMessage config={config} />} />
+        <Route path="initializing" element={<div style={{color: 'white', padding: '20px'}}>TEST: Initializing route matched</div>} />
+        <Route path="birthday" element={<TerminalIntro onComplete={() => navigate('puzzle')} config={config} />} />
+        <Route path="puzzle" element={<MatchingGame onComplete={() => navigate('memories')} />} />
+        <Route path="memories" element={<MemoryGallery onComplete={() => navigate('music')} />} />
+        <Route path="music" element={<MusicPlayer onComplete={() => navigate('videos')} />} />
+        <Route path="videos" element={<VideoMemories onComplete={() => navigate('letter')} />} />
+        <Route path="letter" element={<LoveLetter onComplete={() => navigate('heartbeat')} />} />
+        <Route path="heartbeat" element={<HeartbeatAnalysis onComplete={() => navigate('final')} config={config} />} />
+        <Route path="final" element={<FinalMessage config={config} />} />
       </Routes>
     </>
   );
@@ -65,14 +65,14 @@ function App() {
         <Routes>
           {/* Public birthday experience */}
           <Route path="/birthday/*" element={<BirthdayExperienceWrapper />} />
-          <Route path="/" element={<Navigate to="/birthday/" replace />} />
+          <Route path="/" element={<Navigate to="/birthday" replace />} />
           
           {/* Admin routes */}
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           
           {/* Catch all - redirect to birthday experience */}
-          <Route path="*" element={<Navigate to="/birthday/" replace />} />
+          <Route path="*" element={<Navigate to="/birthday" replace />} />
         </Routes>
       </div>
     </Router>
