@@ -33,7 +33,7 @@ const BirthdayExperience = () => {
     }, 4000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [experienceKey]);
 
   // Handle browser back button - reset to first screen
   useEffect(() => {
@@ -51,11 +51,6 @@ const BirthdayExperience = () => {
     setLoading(true);
     setConfigLoaded(false);
     setIntroTimerComplete(false);
-    
-    // Restart the timer
-    const timer = setTimeout(() => {
-      setIntroTimerComplete(true);
-    }, 4000);
   };
 
   const fetchConfig = async () => {
