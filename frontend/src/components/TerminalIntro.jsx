@@ -4,7 +4,7 @@ import './TerminalIntro.css';
 const terminalLines = [
   { text: '> initializing birthday.exe...', delay: 1200, typing_speed: 100 },
   { text: '> identifying user...', delay: 1200, typing_speed: 100 },
-  { text: '> BELINDA', delay: 1200, typing_speed: 100 },
+  { text: '> BELINDA', delay: 1200, typing_speed: 100, isSpecial: true },
   { text: '> today is your birthday 🎂', delay: 1200, typing_speed: 100 },
   { text: '> loading... but the magic...', delay: 800, typing_speed: 100, showProgress: true },
 ];
@@ -93,7 +93,7 @@ const TerminalIntro = ({ onComplete, config }) => {
         <div className="terminal-content">
           {lines.map((line, index) => (
             <div key={index} className="terminal-line">
-              <span className="terminal-text">{line.text}</span>
+              <span className={`terminal-text ${line.isSpecial ? 'terminal-text-special' : ''}`}>{line.text}</span>
               {line.showProgress && showProgress && (
                 <div className="progress-section">
                   <div className="progress-bar-terminal">
@@ -107,7 +107,7 @@ const TerminalIntro = ({ onComplete, config }) => {
           
           {lines.length === 0 && (
             <div className="terminal-line">
-              <span className="terminal-text">> initializing...</span>
+              <span className="terminal-text">&gt; initializing...</span>
             </div>
           )}
           

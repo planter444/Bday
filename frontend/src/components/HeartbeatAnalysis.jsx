@@ -31,10 +31,32 @@ const HeartbeatAnalysis = ({ onComplete, config }) => {
       const messageText = config?.heartbeat_messages || 
         '> analyzing memories...\n> 10 photos found.\n> 1 beautiful girl found.\n> calculating how much she means to you...\n> ERROR\n> value exceeds measurable limits.\n> trying another method...\n> conclusion:\n> she\'s one of a kind.';
       
-      const lines = messageText.split('\n').map(line => ({
-        text: line,
-        delay: 1000
-      }));
+      const lines = messageText.split('\n').map((line, index) => {
+        // Add special delays for specific lines
+        let delay = 1000;
+        let isSlow = false;
+        let isFinal = false;
+        
+        if (line.includes('photos found')) {
+          delay = 2000;
+          isSlow = true;
+        }
+        if (line.includes('beautiful girl found')) {
+          delay = 2000;
+          isSlow = true;
+        }
+        if (line.includes('she\'s one of a kind')) {
+          delay = 1500;
+          isFinal = true;
+        }
+        
+        return {
+          text: line,
+          delay,
+          isSlow,
+          isFinal
+        };
+      });
 
       let currentLine = 0;
       setTerminalLines([]);
@@ -66,10 +88,7 @@ const HeartbeatAnalysis = ({ onComplete, config }) => {
         setTimeout(() => {
           setShowHeart(true);
           setTimeout(() => {
-            setStage('final');
-            setTimeout(() => {
-              onComplete();
-            }, 5000);
+            onComplete();
           }, 4000);
         }, 1000);
       }, 1000);
@@ -86,10 +105,7 @@ const HeartbeatAnalysis = ({ onComplete, config }) => {
         setTimeout(() => {
           setShowHeart(true);
           setTimeout(() => {
-            setStage('final');
-            setTimeout(() => {
-              onComplete();
-            }, 5000);
+            onComplete();
           }, 4000);
         }, 1000);
       }, 1000);
@@ -117,10 +133,26 @@ const HeartbeatAnalysis = ({ onComplete, config }) => {
         <div className="terminal-screen">
           <div className="terminal-content">
             {terminalLines.map((line, index) => (
-              <div key={index} className="terminal-line">
+              <div key={index} className={`terminal-line ${line.isSlow ? 'terminal-line-slow' : ''} ${line.isFinal ? 'terminal-line-final' : ''}`}>
                 {line.text}
               </div>
             ))}
+            {terminalLines.some(line => line.isFinal) && (
+              <div className="fireworks-container">
+                {[...Array(30)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="firework"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                      animationDelay: `${Math.random() * 2}s`,
+                      animationDuration: `${1 + Math.random()}s`
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -156,13 +188,6 @@ const HeartbeatAnalysis = ({ onComplete, config }) => {
         </div>
       )}
 
-      {stage === 'final' && (
-        <div className="final-screen">
-          <div className="final-content">
-            <h1 className="final-title">HAPPY BIRTHDAY, BELINDA ❤️</h1>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

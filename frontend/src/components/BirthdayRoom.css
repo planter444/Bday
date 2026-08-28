@@ -219,7 +219,7 @@
 
 .candles {
   position: absolute;
-  top: -5px;
+  top: -15px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -231,7 +231,7 @@
 
 .candle {
   width: 16px;
-  height: 35px;
+  height: 50px;
   background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
   border-radius: 2px;
   position: relative;
@@ -240,7 +240,7 @@
 
 .flame {
   position: absolute;
-  top: -8px;
+  top: -10px;
   left: 50%;
   transform: translateX(-50%);
   width: 140%;
@@ -251,18 +251,33 @@
   box-shadow: 0 0 10px #ff6b35, 0 0 20px #ff6b35;
 }
 
-/* Desktop specific adjustment */
-@media (min-width: 768px) {
+/* Mobile specific adjustment */
+@media (max-width: 767px) {
   .candles {
-    top: -8px;
+    top: -25px;
   }
   
   .candle {
-    height: 30px;
+    height: 45px;
   }
   
   .flame {
-    top: -6px;
+    top: -8px;
+  }
+}
+
+/* Desktop specific adjustment */
+@media (min-width: 768px) {
+  .candles {
+    top: -20px;
+  }
+  
+  .candle {
+    height: 55px;
+  }
+  
+  .flame {
+    top: -12px;
   }
 }
 
@@ -370,6 +385,9 @@
   transition: all 0.3s ease;
   animation: slideUp 1.5s ease-out;
   flex-shrink: 0;
+  position: relative;
+  z-index: 100;
+  pointer-events: auto;
 }
 
 .continue-button:hover {
