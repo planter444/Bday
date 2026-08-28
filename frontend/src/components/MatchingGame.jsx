@@ -29,9 +29,14 @@ const MatchingGame = ({ onComplete }) => {
   };
 
   const shuffleBottom = useCallback(() => {
-    const shuffled = [...bottomEmojis].sort(() => Math.random() - 0.5);
+    const emojis = [
+      { id: 1, emoji: '🍌', name: 'banana', type: 'bottom' },
+      { id: 2, emoji: '🥛', name: 'milk', type: 'bottom' },
+      { id: 3, emoji: '💍', name: 'ring', type: 'bottom' },
+    ];
+    const shuffled = [...emojis].sort(() => Math.random() - 0.5);
     setShuffledBottom(shuffled);
-  }, [bottomEmojis]);
+  }, []);
 
   useEffect(() => {
     fetchPuzzleConfig();
