@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import TerminalIntro from '../components/TerminalIntro';
 import BirthdayRoom from '../components/BirthdayRoom';
 import CakePuzzle from '../components/CakePuzzle';
@@ -19,7 +19,6 @@ const BirthdayExperience = () => {
   const [loading, setLoading] = useState(true);
   const [configLoaded, setConfigLoaded] = useState(false);
   const [introTimerComplete, setIntroTimerComplete] = useState(false);
-  const [experienceKey, setExperienceKey] = useState(0);
 
   useEffect(() => {
     fetchConfig();
@@ -33,25 +32,36 @@ const BirthdayExperience = () => {
     }, 4000);
 
     return () => clearTimeout(timer);
-  }, [experienceKey]);
+  }, []);
 
-  // Handle browser back button - reset to first screen
+  const goToPreviousScene = useCallback(() => {
+    const sceneOrder = [
+      'terminal',
+      'birthdayRoom',
+      'matchingGame',
+      'memoryGallery',
+      'musicPlayer',
+      'videoMemories',
+      'loveLetter',
+      'heartbeatAnalysis',
+      'finalMessage'
+    ];
+
+    const currentIndex = sceneOrder.indexOf(currentScene);
+    if (currentIndex > 0) {
+      setCurrentScene(sceneOrder[currentIndex - 1]);
+    }
+  }, [currentScene]);
+
+  // Handle browser back button - navigate to previous scene
   useEffect(() => {
-    const handlePopState = (event) => {
-      resetExperience();
+    const handlePopState = () => {
+      goToPreviousScene();
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  const resetExperience = () => {
-    setExperienceKey(prev => prev + 1);
-    setCurrentScene('terminal');
-    setLoading(true);
-    setConfigLoaded(false);
-    setIntroTimerComplete(false);
-  };
+  }, [goToPreviousScene]);
 
   const fetchConfig = async () => {
     try {
@@ -130,7 +140,7 @@ const BirthdayExperience = () => {
   }
 
   return (
-    <div className="birthday-experience" key={experienceKey}>
+    <div className="birthday-experience">
       {currentScene === 'terminal' && sceneSettings?.terminal && (
         <TerminalIntro onComplete={advanceScene} config={config} />
       )}
@@ -140,6 +150,7 @@ const BirthdayExperience = () => {
           config={config}
           onComplete={advanceScene}
           onSceneChange={goToScene}
+          onBack={goToPreviousScene}
         />
       )}
       
@@ -152,7 +163,7 @@ const BirthdayExperience = () => {
       )}
       
       {currentScene === 'memoryGallery' && sceneSettings?.photoMemories && (
-        <MemoryGallery onComplete={advanceScene} />
+        <MemoryGallery onComplete={advanceScene} onBack={goToPreviousScene} />
       )}
       
       {currentScene === 'musicPlayer' && sceneSettings?.music && (

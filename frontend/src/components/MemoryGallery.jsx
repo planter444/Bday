@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './MemoryGallery.css';
 
-const MemoryGallery = ({ onComplete }) => {
+const MemoryGallery = ({ onComplete, onBack }) => {
   const [memories, setMemories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);

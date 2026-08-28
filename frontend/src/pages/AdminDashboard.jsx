@@ -378,6 +378,16 @@ const AdminDashboard = () => {
                   </div>
                 ))}
               </div>
+              <button className="save-button" onClick={() => {
+                // Save all memories
+                memories.forEach(memory => {
+                  api.put(`/media/photos/${memory.id}`, memory)
+                    .catch(error => console.error('Failed to save memory:', error));
+                });
+                alert('Photo memories saved!');
+              }}>
+                Save All Memories
+              </button>
               <div className="upload-section">
                 <h3>Upload New Photo</h3>
                 <input
@@ -525,6 +535,16 @@ const AdminDashboard = () => {
                   </div>
                 ))}
               </div>
+              <button className="save-button" onClick={() => {
+                // Save all videos
+                videos.forEach(video => {
+                  api.put(`/media/videos/${video.id}`, video)
+                    .catch(error => console.error('Failed to save video:', error));
+                });
+                alert('Video memories saved!');
+              }}>
+                Save All Videos
+              </button>
               <div className="upload-section">
                 <h3>Upload New Video</h3>
                 <input
