@@ -290,14 +290,20 @@ const updateMusic = async (req, res) => {
   try {
     const { title, artist, enabled } = req.body;
 
-    // Get existing music
+    // Get existing music - get the first row with audio_url
     const { data: existingMusic, error: fetchError } = await supabase
       .from('music')
       .select('*')
+      .not('audio_url', 'is', null)
+      .limit(1)
       .maybeSingle();
 
     if (fetchError) {
       console.error('Fetch music error:', fetchError);
+    }
+
+    if (!existingMusic) {
+      return res.status(400).json({ error: 'No music file found. Please upload a music file first.' });
     }
 
     const updates = {};
@@ -305,25 +311,12 @@ const updateMusic = async (req, res) => {
     if (artist !== undefined) updates.artist = artist;
     if (enabled !== undefined) updates.enabled = enabled;
 
-    let result;
-    if (existingMusic) {
-      result = await supabase
-        .from('music')
-        .update(updates)
-        .eq('id', existingMusic.id)
-        .select()
-        .single();
-    } else {
-      result = await supabase
-        .from('music')
-        .insert([{
-          ...updates,
-          audio_url: null,
-          storage_path: null
-        }])
-        .select()
-        .single();
-    }
+    const result = await supabase
+      .from('music')
+      .update(updates)
+      .eq('id', existingMusic.id)
+      .select()
+      .single();
 
     if (result.error) throw result.error;
 
