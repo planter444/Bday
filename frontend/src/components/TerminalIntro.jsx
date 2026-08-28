@@ -86,7 +86,7 @@ const TerminalIntro = ({ onComplete, config }) => {
 
   useEffect(() => {
     runTerminalSequence(terminalLines);
-  }, []);
+  }, [runTerminalSequence]);
 
   return (
     <div className="terminal-intro">
