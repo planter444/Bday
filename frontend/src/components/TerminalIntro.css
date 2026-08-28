@@ -99,6 +99,28 @@
   }
 }
 
+/* Mobile styling */
+@media (max-width: 480px) {
+  .terminal-content {
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 1rem;
+  }
+  
+  .terminal-screen {
+    padding: 1rem;
+  }
+  
+  .terminal-line {
+    margin-bottom: 1.5rem;
+  }
+  
+  .cursor {
+    width: 15px;
+    height: 1.5em;
+  }
+}
+
 /* Progress Bar - integrated into terminal */
 .progress-section {
   margin-top: 0.5rem;
