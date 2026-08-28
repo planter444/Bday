@@ -4,12 +4,8 @@ import './MemoryGallery.css';
 const MemoryGallery = ({ onComplete }) => {
   const [memories, setMemories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [touchStart, setTouchStart] = useState(0);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [music, setMusic] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const cardRef = useRef(null);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -56,57 +52,9 @@ const MemoryGallery = ({ onComplete }) => {
     }
   };
 
-  const handleTouchStart = (e) => {
-    setTouchStart(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = (e) => {
-    const touchEnd = e.changedTouches[0].clientX;
-    const diff = touchStart - touchEnd;
-
-    if (Math.abs(diff) > 50) {
-      if (diff > 0 && currentIndex < memories.length - 1) {
-        setCurrentIndex(prev => prev + 1);
-        setIsFlipped(false);
-      } else if (diff < 0 && currentIndex > 0) {
-        setCurrentIndex(prev => prev - 1);
-        setIsFlipped(false);
-      }
-    }
-  };
-
-  const handleMouseMove = (e) => {
-    if (cardRef.current) {
-      const rect = cardRef.current.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top) / rect.height;
-      setTilt({
-        x: (x - 0.5) * 20,
-        y: (y - 0.5) * -20
-      });
-    }
-  };
-
-  const handleTouchMove = (e) => {
-    if (cardRef.current && e.touches[0]) {
-      const rect = cardRef.current.getBoundingClientRect();
-      const x = (e.touches[0].clientX - rect.left) / rect.width;
-      const y = (e.touches[0].clientY - rect.top) / rect.height;
-      setTilt({
-        x: (x - 0.5) * 20,
-        y: (y - 0.5) * -20
-      });
-    }
-  };
-
-  const handleCardClick = () => {
-    setIsFlipped(!isFlipped);
-  };
-
   const handleNext = () => {
     if (currentIndex < memories.length - 1) {
       setCurrentIndex(prev => prev + 1);
-      setIsFlipped(false);
     } else {
       onComplete();
     }
@@ -115,7 +63,6 @@ const MemoryGallery = ({ onComplete }) => {
   const handlePrevious = () => {
     if (currentIndex > 0) {
       setCurrentIndex(prev => prev - 1);
-      setIsFlipped(false);
     }
   };
 

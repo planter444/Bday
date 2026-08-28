@@ -16,8 +16,6 @@ const TerminalIntro = ({ onComplete, config }) => {
   const [showSpinner, setShowSpinner] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
 
-  const transitionDelay = config?.intro_transition_delay || 4;
-
   const animateProgress = useCallback(() => {
     let currentProgress = 0;
     const duration = 1000; // Faster: 1 second instead of 3
