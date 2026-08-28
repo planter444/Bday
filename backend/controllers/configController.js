@@ -22,6 +22,11 @@ const updateConfig = async (req, res) => {
   try {
     const updates = req.body;
     
+    // Validate intro_duration minimum
+    if (updates.intro_duration !== undefined) {
+      updates.intro_duration = Math.max(2000, parseInt(updates.intro_duration) || 4000);
+    }
+    
     const { data: config, error } = await supabase
       .from('site_config')
       .update(updates)

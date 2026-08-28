@@ -17,10 +17,21 @@ const BirthdayExperience = () => {
   const [config, setConfig] = useState(null);
   const [sceneSettings, setSceneSettings] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [configLoaded, setConfigLoaded] = useState(false);
+  const [introTimerComplete, setIntroTimerComplete] = useState(false);
 
   useEffect(() => {
     fetchConfig();
     fetchSceneSettings();
+  }, []);
+
+  // Start minimum 4-second timer
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIntroTimerComplete(true);
+    }, 4000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   // Handle browser back button
@@ -53,9 +64,11 @@ const BirthdayExperience = () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/config`);
       const data = await response.json();
       setConfig(data);
+      setConfigLoaded(true);
     } catch (error) {
       console.error('Failed to fetch config:', error);
       setConfig({}); // Set empty config to allow page to load
+      setConfigLoaded(true);
     }
   };
 
@@ -64,7 +77,6 @@ const BirthdayExperience = () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/scenes`);
       const data = await response.json();
       setSceneSettings(data);
-      setLoading(false);
     } catch (error) {
       console.error('Failed to fetch scene settings:', error);
       setSceneSettings({
@@ -78,9 +90,15 @@ const BirthdayExperience = () => {
         heartbeatAnalysis: true,
         finalScene: true
       }); // Default to all enabled
-      setLoading(false);
     }
   };
+
+  // Only hide loading screen when both config is loaded AND minimum intro time has passed
+  useEffect(() => {
+    if (configLoaded && introTimerComplete) {
+      setLoading(false);
+    }
+  }, [configLoaded, introTimerComplete]);
 
   const advanceScene = () => {
     const sceneOrder = [

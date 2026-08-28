@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS site_config (
   main_title VARCHAR(255) DEFAULT 'Happy Birthday',
   subtitle VARCHAR(255) DEFAULT '',
   intro_text TEXT DEFAULT '',
+  intro_duration INTEGER DEFAULT 4000,
   birthday_message TEXT DEFAULT '',
   letter_title VARCHAR(255) DEFAULT 'My Dearest Belinda',
   letter TEXT DEFAULT '',
