@@ -50,9 +50,9 @@ const BirthdayExperienceWrapper = () => {
     <>
       <Routes>
         <Route path="initializing" element={<TerminalIntro onComplete={() => navigate('birthday')} config={config} />} />
-        <Route path="birthday" element={<BirthdayRoom onComplete={() => navigate('puzzle')} onSceneChange={advanceScene} config={config} />} />
-        <Route path="puzzle" element={<MatchingGame onComplete={() => navigate('memories')} />} />
-        <Route path="memories" element={<MemoryGallery onComplete={() => navigate('music')} />} />
+        <Route path="birthday" element={<div style={{color: 'white', padding: '20px'}}>TEST: Birthday route matched</div>} />
+        <Route path="puzzle" element={<div style={{color: 'white', padding: '20px'}}>TEST: Puzzle route matched</div>} />
+        <Route path="memories" element={<div style={{color: 'white', padding: '20px'}}>TEST: Memories route matched</div>} />
         <Route path="music" element={<MusicPlayer onComplete={() => navigate('videos')} />} />
         <Route path="videos" element={<VideoMemories onComplete={() => navigate('letter')} />} />
         <Route path="letter" element={<LoveLetter onComplete={() => navigate('heartbeat')} />} />
