@@ -107,7 +107,7 @@ const MemoryGallery = ({ onComplete }) => {
 
         <div className="table-setting">
           {/* Photo frame on table */}
-          <div className="photo-frame">
+          <div className={`photo-frame ${currentMemory.orientation === 'landscape' ? 'landscape' : 'portrait'}`} key={currentIndex}>
             <img 
               src={currentMemory.photo_url} 
               alt={`Memory ${currentIndex + 1}`}

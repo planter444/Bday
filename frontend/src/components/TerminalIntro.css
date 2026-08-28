@@ -69,7 +69,7 @@
 }
 
 .terminal-text-special {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: 900;
   animation: colorCycle 0.3s linear infinite, specialPulse 0.5s ease-in-out infinite alternate;
   display: inline-block;
@@ -78,20 +78,20 @@
 
 @keyframes colorCycle {
   0% {
-    color: #ff6b9d;
-    text-shadow: 0 0 20px #ff6b9d, 0 0 40px #ff6b9d;
-  }
-  33% {
     color: #ffd700;
     text-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700;
   }
-  66% {
+  33% {
     color: #00ff00;
     text-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
   }
-  100% {
+  66% {
     color: #ff6b9d;
     text-shadow: 0 0 20px #ff6b9d, 0 0 40px #ff6b9d;
+  }
+  100% {
+    color: #ffd700;
+    text-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700;
   }
 }
 

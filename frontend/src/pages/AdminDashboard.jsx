@@ -744,6 +744,22 @@ const AdminDashboard = () => {
                           placeholder="https://..."
                         />
                       </div>
+                      <div className="form-group">
+                        <label>Mobile Frame Orientation</label>
+                        <select
+                          value={memory.orientation || 'portrait'}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, orientation: e.target.value } : m
+                            );
+                            setMemories(updated);
+                          }}
+                        >
+                          <option value="portrait">Portrait (vertical)</option>
+                          <option value="landscape">Landscape (horizontal)</option>
+                        </select>
+                        <small>Only affects mobile display. Desktop unchanged.</small>
+                      </div>
                       <button className="delete-button" onClick={() => {
                         if (confirm('Delete this memory page?')) {
                           api.delete(`/memories/${memory.id}`)
@@ -814,12 +830,23 @@ const AdminDashboard = () => {
                     accept="audio/*"
                   />
                 </div>
+                <div className="form-group">
+                  <label>Mobile Frame Orientation</label>
+                  <select
+                    id="new-memory-orientation"
+                  >
+                    <option value="portrait">Portrait (vertical)</option>
+                    <option value="landscape">Landscape (horizontal)</option>
+                  </select>
+                  <small>Only affects mobile display. Desktop unchanged.</small>
+                </div>
                 <div className="form-buttons">
                   <button className="add-button" onClick={() => {
                     const title = document.getElementById('new-memory-title').value;
                     const photoFile = document.getElementById('new-memory-photo').files[0];
                     const message = document.getElementById('new-memory-message').value;
                     const musicFile = document.getElementById('new-memory-music').files[0];
+                    const orientation = document.getElementById('new-memory-orientation').value;
 
                     if (!title) {
                       alert('Please enter a title');
@@ -829,6 +856,7 @@ const AdminDashboard = () => {
                     const formData = new FormData();
                     formData.append('title', title);
                     formData.append('message', message);
+                    formData.append('orientation', orientation);
                     if (photoFile) formData.append('photo', photoFile);
                     if (musicFile) formData.append('music', musicFile);
 
@@ -841,6 +869,7 @@ const AdminDashboard = () => {
                         document.getElementById('new-memory-photo').value = '';
                         document.getElementById('new-memory-message').value = '';
                         document.getElementById('new-memory-music').value = '';
+                        document.getElementById('new-memory-orientation').value = 'portrait';
                         alert('Memory page created successfully!');
                       })
                       .catch(error => {
@@ -855,6 +884,7 @@ const AdminDashboard = () => {
                     const photoFile = document.getElementById('new-memory-photo').files[0];
                     const message = document.getElementById('new-memory-message').value;
                     const musicFile = document.getElementById('new-memory-music').files[0];
+                    const orientation = document.getElementById('new-memory-orientation').value;
 
                     if (!title) {
                       alert('Please enter a title');
@@ -864,6 +894,7 @@ const AdminDashboard = () => {
                     const formData = new FormData();
                     formData.append('title', title);
                     formData.append('message', message);
+                    formData.append('orientation', orientation);
                     if (photoFile) formData.append('photo', photoFile);
                     if (musicFile) formData.append('music', musicFile);
 
@@ -876,6 +907,7 @@ const AdminDashboard = () => {
                         document.getElementById('new-memory-photo').value = '';
                         document.getElementById('new-memory-message').value = '';
                         document.getElementById('new-memory-music').value = '';
+                        document.getElementById('new-memory-orientation').value = 'portrait';
                         alert('Memory page created successfully! Ready for next one.');
                       })
                       .catch(error => {

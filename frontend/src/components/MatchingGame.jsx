@@ -28,7 +28,26 @@ const MatchingGame = ({ onComplete }) => {
       { id: 2, emoji: '🥛', name: 'milk', type: 'bottom' },
       { id: 3, emoji: '💍', name: 'ring', type: 'bottom' },
     ];
-    const shuffled = [...emojis].sort(() => Math.random() - 0.5);
+    
+    // Shuffle until no correct match is directly below its pair
+    let shuffled;
+    let isValid = false;
+    
+    while (!isValid) {
+      shuffled = [...emojis].sort(() => Math.random() - 0.5);
+      
+      // Check if any correct match is directly below
+      isValid = true;
+      for (let i = 0; i < topEmojis.length; i++) {
+        const topEmoji = topEmojis[i];
+        const bottomEmoji = shuffled[i];
+        if (correctMatches[topEmoji.name] === bottomEmoji.name) {
+          isValid = false;
+          break;
+        }
+      }
+    }
+    
     setShuffledBottom(shuffled);
   }, []);
 
