@@ -26,7 +26,7 @@ const AdminDashboard = () => {
       const [configRes, terminalRes, memoriesRes, musicRes, videosRes, puzzleRes, easterEggRes, scenesRes] = await Promise.all([
         api.get('/config'),
         api.get('/terminal/lines'),
-        api.get('/media/memories'),
+        api.get('/memories'),
         api.get('/media/music'),
         api.get('/media/videos'),
         api.get('/puzzle'),
@@ -154,6 +154,12 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('scenes')}
           >
             Scenes
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'scene-music' ? 'active' : ''}`}
+            onClick={() => setActiveTab('scene-music')}
+          >
+            Scene Music
           </button>
         </div>
 
@@ -322,38 +328,137 @@ const AdminDashboard = () => {
 
           {activeTab === 'photos' && (
             <div className="tab-content">
-              <h2>Photo Memories</h2>
+              <h2>Memory Pages</h2>
               <div className="memories-list">
                 {memories.map((memory) => (
                   <div key={memory.id} className="memory-item">
-                    <img src={memory.photo_url} alt="" />
+                    <div className="memory-thumbnail">
+                      {memory.photo_url && <img src={memory.photo_url} alt="" />}
+                    </div>
                     <div className="memory-details">
-                      <input
-                        type="text"
-                        value={memory.caption}
-                        onChange={(e) => {
-                          const updated = memories.map(m => 
-                            m.id === memory.id ? { ...m, caption: e.target.value } : m
-                          );
-                          setMemories(updated);
-                        }}
-                        placeholder="Caption"
-                      />
-                      <textarea
-                        value={memory.message}
-                        onChange={(e) => {
-                          const updated = memories.map(m => 
-                            m.id === memory.id ? { ...m, message: e.target.value } : m
-                          );
-                          setMemories(updated);
-                        }}
-                        placeholder="Personal message"
-                        rows={3}
-                      />
+                      <div className="form-group">
+                        <label>Page Title</label>
+                        <input
+                          type="text"
+                          value={memory.title || ''}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, title: e.target.value } : m
+                            );
+                            setMemories(updated);
+                          }}
+                          placeholder="Memory page title"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Birthday Card Message</label>
+                        <textarea
+                          value={memory.card_message || ''}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, card_message: e.target.value } : m
+                            );
+                            setMemories(updated);
+                          }}
+                          placeholder="Personal message for this memory"
+                          rows={3}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Card Style</label>
+                        <select
+                          value={memory.card_style || 'classic'}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, card_style: e.target.value } : m
+                            );
+                            setMemories(updated);
+                          }}
+                        >
+                          <option value="classic">Classic</option>
+                          <option value="modern">Modern</option>
+                          <option value="elegant">Elegant</option>
+                          <option value="minimal">Minimal</option>
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label>Background Color</label>
+                        <input
+                          type="color"
+                          value={memory.background_color || '#1a1a2e'}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, background_color: e.target.value } : m
+                            );
+                            setMemories(updated);
+                          }}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Animation Type</label>
+                        <select
+                          value={memory.animation_type || 'fade'}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, animation_type: e.target.value } : m
+                            );
+                            setMemories(updated);
+                          }}
+                        >
+                          <option value="fade">Fade In</option>
+                          <option value="slide">Slide</option>
+                          <option value="zoom">Zoom</option>
+                          <option value="none">None</option>
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label>Music URL</label>
+                        <input
+                          type="text"
+                          value={memory.music_url || ''}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, music_url: e.target.value } : m
+                            );
+                            setMemories(updated);
+                          }}
+                          placeholder="https://..."
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Music Volume</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.1"
+                          value={memory.music_volume || 0.7}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, music_volume: parseFloat(e.target.value) } : m
+                            );
+                            setMemories(updated);
+                          }}
+                        />
+                        <span>{Math.round((memory.music_volume || 0.7) * 100)}%</span>
+                      </div>
                       <label className="checkbox-label">
                         <input
                           type="checkbox"
-                          checked={memory.enabled}
+                          checked={memory.music_loop !== false}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, music_loop: e.target.checked } : m
+                            );
+                            setMemories(updated);
+                          }}
+                        />
+                        Loop Music
+                      </label>
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={memory.enabled !== false}
                           onChange={(e) => {
                             const updated = memories.map(m => 
                               m.id === memory.id ? { ...m, enabled: e.target.checked } : m
@@ -364,12 +469,12 @@ const AdminDashboard = () => {
                         Enabled
                       </label>
                       <button className="delete-button" onClick={() => {
-                        if (confirm('Delete this photo?')) {
-                          api.delete(`/media/photos/${memory.id}`)
+                        if (confirm('Delete this memory page?')) {
+                          api.delete(`/memories/${memory.id}`)
                             .then(() => {
                               setMemories(memories.filter(m => m.id !== memory.id));
                             })
-                            .catch(error => console.error('Failed to delete photo:', error));
+                            .catch(error => console.error('Failed to delete memory:', error));
                         }
                       }}>
                         Delete
@@ -381,34 +486,78 @@ const AdminDashboard = () => {
               <button className="save-button" onClick={() => {
                 // Save all memories
                 memories.forEach(memory => {
-                  api.put(`/media/photos/${memory.id}`, memory)
+                  api.put(`/memories/${memory.id}`, memory)
                     .catch(error => console.error('Failed to save memory:', error));
                 });
-                alert('Photo memories saved!');
+                alert('Memory pages saved!');
               }}>
-                Save All Memories
+                Save All Memory Pages
               </button>
               <div className="upload-section">
-                <h3>Upload New Photo</h3>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      const formData = new FormData();
-                      formData.append('file', file);
-                      api.post('/media/photos', formData, {
-                        headers: { 'Content-Type': 'multipart/form-data' }
-                      })
-                        .then(response => {
-                          setMemories([...memories, response.data.memory]);
-                          e.target.value = '';
-                        })
-                        .catch(error => console.error('Failed to upload photo:', error));
-                    }
-                  }}
-                />
+                <h3>Create New Memory Page</h3>
+                <div className="form-group">
+                  <label>Title</label>
+                  <input
+                    type="text"
+                    id="new-memory-title"
+                    placeholder="Memory page title"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Photo</label>
+                  <input
+                    type="file"
+                    id="new-memory-photo"
+                    accept="image/*"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Card Message</label>
+                  <textarea
+                    id="new-memory-message"
+                    placeholder="Personal message"
+                    rows={3}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Music (optional)</label>
+                  <input
+                    type="file"
+                    id="new-memory-music"
+                    accept="audio/*"
+                  />
+                </div>
+                <button className="add-button" onClick={() => {
+                  const title = document.getElementById('new-memory-title').value;
+                  const photoFile = document.getElementById('new-memory-photo').files[0];
+                  const message = document.getElementById('new-memory-message').value;
+                  const musicFile = document.getElementById('new-memory-music').files[0];
+
+                  if (!title) {
+                    alert('Please enter a title');
+                    return;
+                  }
+
+                  const formData = new FormData();
+                  formData.append('title', title);
+                  formData.append('card_message', message);
+                  if (photoFile) formData.append('photo', photoFile);
+                  if (musicFile) formData.append('music', musicFile);
+
+                  api.post('/memories/with-files', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                  })
+                    .then(response => {
+                      setMemories([...memories, response.data]);
+                      document.getElementById('new-memory-title').value = '';
+                      document.getElementById('new-memory-photo').value = '';
+                      document.getElementById('new-memory-message').value = '';
+                      document.getElementById('new-memory-music').value = '';
+                    })
+                    .catch(error => console.error('Failed to create memory:', error));
+                }}>
+                  Create Memory Page
+                </button>
               </div>
             </div>
           )}
@@ -756,6 +905,271 @@ const AdminDashboard = () => {
                       {sceneName.replace(/([A-Z])/g, ' $1').trim()}
                     </label>
                   ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'scene-music' && (
+            <div className="tab-content">
+              <h2>Scene Music Configuration</h2>
+              {config && (
+                <div className="scene-music-config">
+                  <div className="scene-music-section">
+                    <h3>Initializing Scene</h3>
+                    <div className="form-group">
+                      <label>Music URL</label>
+                      <input
+                        type="text"
+                        value={config.initializing_music_url || ''}
+                        onChange={(e) => handleConfigChange('initializing_music_url', e.target.value)}
+                        placeholder="https://..."
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Volume</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={config.initializing_music_volume || 0.7}
+                        onChange={(e) => handleConfigChange('initializing_music_volume', parseFloat(e.target.value))}
+                      />
+                      <span>{Math.round((config.initializing_music_volume || 0.7) * 100)}%</span>
+                    </div>
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={config.initializing_music_loop !== false}
+                        onChange={(e) => handleConfigChange('initializing_music_loop', e.target.checked)}
+                      />
+                      Loop
+                    </label>
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={config.initializing_music_enabled || false}
+                        onChange={(e) => handleConfigChange('initializing_music_enabled', e.target.checked)}
+                      />
+                      Enabled
+                    </label>
+                    <div className="upload-section">
+                      <label>Upload Music</label>
+                      <input
+                        type="file"
+                        accept="audio/*"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            api.post('/config/initializing/music', formData, {
+                              headers: { 'Content-Type': 'multipart/form-data' }
+                            })
+                              .then(response => {
+                                handleConfigChange('initializing_music_url', response.data.music_url);
+                                e.target.value = '';
+                              })
+                              .catch(error => console.error('Failed to upload music:', error));
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="scene-music-section">
+                    <h3>Birthday Scene</h3>
+                    <div className="form-group">
+                      <label>Music URL</label>
+                      <input
+                        type="text"
+                        value={config.birthday_music_url || ''}
+                        onChange={(e) => handleConfigChange('birthday_music_url', e.target.value)}
+                        placeholder="https://..."
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Volume</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={config.birthday_music_volume || 0.7}
+                        onChange={(e) => handleConfigChange('birthday_music_volume', parseFloat(e.target.value))}
+                      />
+                      <span>{Math.round((config.birthday_music_volume || 0.7) * 100)}%</span>
+                    </div>
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={config.birthday_music_loop !== false}
+                        onChange={(e) => handleConfigChange('birthday_music_loop', e.target.checked)}
+                      />
+                      Loop
+                    </label>
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={config.birthday_music_enabled || false}
+                        onChange={(e) => handleConfigChange('birthday_music_enabled', e.target.checked)}
+                      />
+                      Enabled
+                    </label>
+                    <div className="upload-section">
+                      <label>Upload Music</label>
+                      <input
+                        type="file"
+                        accept="audio/*"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            api.post('/config/birthday/music', formData, {
+                              headers: { 'Content-Type': 'multipart/form-data' }
+                            })
+                              .then(response => {
+                                handleConfigChange('birthday_music_url', response.data.music_url);
+                                e.target.value = '';
+                              })
+                              .catch(error => console.error('Failed to upload music:', error));
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="scene-music-section">
+                    <h3>Puzzle Scene</h3>
+                    <div className="form-group">
+                      <label>Music URL</label>
+                      <input
+                        type="text"
+                        value={config.puzzle_music_url || ''}
+                        onChange={(e) => handleConfigChange('puzzle_music_url', e.target.value)}
+                        placeholder="https://..."
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Volume</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={config.puzzle_music_volume || 0.7}
+                        onChange={(e) => handleConfigChange('puzzle_music_volume', parseFloat(e.target.value))}
+                      />
+                      <span>{Math.round((config.puzzle_music_volume || 0.7) * 100)}%</span>
+                    </div>
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={config.puzzle_music_loop !== false}
+                        onChange={(e) => handleConfigChange('puzzle_music_loop', e.target.checked)}
+                      />
+                      Loop
+                    </label>
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={config.puzzle_music_enabled || false}
+                        onChange={(e) => handleConfigChange('puzzle_music_enabled', e.target.checked)}
+                      />
+                      Enabled
+                    </label>
+                    <div className="upload-section">
+                      <label>Upload Music</label>
+                      <input
+                        type="file"
+                        accept="audio/*"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            api.post('/config/puzzle/music', formData, {
+                              headers: { 'Content-Type': 'multipart/form-data' }
+                            })
+                              .then(response => {
+                                handleConfigChange('puzzle_music_url', response.data.music_url);
+                                e.target.value = '';
+                              })
+                              .catch(error => console.error('Failed to upload music:', error));
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="scene-music-section">
+                    <h3>Memories Scene (Default)</h3>
+                    <div className="form-group">
+                      <label>Music URL</label>
+                      <input
+                        type="text"
+                        value={config.memories_music_url || ''}
+                        onChange={(e) => handleConfigChange('memories_music_url', e.target.value)}
+                        placeholder="https://..."
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Volume</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={config.memories_music_volume || 0.7}
+                        onChange={(e) => handleConfigChange('memories_music_volume', parseFloat(e.target.value))}
+                      />
+                      <span>{Math.round((config.memories_music_volume || 0.7) * 100)}%</span>
+                    </div>
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={config.memories_music_loop !== false}
+                        onChange={(e) => handleConfigChange('memories_music_loop', e.target.checked)}
+                      />
+                      Loop
+                    </label>
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={config.memories_music_enabled || false}
+                        onChange={(e) => handleConfigChange('memories_music_enabled', e.target.checked)}
+                      />
+                      Enabled
+                    </label>
+                    <div className="upload-section">
+                      <label>Upload Music</label>
+                      <input
+                        type="file"
+                        accept="audio/*"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            api.post('/config/memories/music', formData, {
+                              headers: { 'Content-Type': 'multipart/form-data' }
+                            })
+                              .then(response => {
+                                handleConfigChange('memories_music_url', response.data.music_url);
+                                e.target.value = '';
+                              })
+                              .catch(error => console.error('Failed to upload music:', error));
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <button className="save-button" onClick={handleSaveConfig} disabled={saving}>
+                    {saving ? 'Saving...' : 'Save Scene Music Configuration'}
+                  </button>
                 </div>
               )}
             </div>

@@ -11,4 +11,12 @@ const upload = multer({
   }
 });
 
-module.exports = upload;
+// For multiple file uploads
+const uploadMultiple = multer({
+  storage,
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 100MB max
+  }
+});
+
+module.exports = { upload, uploadMultiple };

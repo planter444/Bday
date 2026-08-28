@@ -4,6 +4,7 @@ const {
   getMemoryPages,
   getMemoryPage,
   createMemoryPage,
+  createMemoryPageWithFiles,
   updateMemoryPage,
   deleteMemoryPage,
   reorderMemoryPages,
@@ -13,7 +14,7 @@ const {
   setMemoryMusicUrl
 } = require('../controllers/memoryController');
 const auth = require('../middleware/auth');
-const upload = require('../middleware/upload');
+const { upload, uploadMultiple } = require('../middleware/upload');
 
 // Public routes (for the birthday experience)
 router.get('/', getMemoryPages);
@@ -21,6 +22,7 @@ router.get('/:id', getMemoryPage);
 
 // Admin routes (require authentication)
 router.post('/', auth, createMemoryPage);
+router.post('/with-files', auth, uploadMultiple.fields([{ name: 'photo' }, { name: 'music' }]), createMemoryPageWithFiles);
 router.put('/:id', auth, updateMemoryPage);
 router.delete('/:id', auth, deleteMemoryPage);
 router.put('/reorder', auth, reorderMemoryPages);

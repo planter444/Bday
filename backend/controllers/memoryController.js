@@ -1,4 +1,10 @@
 const supabase = require('../config/database');
+const { 
+  ALLOWED_IMAGE_TYPES, 
+  ALLOWED_AUDIO_TYPES, 
+  MAX_IMAGE_SIZE, 
+  MAX_AUDIO_SIZE 
+} = require('../config/constants');
 
 // Get all memory pages
 const getMemoryPages = async (req, res) => {
@@ -401,10 +407,114 @@ const setMemoryMusicUrl = async (req, res) => {
   }
 };
 
+// Create new memory page with file uploads
+const createMemoryPageWithFiles = async (req, res) => {
+  try {
+    const { title, card_message, card_style, background_color, animation_type, music_volume, music_loop, enabled } = req.body;
+    const photoFile = req.files?.photo?.[0];
+    const musicFile = req.files?.music?.[0];
+
+    // Validate photo
+    if (photoFile && !ALLOWED_IMAGE_TYPES.includes(photoFile.mimetype)) {
+      return res.status(400).json({ error: 'Invalid photo file type. Only JPEG, PNG, and WebP are allowed' });
+    }
+    if (photoFile && photoFile.size > MAX_IMAGE_SIZE) {
+      return res.status(400).json({ error: 'Photo file size exceeds 10MB limit' });
+    }
+
+    // Validate music
+    if (musicFile && !ALLOWED_AUDIO_TYPES.includes(musicFile.mimetype)) {
+      return res.status(400).json({ error: 'Invalid music file type. Only MP3 is allowed' });
+    }
+    if (musicFile && musicFile.size > MAX_AUDIO_SIZE) {
+      return res.status(400).json({ error: 'Music file size exceeds 20MB limit' });
+    }
+
+    // Get max display_order
+    const { data: maxOrder } = await supabase
+      .from('memories')
+      .select('display_order')
+      .order('display_order', { ascending: false })
+      .limit(1)
+      .single();
+
+    const order = (maxOrder?.display_order || 0) + 1;
+
+    // Upload photo if provided
+    let photoUrl = null;
+    if (photoFile) {
+      const fileName = `photos/memory-${Date.now()}-${photoFile.originalname}`;
+      const { error: uploadError } = await supabase.storage
+        .from('birthday-media')
+        .upload(fileName, photoFile.buffer, {
+          contentType: photoFile.mimetype,
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('birthday-media')
+        .getPublicUrl(fileName);
+      photoUrl = publicUrl;
+    }
+
+    // Upload music if provided
+    let musicUrl = null;
+    if (musicFile) {
+      const fileName = `music/memory-${Date.now()}-${musicFile.originalname}`;
+      const { error: uploadError } = await supabase.storage
+        .from('birthday-media')
+        .upload(fileName, musicFile.buffer, {
+          contentType: musicFile.mimetype,
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('birthday-media')
+        .getPublicUrl(fileName);
+      musicUrl = publicUrl;
+    }
+
+    // Create memory page
+    const { data: memory, error } = await supabase
+      .from('memories')
+      .insert([{
+        title: title || `Memory ${order}`,
+        display_order: order,
+        photo_url: photoUrl,
+        background_url: null,
+        message: card_message || '',
+        card_style: card_style || 'butterfly',
+        photo_animation: animation_type || 'gentle-float',
+        card_animation: animation_type || 'butterfly-reveal',
+        photo_orientation: 'tilt-left',
+        photo_position: 'center',
+        card_position: 'right',
+        music_url: musicUrl,
+        music_volume: music_volume ? parseFloat(music_volume) : 0.7,
+        music_loop: music_loop !== undefined ? music_loop : true,
+        is_active: enabled !== undefined ? enabled : true
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    res.status(201).json(memory);
+  } catch (error) {
+    console.error('Create memory page with files error:', error);
+    res.status(500).json({ error: 'Failed to create memory page' });
+  }
+};
+
 module.exports = {
   getMemoryPages,
   getMemoryPage,
   createMemoryPage,
+  createMemoryPageWithFiles,
   updateMemoryPage,
   deleteMemoryPage,
   reorderMemoryPages,
