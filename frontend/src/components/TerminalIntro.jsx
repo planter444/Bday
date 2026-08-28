@@ -2,11 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './TerminalIntro.css';
 
 const terminalLines = [
-  { text: '> initializing birthday.exe...', delay: 500, typing_speed: 50 },
-  { text: '> identifying user...', delay: 500, typing_speed: 50 },
-  { text: '> BELINDA', delay: 500, typing_speed: 50 },
-  { text: '> today is your birthday 🎂', delay: 500, typing_speed: 50 },
-  { text: '> loading... but the magic...', delay: 300, typing_speed: 50, showProgress: true },
+  { text: '> initializing birthday.exe...', delay: 1200, typing_speed: 100 },
+  { text: '> identifying user...', delay: 1200, typing_speed: 100 },
+  { text: '> BELINDA', delay: 1200, typing_speed: 100 },
+  { text: '> today is your birthday 🎂', delay: 1200, typing_speed: 100 },
+  { text: '> loading... but the magic...', delay: 800, typing_speed: 100, showProgress: true },
 ];
 
 const TerminalIntro = ({ onComplete, config }) => {
@@ -18,7 +18,7 @@ const TerminalIntro = ({ onComplete, config }) => {
 
   const animateProgress = useCallback(() => {
     let currentProgress = 0;
-    const duration = 1000; // Faster: 1 second instead of 3
+    const duration = 3000;
     const interval = 30;
     const increment = 100 / (duration / interval);
 
@@ -35,8 +35,8 @@ const TerminalIntro = ({ onComplete, config }) => {
           setIsComplete(true);
           setTimeout(() => {
             onComplete();
-          }, 1000); // Faster: 1 second instead of 4*transitionDelay
-        }, 1000); // Faster: 1 second instead of 4
+          }, 4000);
+        }, 4000);
       }
       setProgress(currentProgress);
     }, interval);

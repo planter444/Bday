@@ -6,6 +6,7 @@ const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
   const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
   const [showEasterEgg, setShowEasterEgg] = useState(false);
   const [easterEggConfig, setEasterEggConfig] = useState(null);
+  const [touchedElement, setTouchedElement] = useState(null);
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -33,16 +34,25 @@ const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
       }
     };
 
+    const handleTouchStart = (e) => {
+      if (e.target) {
+        setTouchedElement(e.target);
+        setTimeout(() => setTouchedElement(null), 300);
+      }
+    };
+
     const container = containerRef.current;
     if (container) {
       container.addEventListener('mousemove', handleMouseMove);
       container.addEventListener('touchmove', handleTouchMove);
+      container.addEventListener('touchstart', handleTouchStart);
     }
 
     return () => {
       if (container) {
         container.removeEventListener('mousemove', handleMouseMove);
         container.removeEventListener('touchmove', handleTouchMove);
+        container.removeEventListener('touchstart', handleTouchStart);
       }
     };
   }, []);

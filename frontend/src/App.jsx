@@ -46,6 +46,14 @@ const BirthdayExperienceWrapper = () => {
     />;
   }
 
+  // If on /birthday path, also show loading screen
+  if (location.pathname === '/birthday') {
+    return <LoadingScreen 
+      onComplete={() => navigate('initializing')} 
+      config={config} 
+    />;
+  }
+
   return (
     <>
       <Routes>
