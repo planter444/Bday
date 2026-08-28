@@ -39,6 +39,28 @@
   animation: slideUp 0.8s ease-out;
 }
 
+.music-player-mini {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.music-toggle {
+  background: var(--primary-accent);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s;
+}
+
+.music-toggle:hover {
+  transform: scale(1.1);
+}
+
 .card-container {
   perspective: 1000px;
   margin: 0 auto 2rem;

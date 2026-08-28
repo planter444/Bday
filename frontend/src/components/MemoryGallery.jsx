@@ -137,6 +137,23 @@ const MemoryGallery = ({ onComplete }) => {
           {String(currentIndex + 1).padStart(2, '0')} / {String(memories.length).padStart(2, '0')}
         </div>
 
+        {/* Music player */}
+        {music && (
+          <div className="music-player-mini">
+            <button 
+              className="music-toggle interactive-element"
+              onClick={toggleMusic}
+            >
+              {isPlaying ? '⏸️' : '▶️'}
+            </button>
+            <audio 
+              ref={audioRef}
+              src={music.audio_url}
+              loop
+            />
+          </div>
+        )}
+
         <div 
           className="card-container"
           onTouchStart={handleTouchStart}
