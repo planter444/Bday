@@ -174,7 +174,7 @@ const BirthdayExperience = () => {
       )}
       
       {currentScene === 'heartbeatAnalysis' && sceneSettings?.heartbeatAnalysis && (
-        <HeartbeatAnalysis onComplete={advanceScene} />
+        <HeartbeatAnalysis onComplete={advanceScene} config={config} />
       )}
       
       {currentScene === 'finalMessage' && sceneSettings?.finalScene && (

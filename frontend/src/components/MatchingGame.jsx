@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './MatchingGame.css';
 
 const MatchingGame = ({ onComplete }) => {
+  const [puzzleConfig, setPuzzleConfig] = useState(null);
   const [selectedTop, setSelectedTop] = useState(null);
   const [selectedBottom, setSelectedBottom] = useState(null);
   const [matches, setMatches] = useState([]);
@@ -9,7 +10,7 @@ const MatchingGame = ({ onComplete }) => {
   const [wrongMatch, setWrongMatch] = useState(false);
 
   const topEmojis = [
-    { id: 1, emoji: '�', name: 'monkey' },
+    { id: 1, emoji: '🐒', name: 'monkey' },
     { id: 2, emoji: '🐱', name: 'cat' },
     { id: 3, emoji: '👧', name: 'girl' },
   ];
@@ -24,6 +25,25 @@ const MatchingGame = ({ onComplete }) => {
     'monkey': 'banana',
     'cat': 'milk',
     'girl': 'ring'
+  };
+
+  useEffect(() => {
+    fetchPuzzleConfig();
+  }, []);
+
+  const fetchPuzzleConfig = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/puzzle`);
+      const data = await response.json();
+      setPuzzleConfig(data);
+    } catch (error) {
+      console.error('Failed to fetch puzzle config:', error);
+      // Fallback
+      setPuzzleConfig({
+        matching_instruction: 'Match the emojis to proceed to the next page.',
+        completion_message: 'You found the way in. ❤️'
+      });
+    }
   };
 
   const handleTopClick = (emoji) => {
@@ -63,7 +83,7 @@ const MatchingGame = ({ onComplete }) => {
   return (
     <div className="matching-game">
       <div className="game-container">
-        <h2 className="game-title">Match the emojis to proceed to the next page.</h2>
+        <h2 className="game-title">{puzzleConfig?.matching_instruction || 'Match the emojis to proceed to the next page.'}</h2>
         
         <div className="emojis-row top-row">
           {topEmojis.map((emoji) => (
@@ -100,7 +120,7 @@ const MatchingGame = ({ onComplete }) => {
         {showSuccess && (
           <div className="success-screen">
             <h3>🎉 Congratulations! 🎉</h3>
-            <p>You found the way in. ❤️</p>
+            <p>{puzzleConfig?.completion_message || 'You found the way in. ❤️'}</p>
           </div>
         )}
       </div>

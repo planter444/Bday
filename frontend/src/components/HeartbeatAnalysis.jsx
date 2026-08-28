@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './HeartbeatAnalysis.css';
 
-const HeartbeatAnalysis = ({ onComplete }) => {
+const HeartbeatAnalysis = ({ onComplete, config }) => {
   const [stage, setStage] = useState('darkening'); // darkening, heartbeat, terminal, photos, heart, final
   const [terminalLines, setTerminalLines] = useState([]);
   const [memories, setMemories] = useState([]);
@@ -27,17 +27,14 @@ const HeartbeatAnalysis = ({ onComplete }) => {
 
   useEffect(() => {
     if (stage === 'terminal') {
-      const lines = [
-        { text: '> analyzing memories...', delay: 1000 },
-        { text: '> 10 photos found.', delay: 800 },
-        { text: '> 1 beautiful girl found.', delay: 800 },
-        { text: '> calculating how much she means to you...', delay: 1500 },
-        { text: '> ERROR', delay: 500 },
-        { text: '> value exceeds measurable limits.', delay: 2000 },
-        { text: '> trying another method...', delay: 1500 },
-        { text: '> conclusion:', delay: 1000 },
-        { text: '> she\'s one of a kind.', delay: 2000 },
-      ];
+      // Use heartbeat_messages from config or fallback
+      const messageText = config?.heartbeat_messages || 
+        '> analyzing memories...\n> 10 photos found.\n> 1 beautiful girl found.\n> calculating how much she means to you...\n> ERROR\n> value exceeds measurable limits.\n> trying another method...\n> conclusion:\n> she\'s one of a kind.';
+      
+      const lines = messageText.split('\n').map(line => ({
+        text: line,
+        delay: 1000
+      }));
 
       let currentLine = 0;
       setTerminalLines([]);
@@ -56,7 +53,7 @@ const HeartbeatAnalysis = ({ onComplete }) => {
       showNextLine();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stage]);
+  }, [stage, config]);
 
   const fetchMemories = async () => {
     try {

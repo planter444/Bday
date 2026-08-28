@@ -17,9 +17,11 @@ CREATE TABLE IF NOT EXISTS site_config (
   intro_text TEXT DEFAULT '',
   intro_duration INTEGER DEFAULT 4000,
   birthday_message TEXT DEFAULT '',
+  continue_button_text VARCHAR(255) DEFAULT 'CONTINUE',
   letter_title VARCHAR(255) DEFAULT 'My Dearest Belinda',
   letter TEXT DEFAULT '',
   final_message TEXT DEFAULT '',
+  heartbeat_messages TEXT DEFAULT '',
   music_title VARCHAR(255) DEFAULT 'Belinda''s Song',
   easter_egg_message TEXT DEFAULT '',
   primary_accent VARCHAR(7) DEFAULT '#ff6b9d',
@@ -101,6 +103,8 @@ CREATE TABLE IF NOT EXISTS puzzle_config (
   puzzle_letters VARCHAR(50) DEFAULT 'BELINDA',
   hint TEXT DEFAULT 'There might be something hidden here...',
   success_message TEXT DEFAULT 'Happy Birthday, Belinda!',
+  matching_instruction TEXT DEFAULT 'Match the emojis to proceed to the next page.',
+  completion_message TEXT DEFAULT 'You found the way in. ❤️',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

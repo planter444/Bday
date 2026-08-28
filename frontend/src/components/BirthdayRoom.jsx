@@ -180,7 +180,7 @@ const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
           className="continue-button interactive-element"
           onClick={() => onSceneChange('matchingGame')}
         >
-          CONTINUE
+          {config?.continue_button_text || 'CONTINUE'}
         </button>
       </div>
 

@@ -129,7 +129,13 @@ const AdminDashboard = () => {
             className={`tab-button ${activeTab === 'puzzle' ? 'active' : ''}`}
             onClick={() => setActiveTab('puzzle')}
           >
-            Puzzle
+            Matching Game
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'heartbeat' ? 'active' : ''}`}
+            onClick={() => setActiveTab('heartbeat')}
+          >
+            Heartbeat
           </button>
           <button
             className={`tab-button ${activeTab === 'easter-egg' ? 'active' : ''}`}
@@ -156,6 +162,26 @@ const AdminDashboard = () => {
             <div className="tab-content">
               <h2>General Content</h2>
               <div className="form-section">
+                <div className="form-group">
+                  <label>Intro Duration (seconds)</label>
+                  <input
+                    type="number"
+                    min="2"
+                    max="30"
+                    value={(config?.intro_duration || 4000) / 1000}
+                    onChange={(e) => handleConfigChange('intro_duration', parseInt(e.target.value) * 1000)}
+                  />
+                  <small>Minimum 2 seconds, default 4 seconds</small>
+                </div>
+                <div className="form-group">
+                  <label>Intro Text</label>
+                  <input
+                    type="text"
+                    value={config?.intro_text || 'Loading birthday magic...'}
+                    onChange={(e) => handleConfigChange('intro_text', e.target.value)}
+                  />
+                  <small>Text shown on the first loading screen</small>
+                </div>
                 <div className="form-group">
                   <label>Belinda's Name</label>
                   <input
@@ -186,6 +212,14 @@ const AdminDashboard = () => {
                     value={config?.birthday_message || ''}
                     onChange={(e) => handleConfigChange('birthday_message', e.target.value)}
                     rows={4}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Continue Button Text</label>
+                  <input
+                    type="text"
+                    value={config?.continue_button_text || 'CONTINUE'}
+                    onChange={(e) => handleConfigChange('continue_button_text', e.target.value)}
                   />
                 </div>
                 <div className="form-group">
@@ -518,7 +552,7 @@ const AdminDashboard = () => {
 
           {activeTab === 'puzzle' && (
             <div className="tab-content">
-              <h2>Puzzle Configuration</h2>
+              <h2>Matching Game Configuration</h2>
               {puzzleConfig && (
                 <div className="puzzle-config">
                   <label className="checkbox-label">
@@ -530,22 +564,6 @@ const AdminDashboard = () => {
                     Puzzle Enabled
                   </label>
                   <div className="form-group">
-                    <label>Number of Candles</label>
-                    <input
-                      type="number"
-                      value={puzzleConfig.num_candles}
-                      onChange={(e) => setPuzzleConfig({ ...puzzleConfig, num_candles: parseInt(e.target.value) })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Puzzle Letters</label>
-                    <input
-                      type="text"
-                      value={puzzleConfig.puzzle_letters}
-                      onChange={(e) => setPuzzleConfig({ ...puzzleConfig, puzzle_letters: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-group">
                     <label>Hint</label>
                     <input
                       type="text"
@@ -554,11 +572,27 @@ const AdminDashboard = () => {
                     />
                   </div>
                   <div className="form-group">
+                    <label>Matching Instruction</label>
+                    <textarea
+                      value={puzzleConfig.matching_instruction || 'Match the emojis to proceed to the next page.'}
+                      onChange={(e) => setPuzzleConfig({ ...puzzleConfig, matching_instruction: e.target.value })}
+                      rows={2}
+                    />
+                  </div>
+                  <div className="form-group">
                     <label>Success Message</label>
                     <textarea
                       value={puzzleConfig.success_message}
                       onChange={(e) => setPuzzleConfig({ ...puzzleConfig, success_message: e.target.value })}
-                      rows={3}
+                      rows={2}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Completion Message</label>
+                    <textarea
+                      value={puzzleConfig.completion_message || 'You found the way in. ❤️'}
+                      onChange={(e) => setPuzzleConfig({ ...puzzleConfig, completion_message: e.target.value })}
+                      rows={2}
                     />
                   </div>
                   <button className="save-button" onClick={() => {
@@ -570,6 +604,26 @@ const AdminDashboard = () => {
                   </button>
                 </div>
               )}
+            </div>
+          )}
+
+          {activeTab === 'heartbeat' && (
+            <div className="tab-content">
+              <h2>Heartbeat Analysis Configuration</h2>
+              <div className="form-section">
+                <div className="form-group">
+                  <label>Terminal Messages (one per line)</label>
+                  <textarea
+                    value={config?.heartbeat_messages || '> analyzing memories...\n> 10 photos found.\n> 1 beautiful girl found.\n> calculating how much she means to you...\n> ERROR\n> value exceeds measurable limits.\n> trying another method...\n> conclusion:\n> she\'s one of a kind.'}
+                    onChange={(e) => handleConfigChange('heartbeat_messages', e.target.value)}
+                    rows={10}
+                  />
+                  <small>Each line will be typed sequentially during the heartbeat analysis scene</small>
+                </div>
+                <button className="save-button" onClick={handleSaveConfig} disabled={saving}>
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
             </div>
           )}
 
