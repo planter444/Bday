@@ -18,34 +18,32 @@ const TerminalIntro = ({ onComplete, config }) => {
     { text: '> loading... but the magic...', delay: 500, typing_speed: 50, showProgress: true },
   ];
 
-  useEffect(() => {
-    const fetchTerminalLines = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/terminal/lines`);
-        const data = await response.json();
-        
-        if (data && data.length > 0) {
-          // Use lines from database
-          const dbLines = data.filter(line => line.enabled).map(line => ({
-            text: line.text,
-            delay: line.delay || 800,
-            typing_speed: line.typing_speed || 50,
-            showProgress: line.show_progress || false
-          }));
-          runTerminalSequence(dbLines);
-        } else {
-          // Fallback to hardcoded lines
-          runTerminalSequence(terminalLines);
-        }
-      } catch (error) {
-        console.error('Failed to fetch terminal lines:', error);
-        // Fallback to hardcoded lines
-        runTerminalSequence(terminalLines);
-      }
-    };
+  const animateProgress = useCallback(() => {
+    let currentProgress = 0;
+    const duration = 3000; // 3 seconds
+    const interval = 30;
+    const increment = 100 / (duration / interval);
 
-    fetchTerminalLines();
-  }, [runTerminalSequence]);
+    const progressInterval = setInterval(() => {
+      currentProgress += increment;
+      if (currentProgress >= 100) {
+        currentProgress = 100;
+        clearInterval(progressInterval);
+        setProgress(100);
+        setShowProgress(false);
+        setShowSpinner(true);
+        
+        // Show spinner for 4 seconds
+        setTimeout(() => {
+          setIsComplete(true);
+          setTimeout(() => {
+            onComplete();
+          }, transitionDelay * 1000);
+        }, 4000);
+      }
+      setProgress(currentProgress);
+    }, interval);
+  }, [transitionDelay, onComplete]);
 
   const runTerminalSequence = useCallback((sequenceLines) => {
     let lineIndex = 0;
@@ -84,34 +82,37 @@ const TerminalIntro = ({ onComplete, config }) => {
     };
 
     typeNextChar();
-  }, []);
+  }, [animateProgress]);
 
-  const animateProgress = useCallback(() => {
-    let currentProgress = 0;
-    const duration = 3000; // 3 seconds
-    const interval = 30;
-    const increment = 100 / (duration / interval);
-
-    const progressInterval = setInterval(() => {
-      currentProgress += increment;
-      if (currentProgress >= 100) {
-        currentProgress = 100;
-        clearInterval(progressInterval);
-        setProgress(100);
-        setShowProgress(false);
-        setShowSpinner(true);
+  useEffect(() => {
+    const fetchTerminalLines = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/terminal/lines`);
+        const data = await response.json();
         
-        // Show spinner for 4 seconds
-        setTimeout(() => {
-          setIsComplete(true);
-          setTimeout(() => {
-            onComplete();
-          }, transitionDelay * 1000);
-        }, 4000);
+        if (data && data.length > 0) {
+          // Use lines from database
+          const dbLines = data.filter(line => line.enabled).map(line => ({
+            text: line.text,
+            delay: line.delay || 800,
+            typing_speed: line.typing_speed || 50,
+            showProgress: line.show_progress || false
+          }));
+          runTerminalSequence(dbLines);
+        } else {
+          // Fallback to hardcoded lines
+          runTerminalSequence(terminalLines);
+        }
+      } catch (error) {
+        console.error('Failed to fetch terminal lines:', error);
+        // Fallback to hardcoded lines
+        runTerminalSequence(terminalLines);
       }
-      setProgress(currentProgress);
-    }, interval);
-  }, [transitionDelay, onComplete]);
+    };
+
+    fetchTerminalLines();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [runTerminalSequence]);
 
   return (
     <div className="terminal-intro">
