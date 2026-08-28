@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import LoadingScreen from './components/LoadingScreen';
 import TerminalIntro from './components/TerminalIntro';
+import BirthdayRoom from './components/BirthdayRoom';
 import MatchingGame from './components/MatchingGame';
 import MemoryGallery from './components/MemoryGallery';
 import MusicPlayer from './components/MusicPlayer';
@@ -33,6 +34,10 @@ const BirthdayExperienceWrapper = () => {
     fetchConfig();
   }, []);
 
+  const advanceScene = (nextPath) => {
+    navigate(nextPath);
+  };
+
   // If on root path, show loading screen
   if (location.pathname === '' || location.pathname === '/') {
     return <LoadingScreen 
@@ -44,8 +49,8 @@ const BirthdayExperienceWrapper = () => {
   return (
     <>
       <Routes>
-        <Route path="initializing" element={<div style={{color: 'white', padding: '20px'}}>TEST: Initializing route matched</div>} />
-        <Route path="birthday" element={<TerminalIntro onComplete={() => navigate('puzzle')} config={config} />} />
+        <Route path="initializing" element={<TerminalIntro onComplete={() => navigate('birthday')} config={config} />} />
+        <Route path="birthday" element={<BirthdayRoom onComplete={() => navigate('puzzle')} onSceneChange={advanceScene} config={config} />} />
         <Route path="puzzle" element={<MatchingGame onComplete={() => navigate('memories')} />} />
         <Route path="memories" element={<MemoryGallery onComplete={() => navigate('music')} />} />
         <Route path="music" element={<MusicPlayer onComplete={() => navigate('videos')} />} />
