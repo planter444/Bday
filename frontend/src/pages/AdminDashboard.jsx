@@ -809,7 +809,7 @@ const AdminDashboard = () => {
                         <label>Card Text Color</label>
                         <input
                           type="color"
-                          value={memory.card_text_color || '#333'}
+                          value={memory.card_text_color || '#333333'}
                           onChange={(e) => {
                             const updated = memories.map(m =>
                               m.id === memory.id ? { ...m, card_text_color: e.target.value } : m

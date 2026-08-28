@@ -468,7 +468,7 @@ const createMemoryPageWithFiles = async (req, res) => {
       frame_color: frame_color || '#8B4513',
       card_color: card_color || '#fff5e6',
       card_font: card_font || 'Arial',
-      card_text_color: card_text_color || '#333'
+      card_text_color: card_text_color || '#333333'
     };
 
     // Only add music URL if music was uploaded
