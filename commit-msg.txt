@@ -1,10 +1,11 @@
-Fix ESLint errors and remove display_order dependency
+Fix navigation and memory creation to work with existing schema
 
-- Remove unused configLoaded variable
-- Add eslint-disable for config dependency in LoadingScreen
-- Remove display_order column dependency from memory operations
-- Simplify memory creation to use only basic columns
-- Fix memory creation to work with existing database schema
+- Simplify App.jsx navigation logic
+- Remove console logs for cleaner code
+- Make memory creation use only basic columns (title, photo_url, message, music_url)
+- Make memory update only use safe columns
+- Fix puzzle config update to handle missing rows
+- Change card_message to message in frontend for database compatibility
 
 Generated with [Devin](https://devin.ai)
 

@@ -20,7 +20,7 @@ const TerminalIntro = ({ onComplete, config }) => {
 
   const animateProgress = useCallback(() => {
     let currentProgress = 0;
-    const duration = 3000; // 3 seconds
+    const duration = 3000;
     const interval = 30;
     const increment = 100 / (duration / interval);
 
@@ -33,7 +33,6 @@ const TerminalIntro = ({ onComplete, config }) => {
         setShowProgress(false);
         setShowSpinner(true);
         
-        // Show spinner for 4 seconds
         setTimeout(() => {
           setIsComplete(true);
           setTimeout(() => {
@@ -67,7 +66,6 @@ const TerminalIntro = ({ onComplete, config }) => {
         } else {
           charIndex = 0;
           
-          // Check if this line should show progress bar
           if (currentLine.showProgress) {
             setShowProgress(true);
             setTimeout(() => {
@@ -85,33 +83,35 @@ const TerminalIntro = ({ onComplete, config }) => {
   }, [animateProgress]);
 
   useEffect(() => {
+    console.log('TerminalIntro mounted');
     const fetchTerminalLines = async () => {
       try {
+        console.log('Fetching terminal lines...');
         const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/terminal/lines`);
         const data = await response.json();
+        console.log('Terminal lines data:', data);
         
         if (data && data.length > 0) {
-          // Use lines from database
           const dbLines = data.filter(line => line.enabled).map(line => ({
             text: line.text,
             delay: line.delay || 800,
             typing_speed: line.typing_speed || 50,
             showProgress: line.show_progress || false
           }));
+          console.log('Using DB lines:', dbLines);
           runTerminalSequence(dbLines);
         } else {
-          // Fallback to hardcoded lines
+          console.log('Using fallback lines');
           runTerminalSequence(terminalLines);
         }
       } catch (error) {
         console.error('Failed to fetch terminal lines:', error);
-        // Fallback to hardcoded lines
+        console.log('Using fallback lines due to error');
         runTerminalSequence(terminalLines);
       }
     };
 
     fetchTerminalLines();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runTerminalSequence]);
 
   return (

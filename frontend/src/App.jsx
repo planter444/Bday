@@ -23,11 +23,13 @@ const BirthdayExperienceWrapper = () => {
   useEffect(() => {
     const fetchConfig = async () => {
       try {
+        console.log('App: Fetching config...');
         const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/config`);
         const data = await response.json();
+        console.log('App: Config fetched:', data);
         setConfig(data);
       } catch (error) {
-        console.error('Failed to fetch config:', error);
+        console.error('App: Failed to fetch config:', error);
         setConfig({});
       }
     };
@@ -35,13 +37,20 @@ const BirthdayExperienceWrapper = () => {
   }, []);
 
   const advanceScene = (nextPath) => {
+    console.log('App: Advancing to:', nextPath);
     navigate(nextPath);
   };
 
+  console.log('App: Current path:', location.pathname);
+
   // If on root path, show loading screen
   if (location.pathname === '/' || location.pathname === '/birthday' || location.pathname === '/birthday/') {
+    console.log('App: Showing loading screen');
     return <LoadingScreen 
-      onComplete={() => navigate('/birthday/initializing')} 
+      onComplete={() => {
+        console.log('App: LoadingScreen complete, navigating to /birthday/initializing');
+        navigate('/birthday/initializing');
+      }} 
       config={config} 
     />;
   }
