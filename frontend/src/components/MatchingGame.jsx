@@ -31,7 +31,7 @@ const MatchingGame = ({ onComplete }) => {
   const shuffleBottom = useCallback(() => {
     const shuffled = [...bottomEmojis].sort(() => Math.random() - 0.5);
     setShuffledBottom(shuffled);
-  }, []);
+  }, [bottomEmojis]);
 
   useEffect(() => {
     fetchPuzzleConfig();
