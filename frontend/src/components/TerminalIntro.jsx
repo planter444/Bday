@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './TerminalIntro.css';
 
 const TerminalIntro = ({ onComplete, config }) => {
@@ -10,22 +10,51 @@ const TerminalIntro = ({ onComplete, config }) => {
 
   const transitionDelay = config?.intro_transition_delay || 4;
 
-  useEffect(() => {
-    const terminalLines = [
-      { text: '> initializing birthday.exe...', delay: 800, typing_speed: 50 },
-      { text: '> identifying user...', delay: 800, typing_speed: 50 },
-      { text: '> BELINDA', delay: 800, typing_speed: 50 },
-      { text: '> today is your birthday 🎂', delay: 800, typing_speed: 50 },
-      { text: '> loading... but the magic...', delay: 500, typing_speed: 50, showProgress: true },
-    ];
+  const terminalLines = [
+    { text: '> initializing birthday.exe...', delay: 800, typing_speed: 50 },
+    { text: '> identifying user...', delay: 800, typing_speed: 50 },
+    { text: '> BELINDA', delay: 800, typing_speed: 50 },
+    { text: '> today is your birthday 🎂', delay: 800, typing_speed: 50 },
+    { text: '> loading... but the magic...', delay: 500, typing_speed: 50, showProgress: true },
+  ];
 
+  useEffect(() => {
+    const fetchTerminalLines = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/terminal/lines`);
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+          // Use lines from database
+          const dbLines = data.filter(line => line.enabled).map(line => ({
+            text: line.text,
+            delay: line.delay || 800,
+            typing_speed: line.typing_speed || 50,
+            showProgress: line.show_progress || false
+          }));
+          runTerminalSequence(dbLines);
+        } else {
+          // Fallback to hardcoded lines
+          runTerminalSequence(terminalLines);
+        }
+      } catch (error) {
+        console.error('Failed to fetch terminal lines:', error);
+        // Fallback to hardcoded lines
+        runTerminalSequence(terminalLines);
+      }
+    };
+
+    fetchTerminalLines();
+  }, [runTerminalSequence]);
+
+  const runTerminalSequence = useCallback((sequenceLines) => {
     let lineIndex = 0;
     let charIndex = 0;
     const typedLines = [];
 
     const typeNextChar = () => {
-      if (lineIndex < terminalLines.length) {
-        const currentLine = terminalLines[lineIndex];
+      if (lineIndex < sequenceLines.length) {
+        const currentLine = sequenceLines[lineIndex];
         
         if (charIndex === 0) {
           typedLines.push({ text: '', showProgress: currentLine.showProgress });
@@ -45,7 +74,6 @@ const TerminalIntro = ({ onComplete, config }) => {
             setShowProgress(true);
             setTimeout(() => {
               animateProgress();
-              // eslint-disable-next-line react-hooks/exhaustive-deps
             }, currentLine.delay);
           } else {
             lineIndex++;
@@ -56,10 +84,9 @@ const TerminalIntro = ({ onComplete, config }) => {
     };
 
     typeNextChar();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const animateProgress = () => {
+  const animateProgress = useCallback(() => {
     let currentProgress = 0;
     const duration = 3000; // 3 seconds
     const interval = 30;
@@ -84,7 +111,7 @@ const TerminalIntro = ({ onComplete, config }) => {
       }
       setProgress(currentProgress);
     }, interval);
-  };
+  }, [transitionDelay, onComplete]);
 
   return (
     <div className="terminal-intro">
