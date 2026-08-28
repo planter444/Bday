@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './TerminalIntro.css';
 
 const TerminalIntro = ({ onComplete, config }) => {
-  const [lines, setLines] = useState([]);
+  const [lines, setLines] = useState([{ text: '> initializing birthday.exe...' }]);
   const [showProgress, setShowProgress] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showSpinner, setShowSpinner] = useState(false);
@@ -83,7 +83,7 @@ const TerminalIntro = ({ onComplete, config }) => {
   }, [animateProgress]);
 
   useEffect(() => {
-    // Immediately start with fallback lines
+    // Start immediately with fallback lines
     runTerminalSequence(terminalLines);
     
     // Try to fetch DB lines in background
