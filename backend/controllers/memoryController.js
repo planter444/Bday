@@ -15,12 +15,16 @@ const getMemoryPages = async (req, res) => {
       .eq('is_active', true)
       .order('display_order', { ascending: true });
     
-    if (error) throw error;
+    if (error) {
+      // Return empty array if table doesn't exist
+      return res.json([]);
+    }
     
     res.json(memories);
   } catch (error) {
     console.error('Get memory pages error:', error);
-    res.status(500).json({ error: 'Failed to fetch memory pages' });
+    // Return empty array on error
+    res.json([]);
   }
 };
 

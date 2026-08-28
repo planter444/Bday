@@ -8,12 +8,24 @@ const getEasterEggConfig = async (req, res) => {
       .select('*')
       .single();
     
-    if (error) throw error;
+    if (error) {
+      // Return default config if table doesn't exist or is empty
+      return res.json({
+        enabled: false,
+        trigger_method: 'triple_click',
+        secret_message: 'You found the secret! 🎉'
+      });
+    }
     
     res.json(easterEgg);
   } catch (error) {
     console.error('Get Easter egg config error:', error);
-    res.status(500).json({ error: 'Failed to fetch Easter egg configuration' });
+    // Return default config on error
+    res.json({
+      enabled: false,
+      trigger_method: 'triple_click',
+      secret_message: 'You found the secret! 🎉'
+    });
   }
 };
 

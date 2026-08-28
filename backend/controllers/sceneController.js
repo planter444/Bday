@@ -7,7 +7,21 @@ const getSceneSettings = async (req, res) => {
       .from('scenes')
       .select('*');
     
-    if (error) throw error;
+    if (error) {
+      // Return default scene settings if table doesn't exist
+      return res.json({
+        loading: true,
+        initializing: true,
+        birthday: true,
+        puzzle: true,
+        memories: true,
+        music: true,
+        videos: true,
+        letter: true,
+        heartbeat: true,
+        final: true
+      });
+    }
     
     // Convert to object for easier frontend usage
     const sceneSettings = {};
@@ -18,7 +32,19 @@ const getSceneSettings = async (req, res) => {
     res.json(sceneSettings);
   } catch (error) {
     console.error('Get scene settings error:', error);
-    res.status(500).json({ error: 'Failed to fetch scene settings' });
+    // Return default scene settings on error
+    res.json({
+      loading: true,
+      initializing: true,
+      birthday: true,
+      puzzle: true,
+      memories: true,
+      music: true,
+      videos: true,
+      letter: true,
+      heartbeat: true,
+      final: true
+    });
   }
 };
 

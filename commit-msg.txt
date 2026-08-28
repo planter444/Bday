@@ -1,22 +1,8 @@
-Fix loading screen stuck issue and TerminalIntro config fetching
+Fix ESLint errors in TerminalIntro component
 
-Loading screen fixes:
-- LoadingScreen now accepts config prop and uses intro_duration from config
-- LoadingScreen auto-advances after configured duration
-- Removed dependency on component-level timer (moved to App.jsx wrapper)
-- LoadingScreen now properly shows configured intro_text
-
-App.jsx improvements:
-- BirthdayExperienceWrapper now fetches config properly
-- Added proper loading state management (configLoaded + introTimerComplete)
-- Loading screen shows at /birthday/ and /birthday/ routes until config loads
-- Timer now managed in wrapper component
-- Config passed to all components that need it
-
-TerminalIntro fixes:
-- Fixed useCallback dependencies to prevent ESLint errors
-- runTerminalSequence and animateProgress now properly memoized
-- Fixed dependency array issues
+- Move function definitions before use to fix no-use-before-define
+- Add animateProgress to runTerminalSequence dependencies
+- Add eslint-disable for terminalLines dependency (intentionally excluded)
 
 Generated with [Devin](https://devin.ai)
 

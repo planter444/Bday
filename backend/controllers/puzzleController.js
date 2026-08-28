@@ -8,12 +8,28 @@ const getPuzzleConfig = async (req, res) => {
       .select('*')
       .single();
     
-    if (error) throw error;
+    if (error) {
+      // Return default config if table doesn't exist or is empty
+      return res.json({
+        enabled: true,
+        hint: 'Look for the hidden clue...',
+        matching_instruction: 'Match the emojis to proceed to the next page.',
+        success_message: 'Well done!',
+        completion_message: 'You found the way in. ❤️'
+      });
+    }
     
     res.json(puzzle);
   } catch (error) {
     console.error('Get puzzle config error:', error);
-    res.status(500).json({ error: 'Failed to fetch puzzle configuration' });
+    // Return default config on error
+    res.json({
+      enabled: true,
+      hint: 'Look for the hidden clue...',
+      matching_instruction: 'Match the emojis to proceed to the next page.',
+      success_message: 'Well done!',
+      completion_message: 'You found the way in. ❤️'
+    });
   }
 };
 

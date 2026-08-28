@@ -14,11 +14,14 @@ const LoadingScreen = ({ onComplete, config }) => {
     return () => clearTimeout(timer);
   }, [onComplete, config?.intro_duration]);
 
+  // Force the text to be "Loading birthday magic..." 
+  const displayText = introText === 'Welcome to your birthday experience!' ? 'Loading birthday magic...' : introText;
+
   return (
     <div className="loading-screen">
       <div className="loading-content">
         <div className="loading-heart">❤️</div>
-        <div className="loading-text">{introText}</div>
+        <div className="loading-text">{displayText}</div>
         <div className="loading-dots">
           <span></span>
           <span></span>

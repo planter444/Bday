@@ -60,7 +60,8 @@ const AdminDashboard = () => {
       await api.put('/config', config);
       alert('Configuration saved successfully!');
     } catch (error) {
-      alert('Failed to save configuration');
+      console.error('Save error:', error);
+      alert('Failed to save configuration: ' + (error.response?.data?.error || error.message));
     } finally {
       setSaving(false);
     }
@@ -485,11 +486,22 @@ const AdminDashboard = () => {
               </div>
               <button className="save-button" onClick={() => {
                 // Save all memories
-                memories.forEach(memory => {
-                  api.put(`/memories/${memory.id}`, memory)
-                    .catch(error => console.error('Failed to save memory:', error));
+                const savePromises = memories.map(memory => {
+                  return api.put(`/memories/${memory.id}`, memory)
+                    .catch(error => {
+                      console.error('Failed to save memory:', error);
+                      return { error, memory };
+                    });
                 });
-                alert('Memory pages saved!');
+                
+                Promise.all(savePromises).then(results => {
+                  const errors = results.filter(r => r.error);
+                  if (errors.length > 0) {
+                    alert(`Some memories failed to save. Check console for details.`);
+                  } else {
+                    alert('Memory pages saved successfully!');
+                  }
+                });
               }}>
                 Save All Memory Pages
               </button>
@@ -553,8 +565,12 @@ const AdminDashboard = () => {
                       document.getElementById('new-memory-photo').value = '';
                       document.getElementById('new-memory-message').value = '';
                       document.getElementById('new-memory-music').value = '';
+                      alert('Memory page created successfully!');
                     })
-                    .catch(error => console.error('Failed to create memory:', error));
+                    .catch(error => {
+                      console.error('Failed to create memory:', error);
+                      alert('Failed to create memory: ' + (error.response?.data?.error || error.message));
+                    });
                 }}>
                   Create Memory Page
                 </button>
@@ -767,7 +783,10 @@ const AdminDashboard = () => {
                   <button className="save-button" onClick={() => {
                     api.put('/puzzle', puzzleConfig)
                       .then(() => alert('Puzzle configuration saved!'))
-                      .catch(error => console.error('Failed to save puzzle:', error));
+                      .catch(error => {
+                        console.error('Failed to save puzzle:', error);
+                        alert('Failed to save puzzle: ' + (error.response?.data?.error || error.message));
+                      });
                   }}>
                     Save Puzzle Config
                   </button>
@@ -828,7 +847,10 @@ const AdminDashboard = () => {
                   <button className="save-button" onClick={() => {
                     api.put('/easter-egg', easterEggConfig)
                       .then(() => alert('Easter egg configuration saved!'))
-                      .catch(error => console.error('Failed to save easter egg:', error));
+                      .catch(error => {
+                        console.error('Failed to save easter egg:', error);
+                        alert('Failed to save Easter egg: ' + (error.response?.data?.error || error.message));
+                      });
                   }}>
                     Save Easter Egg Config
                   </button>
@@ -970,8 +992,12 @@ const AdminDashboard = () => {
                               .then(response => {
                                 handleConfigChange('initializing_music_url', response.data.music_url);
                                 e.target.value = '';
+                                alert('Music uploaded successfully!');
                               })
-                              .catch(error => console.error('Failed to upload music:', error));
+                              .catch(error => {
+                                console.error('Failed to upload music:', error);
+                                alert('Failed to upload music: ' + (error.response?.data?.error || error.message));
+                              });
                           }
                         }}
                       />
@@ -1033,8 +1059,12 @@ const AdminDashboard = () => {
                               .then(response => {
                                 handleConfigChange('birthday_music_url', response.data.music_url);
                                 e.target.value = '';
+                                alert('Music uploaded successfully!');
                               })
-                              .catch(error => console.error('Failed to upload music:', error));
+                              .catch(error => {
+                                console.error('Failed to upload music:', error);
+                                alert('Failed to upload music: ' + (error.response?.data?.error || error.message));
+                              });
                           }
                         }}
                       />
@@ -1096,8 +1126,12 @@ const AdminDashboard = () => {
                               .then(response => {
                                 handleConfigChange('puzzle_music_url', response.data.music_url);
                                 e.target.value = '';
+                                alert('Music uploaded successfully!');
                               })
-                              .catch(error => console.error('Failed to upload music:', error));
+                              .catch(error => {
+                                console.error('Failed to upload music:', error);
+                                alert('Failed to upload music: ' + (error.response?.data?.error || error.message));
+                              });
                           }
                         }}
                       />
@@ -1159,8 +1193,12 @@ const AdminDashboard = () => {
                               .then(response => {
                                 handleConfigChange('memories_music_url', response.data.music_url);
                                 e.target.value = '';
+                                alert('Music uploaded successfully!');
                               })
-                              .catch(error => console.error('Failed to upload music:', error));
+                              .catch(error => {
+                                console.error('Failed to upload music:', error);
+                                alert('Failed to upload music: ' + (error.response?.data?.error || error.message));
+                              });
                           }
                         }}
                       />

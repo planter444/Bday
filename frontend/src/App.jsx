@@ -52,7 +52,12 @@ const BirthdayExperienceWrapper = () => {
   };
 
   // Show loading screen at root or if loading
-  if (location.pathname === '/birthday' || location.pathname === '/birthday/' || !configLoaded || !introTimerComplete) {
+  if ((location.pathname === '/' || location.pathname === '/birthday' || location.pathname === '/birthday/') && (!configLoaded || !introTimerComplete)) {
+    return <LoadingScreen onComplete={() => navigate('/birthday/initializing')} config={config} />;
+  }
+
+  // If we're on a birthday route but config is not loaded, show loading
+  if (location.pathname.startsWith('/birthday') && !configLoaded) {
     return <LoadingScreen onComplete={() => navigate('/birthday/initializing')} config={config} />;
   }
 
