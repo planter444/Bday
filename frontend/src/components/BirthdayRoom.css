@@ -57,12 +57,13 @@
 .room-content {
   position: relative;
   z-index: 10;
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: 2rem 1rem;
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  overflow-x: hidden;
 }
 
 .floating-hearts {
@@ -101,12 +102,14 @@
 
 .birthday-title {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
   animation: slideUp 1s ease-out;
+  flex-shrink: 0;
 }
 
 .main-title {
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 5vw, 3rem);
   font-weight: 700;
   background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent), var(--violet));
   -webkit-background-clip: text;
@@ -119,14 +122,14 @@
 }
 
 .name-title {
-  font-size: 3.5rem;
+  font-size: clamp(2rem, 6vw, 4.5rem);
   font-weight: 800;
   color: var(--warm-white);
   text-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color);
   transition: transform 0.1s ease-out;
   animation: glow 3s ease-in-out infinite;
   background: rgba(0, 0, 0, 0.3);
-  padding: 1rem 2rem;
+  padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
   border-radius: 20px;
   border: 2px solid var(--primary-accent);
   box-shadow: 0 0 20px var(--glow-color);
@@ -134,21 +137,24 @@
 
 .cake-container {
   position: relative;
-  margin: 2rem 0;
-  animation: slideUp 1.2s ease-out;
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 0;
+  width: 100%;
+  max-width: 400px;
+  animation: slideUp 1.2s ease-out;
 }
 
 .cake {
   position: relative;
-  width: 200px;
-  height: 180px;
+  width: clamp(140px, 35vw, 280px);
+  height: clamp(130px, 32vw, 250px);
   transition: transform 0.1s ease-out;
   cursor: pointer;
   flex-shrink: 0;
-  animation: cakeFloat 4s ease-in-out infinite;
+  animation: cakeFloat 6s ease-in-out infinite;
 }
 
 @keyframes cakeFloat {
@@ -156,13 +162,13 @@
     transform: translateY(0) rotateY(0deg) rotateX(0deg);
   }
   25% {
-    transform: translateY(-8px) rotateY(3deg) rotateX(2deg);
+    transform: translateY(-5px) rotateY(2deg) rotateX(1deg);
   }
   50% {
-    transform: translateY(-12px) rotateY(0deg) rotateX(0deg);
+    transform: translateY(-8px) rotateY(0deg) rotateX(0deg);
   }
   75% {
-    transform: translateY(-8px) rotateY(-3deg) rotateX(-2deg);
+    transform: translateY(-5px) rotateY(-2deg) rotateX(-1deg);
   }
 }
 
@@ -204,16 +210,18 @@
 
 .candles {
   position: absolute;
-  top: -30px;
+  top: -12%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 8px;
+  gap: 3%;
+  width: 70%;
+  justify-content: center;
 }
 
 .candle {
-  width: 8px;
-  height: 30px;
+  width: 4%;
+  height: 16%;
   background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
   border-radius: 2px;
   position: relative;
@@ -222,11 +230,11 @@
 
 .flame {
   position: absolute;
-  top: -15px;
+  top: -50%;
   left: 50%;
   transform: translateX(-50%);
-  width: 12px;
-  height: 18px;
+  width: 150%;
+  height: 60%;
   background: linear-gradient(135deg, #ff6b35, #f7931e);
   border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   animation: flameFlicker 0.3s ease-in-out infinite alternate;
@@ -253,14 +261,21 @@
   }
 }
 
+.hint-container {
+  flex-shrink: 0;
+  margin-bottom: 1rem;
+  animation: slideUp 1.5s ease-out;
+}
+
 .cake-hint {
   text-align: center;
-  margin-top: 1.5rem;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
   color: var(--soft-rose);
   opacity: 0.9;
   animation: pulse 2s ease-in-out infinite;
   font-style: italic;
+  margin: 0;
+  line-height: 1.4;
 }
 
 .balloons {
@@ -318,9 +333,8 @@
 }
 
 .continue-button {
-  margin-top: 2rem;
   padding: 1rem 2rem;
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 3vw, 1.1rem);
   background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
   color: white;
   border: none;
@@ -330,6 +344,7 @@
   box-shadow: 0 5px 20px var(--glow-color);
   transition: all 0.3s ease;
   animation: slideUp 1.5s ease-out;
+  flex-shrink: 0;
 }
 
 .continue-button:hover {
@@ -432,50 +447,12 @@
 
 /* Responsive design */
 @media (max-width: 480px) {
-  .main-title {
-    font-size: 1.8rem;
-  }
-  
-  .name-title {
-    font-size: 2rem;
-    padding: 0.8rem 1.5rem;
-  }
-  
-  .cake-container {
-    margin: 1rem 0;
-  }
-  
-  .cake {
-    width: 140px;
-    height: 130px;
-  }
-  
   .balloon {
     width: 50px;
     height: 65px;
   }
-  
-  .continue-button {
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-  }
 
   .room-content {
     padding: 1rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .main-title {
-    font-size: 3rem;
-  }
-  
-  .name-title {
-    font-size: 4.5rem;
-  }
-  
-  .cake {
-    width: 250px;
-    height: 220px;
   }
 }

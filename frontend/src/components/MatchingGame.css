@@ -71,9 +71,20 @@
 }
 
 .emoji-item:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
   background: rgba(255, 255, 255, 0.2);
   box-shadow: 0 0 20px var(--glow-color);
+}
+
+.emoji-item:active {
+  cursor: grabbing;
+  transform: scale(1.2);
+}
+
+.emoji-item.drag-over {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 30px var(--glow-color);
+  transform: scale(1.15);
 }
 
 .emoji-item.selected {
@@ -158,6 +169,15 @@
   font-size: 0.9rem;
   opacity: 0.8;
   margin: 0;
+}
+
+.dragged-emoji {
+  position: fixed;
+  font-size: 4rem;
+  pointer-events: none;
+  z-index: 1000;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+  transition: transform 0.1s ease;
 }
 
 .success-screen {

@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './MatchingGame.css';
 
 const MatchingGame = ({ onComplete }) => {
   const [puzzleConfig, setPuzzleConfig] = useState(null);
-  const [selectedTop, setSelectedTop] = useState(null);
-  const [selectedBottom, setSelectedBottom] = useState(null);
   const [matches, setMatches] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [wrongMatch, setWrongMatch] = useState(false);
+  const [shuffledBottom, setShuffledBottom] = useState([]);
+  const [draggedItem, setDraggedItem] = useState(null);
+  const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
+  const [wrongMatch, setWrongMatch] = useState(null);
+  const dragItemRef = useRef(null);
 
   const topEmojis = [
-    { id: 1, emoji: '🐒', name: 'monkey' },
-    { id: 2, emoji: '🐱', name: 'cat' },
-    { id: 3, emoji: '👧', name: 'girl' },
+    { id: 1, emoji: '�', name: 'monkey', type: 'top' },
+    { id: 2, emoji: '🐱', name: 'cat', type: 'top' },
+    { id: 3, emoji: '👧', name: 'girl', type: 'top' },
   ];
 
   const bottomEmojis = [
-    { id: 1, emoji: '🍌', name: 'banana' },
-    { id: 2, emoji: '🥛', name: 'milk' },
-    { id: 3, emoji: '💍', name: 'ring' },
+    { id: 1, emoji: '🍌', name: 'banana', type: 'bottom' },
+    { id: 2, emoji: '🥛', name: 'milk', type: 'bottom' },
+    { id: 3, emoji: '💍', name: 'ring', type: 'bottom' },
   ];
 
   const correctMatches = {
@@ -29,7 +31,13 @@ const MatchingGame = ({ onComplete }) => {
 
   useEffect(() => {
     fetchPuzzleConfig();
+    shuffleBottom();
   }, []);
+
+  const shuffleBottom = () => {
+    const shuffled = [...bottomEmojis].sort(() => Math.random() - 0.5);
+    setShuffledBottom(shuffled);
+  };
 
   const fetchPuzzleConfig = async () => {
     try {
@@ -38,7 +46,6 @@ const MatchingGame = ({ onComplete }) => {
       setPuzzleConfig(data);
     } catch (error) {
       console.error('Failed to fetch puzzle config:', error);
-      // Fallback
       setPuzzleConfig({
         matching_instruction: 'Match the emojis to proceed to the next page.',
         completion_message: 'You found the way in. ❤️'
@@ -46,24 +53,69 @@ const MatchingGame = ({ onComplete }) => {
     }
   };
 
-  const handleTopClick = (emoji) => {
-    if (matches.includes(emoji.name)) return;
-    setSelectedTop(emoji);
-    setSelectedBottom(null);
-    setWrongMatch(false);
+  const handlePointerDown = (e, item) => {
+    e.preventDefault();
+    if (matches.includes(item.name)) return;
+    if (item.type === 'bottom' && matches.includes(Object.keys(correctMatches).find(key => correctMatches[key] === item.name))) return;
+
+    setDraggedItem(item);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDragPosition({
+      x: e.clientX - rect.left - rect.width / 2,
+      y: e.clientY - rect.top - rect.height / 2
+    });
+
+    if (e.currentTarget.setPointerCapture) {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    }
   };
 
-  const handleBottomClick = (emoji) => {
-    if (!selectedTop) return;
-    if (matches.includes(correctMatches[Object.keys(correctMatches).find(key => correctMatches[key] === emoji.name)])) return;
-    
-    setSelectedBottom(emoji);
-    
-    if (correctMatches[selectedTop.name] === emoji.name) {
-      setMatches([...matches, selectedTop.name]);
-      setSelectedTop(null);
-      setSelectedBottom(null);
-      
+  const handlePointerMove = (e) => {
+    if (!draggedItem) return;
+    e.preventDefault();
+    setDragPosition({
+      x: e.clientX,
+      y: e.clientY
+    });
+  };
+
+  const handlePointerUp = (e) => {
+    if (!draggedItem) return;
+
+    const dropTarget = document.elementFromPoint(e.clientX, e.clientY);
+    const targetEmoji = dropTarget?.closest('.emoji-item');
+
+    if (targetEmoji) {
+      const targetId = parseInt(targetEmoji.dataset.id);
+      const targetType = targetEmoji.dataset.type;
+
+      const allEmojis = [...topEmojis, ...shuffledBottom];
+      const targetItem = allEmojis.find(emoji => emoji.id === targetId && emoji.type === targetType);
+
+      if (targetItem && targetItem !== draggedItem) {
+        checkMatch(draggedItem, targetItem);
+      }
+    }
+
+    setDraggedItem(null);
+    setDragPosition({ x: 0, y: 0 });
+  };
+
+  const checkMatch = (item1, item2) => {
+    let source, target;
+
+    if (item1.type === 'top' && item2.type === 'bottom') {
+      source = item1;
+      target = item2;
+    } else if (item1.type === 'bottom' && item2.type === 'top') {
+      source = item2;
+      target = item1;
+    } else {
+      return;
+    }
+
+    if (correctMatches[source.name] === target.name) {
+      setMatches([...matches, source.name]);
       if (matches.length + 1 === 3) {
         setShowSuccess(true);
         setTimeout(() => {
@@ -71,17 +123,21 @@ const MatchingGame = ({ onComplete }) => {
         }, 2000);
       }
     } else {
-      setWrongMatch(true);
-      setTimeout(() => {
-        setSelectedTop(null);
-        setSelectedBottom(null);
-        setWrongMatch(false);
-      }, 500);
+      setWrongMatch(source.id);
+      setTimeout(() => setWrongMatch(null), 500);
+    }
+  };
+
+  const isMatched = (item) => {
+    if (item.type === 'top') {
+      return matches.includes(item.name);
+    } else {
+      return matches.includes(Object.keys(correctMatches).find(key => correctMatches[key] === item.name));
     }
   };
 
   return (
-    <div className="matching-game">
+    <div className="matching-game" onPointerMove={handlePointerMove} onPointerUp={handlePointerUp}>
       <div className="game-container">
         <h2 className="game-title">{puzzleConfig?.matching_instruction || 'Match the emojis to proceed to the next page.'}</h2>
         
@@ -89,33 +145,52 @@ const MatchingGame = ({ onComplete }) => {
           {topEmojis.map((emoji) => (
             <div
               key={emoji.id}
-              className={`emoji-item ${selectedTop?.id === emoji.id ? 'selected' : ''} ${matches.includes(emoji.name) ? 'matched' : ''} ${wrongMatch && selectedTop?.id === emoji.id ? 'wrong' : ''}`}
-              onClick={() => handleTopClick(emoji)}
+              data-id={emoji.id}
+              data-type={emoji.type}
+              className={`emoji-item ${isMatched(emoji) ? 'matched' : ''} ${wrongMatch === emoji.id ? 'wrong' : ''}`}
+              onPointerDown={(e) => handlePointerDown(e, emoji)}
+              style={{ cursor: isMatched(emoji) ? 'not-allowed' : 'grab' }}
             >
               {emoji.emoji}
-              {matches.includes(emoji.name) && <span className="match-check">✓</span>}
+              {isMatched(emoji) && <span className="match-check">✓</span>}
             </div>
           ))}
         </div>
 
         <div className="instruction-arrow">
           <div className="arrow-down">↓</div>
-          <p className="instruction-text">choose their match</p>
+          <p className="instruction-text">drag to match</p>
           <div className="arrow-down">↓</div>
         </div>
 
         <div className="emojis-row bottom-row">
-          {bottomEmojis.map((emoji) => (
+          {shuffledBottom.map((emoji) => (
             <div
               key={emoji.id}
-              className={`emoji-item ${selectedBottom?.id === emoji.id ? 'selected' : ''} ${matches.includes(correctMatches[Object.keys(correctMatches).find(key => correctMatches[key] === emoji.name)]) ? 'matched' : ''} ${wrongMatch && selectedBottom?.id === emoji.id ? 'wrong' : ''}`}
-              onClick={() => handleBottomClick(emoji)}
+              data-id={emoji.id}
+              data-type={emoji.type}
+              className={`emoji-item ${isMatched(emoji) ? 'matched' : ''} ${wrongMatch === emoji.id ? 'wrong' : ''}`}
+              onPointerDown={(e) => handlePointerDown(e, emoji)}
+              style={{ cursor: isMatched(emoji) ? 'not-allowed' : 'grab' }}
             >
               {emoji.emoji}
-              {matches.includes(correctMatches[Object.keys(correctMatches).find(key => correctMatches[key] === emoji.name)]) && <span className="match-check">✓</span>}
+              {isMatched(emoji) && <span className="match-check">✓</span>}
             </div>
           ))}
         </div>
+
+        {draggedItem && (
+          <div
+            className="dragged-emoji"
+            style={{
+              left: dragPosition.x,
+              top: dragPosition.y,
+              transform: 'translate(-50%, -50%) scale(1.3)'
+            }}
+          >
+            {draggedItem.emoji}
+          </div>
+        )}
 
         {showSuccess && (
           <div className="success-screen">

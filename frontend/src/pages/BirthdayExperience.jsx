@@ -19,6 +19,7 @@ const BirthdayExperience = () => {
   const [loading, setLoading] = useState(true);
   const [configLoaded, setConfigLoaded] = useState(false);
   const [introTimerComplete, setIntroTimerComplete] = useState(false);
+  const [experienceKey, setExperienceKey] = useState(0);
 
   useEffect(() => {
     fetchConfig();
@@ -34,30 +35,28 @@ const BirthdayExperience = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle browser back button
+  // Handle browser back button - reset to first screen
   useEffect(() => {
     const handlePopState = (event) => {
-      const sceneOrder = [
-        'terminal',
-        'birthdayRoom',
-        'matchingGame',
-        'memoryGallery',
-        'musicPlayer',
-        'videoMemories',
-        'loveLetter',
-        'heartbeatAnalysis',
-        'finalMessage'
-      ];
-      
-      const currentIndex = sceneOrder.indexOf(currentScene);
-      if (currentIndex > 0) {
-        setCurrentScene(sceneOrder[currentIndex - 1]);
-      }
+      resetExperience();
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [currentScene]);
+  }, []);
+
+  const resetExperience = () => {
+    setExperienceKey(prev => prev + 1);
+    setCurrentScene('terminal');
+    setLoading(true);
+    setConfigLoaded(false);
+    setIntroTimerComplete(false);
+    
+    // Restart the timer
+    const timer = setTimeout(() => {
+      setIntroTimerComplete(true);
+    }, 4000);
+  };
 
   const fetchConfig = async () => {
     try {
@@ -136,7 +135,7 @@ const BirthdayExperience = () => {
   }
 
   return (
-    <div className="birthday-experience">
+    <div className="birthday-experience" key={experienceKey}>
       {currentScene === 'terminal' && sceneSettings?.terminal && (
         <TerminalIntro onComplete={advanceScene} config={config} />
       )}

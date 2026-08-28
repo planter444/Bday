@@ -141,7 +141,10 @@ const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
               ))}
             </div>
           </div>
-          <p className="cake-hint">There might be something hidden here.</p>
+        </div>
+
+        <div className="hint-container">
+          <p className="cake-hint">👀 There might be something hidden here.</p>
         </div>
 
         <div className="balloons">
