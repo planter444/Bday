@@ -75,15 +75,23 @@ const HeartbeatAnalysis = ({ onComplete, config }) => {
       }, 1000);
     } catch (error) {
       console.error('Failed to fetch memories:', error);
-      // Continue without photos
+      // Fallback test data
+      setMemories([
+        { id: 1, caption: 'Memory 1', photo_url: 'https://via.placeholder.com/200x200/ff6b9d/ffffff?text=1', enabled: true },
+        { id: 2, caption: 'Memory 2', photo_url: 'https://via.placeholder.com/200x200/7b2cbf/ffffff?text=2', enabled: true },
+        { id: 3, caption: 'Memory 3', photo_url: 'https://via.placeholder.com/200x200/c44569/ffffff?text=3', enabled: true },
+      ]);
       setTimeout(() => {
-        setShowHeart(true);
+        setStage('photos');
         setTimeout(() => {
-          setStage('final');
+          setShowHeart(true);
           setTimeout(() => {
-            onComplete();
-          }, 5000);
-        }, 4000);
+            setStage('final');
+            setTimeout(() => {
+              onComplete();
+            }, 5000);
+          }, 4000);
+        }, 1000);
       }, 1000);
     }
   };

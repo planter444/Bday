@@ -17,6 +17,11 @@ const LoveLetter = ({ onComplete }) => {
       setConfig(data);
     } catch (error) {
       console.error('Failed to fetch config:', error);
+      // Fallback config
+      setConfig({
+        love_letter_title: 'My Dearest Belinda',
+        love_letter_message: 'You are the most beautiful person I know. Every moment with you is a treasure. Happy Birthday!'
+      });
     }
   };
 

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import LoadingScreen from './components/LoadingScreen';
 import TerminalIntro from './components/TerminalIntro';
+import BirthdayRoom from './components/BirthdayRoom';
+import MatchingGame from './components/MatchingGame';
+import MemoryGallery from './components/MemoryGallery';
 import MusicPlayer from './components/MusicPlayer';
 import VideoMemories from './components/VideoMemories';
 import LoveLetter from './components/LoveLetter';
@@ -31,6 +34,10 @@ const BirthdayExperienceWrapper = () => {
     fetchConfig();
   }, []);
 
+  const advanceScene = (nextPath) => {
+    navigate(nextPath);
+  };
+
   // If on root path, show loading screen
   if (location.pathname === '' || location.pathname === '/') {
     return <LoadingScreen 
@@ -43,9 +50,9 @@ const BirthdayExperienceWrapper = () => {
     <>
       <Routes>
         <Route path="initializing" element={<TerminalIntro onComplete={() => navigate('birthday')} config={config} />} />
-        <Route path="birthday" element={<div style={{color: 'white', padding: '20px'}}>TEST: Birthday route matched</div>} />
-        <Route path="puzzle" element={<div style={{color: 'white', padding: '20px'}}>TEST: Puzzle route matched</div>} />
-        <Route path="memories" element={<div style={{color: 'white', padding: '20px'}}>TEST: Memories route matched</div>} />
+        <Route path="birthday" element={<BirthdayRoom onComplete={() => navigate('puzzle')} onSceneChange={advanceScene} config={config} />} />
+        <Route path="puzzle" element={<MatchingGame onComplete={() => navigate('memories')} />} />
+        <Route path="memories" element={<MemoryGallery onComplete={() => navigate('music')} />} />
         <Route path="music" element={<MusicPlayer onComplete={() => navigate('videos')} />} />
         <Route path="videos" element={<VideoMemories onComplete={() => navigate('letter')} />} />
         <Route path="letter" element={<LoveLetter onComplete={() => navigate('heartbeat')} />} />

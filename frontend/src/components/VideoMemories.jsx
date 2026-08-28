@@ -16,6 +16,11 @@ const VideoMemories = ({ onComplete }) => {
       setVideos(data.filter(video => video.enabled));
     } catch (error) {
       console.error('Failed to fetch videos:', error);
+      // Fallback test data
+      setVideos([
+        { id: 1, title: 'Video Memory 1', video_url: 'https://www.w3schools.com/html/mov_bbb.mp4', enabled: true },
+        { id: 2, title: 'Video Memory 2', video_url: 'https://www.w3schools.com/html/movie.mp4', enabled: true },
+      ]);
     }
   };
 

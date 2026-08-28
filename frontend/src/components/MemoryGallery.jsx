@@ -20,6 +20,12 @@ const MemoryGallery = ({ onComplete }) => {
       setMemories(data.filter(memory => memory.enabled !== false));
     } catch (error) {
       console.error('Failed to fetch memories:', error);
+      // Fallback test data
+      setMemories([
+        { id: 1, caption: 'Beautiful Memory 1', photo_url: 'https://via.placeholder.com/400x300/ff6b9d/ffffff?text=Memory+1', enabled: true },
+        { id: 2, caption: 'Wonderful Moment 2', photo_url: 'https://via.placeholder.com/400x300/7b2cbf/ffffff?text=Memory+2', enabled: true },
+        { id: 3, caption: 'Precious Time 3', photo_url: 'https://via.placeholder.com/400x300/c44569/ffffff?text=Memory+3', enabled: true },
+      ]);
     }
   };
 

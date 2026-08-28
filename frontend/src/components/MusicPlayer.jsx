@@ -20,6 +20,14 @@ const MusicPlayer = ({ onComplete }) => {
       }
     } catch (error) {
       console.error('Failed to fetch music:', error);
+      // Fallback test data
+      setMusic({
+        id: 1,
+        title: 'Our Special Song',
+        artist: 'For Belinda',
+        audio_url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+        enabled: true
+      });
     }
   };
 
