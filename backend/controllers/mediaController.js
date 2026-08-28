@@ -249,32 +249,81 @@ const deleteMusic = async (req, res) => {
       .from('music')
       .select('*')
       .single();
-    
+
     if (fetchError || !music) {
       return res.status(404).json({ error: 'Music not found' });
     }
-    
+
     // Delete from storage
     if (music.storage_path) {
       const { error: storageError } = await supabase.storage
         .from('birthday-media')
         .remove([music.storage_path]);
-      
+
       if (storageError) console.error('Storage deletion error:', storageError);
     }
-    
+
     // Delete from database
     const { error } = await supabase
       .from('music')
       .delete()
       .neq('id', 0); // Delete all music
-    
+
     if (error) throw error;
-    
+
     res.json({ message: 'Music deleted successfully' });
   } catch (error) {
     console.error('Delete music error:', error);
     res.status(500).json({ error: 'Failed to delete music' });
+  }
+};
+
+// Update music configuration
+const updateMusic = async (req, res) => {
+  try {
+    const { title, artist, enabled } = req.body;
+
+    // Get existing music
+    const { data: existingMusic, error: fetchError } = await supabase
+      .from('music')
+      .select('*')
+      .maybeSingle();
+
+    if (fetchError) {
+      console.error('Fetch music error:', fetchError);
+    }
+
+    const updates = {};
+    if (title !== undefined) updates.title = title;
+    if (artist !== undefined) updates.artist = artist;
+    if (enabled !== undefined) updates.enabled = enabled;
+
+    let result;
+    if (existingMusic) {
+      result = await supabase
+        .from('music')
+        .update(updates)
+        .eq('id', existingMusic.id)
+        .select()
+        .single();
+    } else {
+      result = await supabase
+        .from('music')
+        .insert([{
+          ...updates,
+          audio_url: null,
+          storage_path: null
+        }])
+        .select()
+        .single();
+    }
+
+    if (result.error) throw result.error;
+
+    res.json({ message: 'Music updated successfully', music: result.data });
+  } catch (error) {
+    console.error('Update music error:', error);
+    res.status(500).json({ error: 'Failed to update music' });
   }
 };
 
@@ -399,6 +448,7 @@ module.exports = {
   reorderPhotos,
   getMusic,
   uploadMusic,
+  updateMusic,
   deleteMusic,
   getVideos,
   uploadVideo,

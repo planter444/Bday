@@ -811,13 +811,23 @@ const AdminDashboard = () => {
                           type="color"
                           value={memory.card_text_color || '#333'}
                           onChange={(e) => {
-                            const updated = memories.map(m => 
+                            const updated = memories.map(m =>
                               m.id === memory.id ? { ...m, card_text_color: e.target.value } : m
                             );
                             setMemories(updated);
                           }}
                         />
                       </div>
+                      <button className="save-button" onClick={() => {
+                        api.put(`/memories/${memory.id}`, memory)
+                          .then(() => alert('Memory saved successfully!'))
+                          .catch(error => {
+                            console.error('Failed to save memory:', error);
+                            alert('Failed to save memory');
+                          });
+                      }}>
+                        Save This Memory
+                      </button>
                       <button className="delete-button" onClick={() => {
                         if (confirm('Delete this memory page?')) {
                           api.delete(`/memories/${memory.id}`)
@@ -1071,9 +1081,19 @@ const AdminDashboard = () => {
                     Enabled
                   </label>
                   <button className="save-button" onClick={() => {
-                    api.put('/media/music', music)
-                      .then(() => alert('Music configuration saved!'))
-                      .catch(error => console.error('Failed to save music:', error));
+                    api.put('/media/music', {
+                      title: music.title,
+                      artist: music.artist,
+                      enabled: music.enabled
+                    })
+                      .then(response => {
+                        setMusic(response.data.music);
+                        alert('Music configuration saved!');
+                      })
+                      .catch(error => {
+                        console.error('Failed to save music:', error);
+                        alert('Failed to save music');
+                      });
                   }}>
                     Save Music Config
                   </button>

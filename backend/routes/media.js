@@ -28,6 +28,7 @@ router.put('/photos/:id', authMiddleware, updatePhoto);
 router.put('/photos/reorder', authMiddleware, reorderPhotos);
 
 router.post('/music', authMiddleware, upload.single('file'), uploadMusic);
+router.put('/music', authMiddleware, updateMusic);
 router.delete('/music', authMiddleware, deleteMusic);
 
 router.post('/videos', authMiddleware, upload.single('file'), uploadVideo);
