@@ -38,15 +38,39 @@ const updatePuzzleConfig = async (req, res) => {
   try {
     const updates = req.body;
     
-    const { data: puzzle, error } = await supabase
+    // Check if puzzle config exists
+    const { data: existing } = await supabase
       .from('puzzle_config')
-      .update(updates)
-      .select()
+      .select('*')
       .single();
     
-    if (error) throw error;
+    let result;
+    if (existing) {
+      // Update existing
+      result = await supabase
+        .from('puzzle_config')
+        .update(updates)
+        .select()
+        .single();
+    } else {
+      // Insert new
+      result = await supabase
+        .from('puzzle_config')
+        .insert([{
+          enabled: true,
+          hint: 'Look for the hidden clue...',
+          matching_instruction: 'Match the emojis to proceed to the next page.',
+          success_message: 'Well done!',
+          completion_message: 'You found the way in. ❤️',
+          ...updates
+        }])
+        .select()
+        .single();
+    }
     
-    res.json({ message: 'Puzzle configuration updated successfully', puzzle });
+    if (result.error) throw result.error;
+    
+    res.json({ message: 'Puzzle configuration updated successfully', puzzle: result.data });
   } catch (error) {
     console.error('Update puzzle config error:', error);
     res.status(500).json({ error: 'Failed to update puzzle configuration' });

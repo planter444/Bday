@@ -1,8 +1,10 @@
-Add console logging to debug navigation issue
+Fix ESLint errors and remove display_order dependency
 
-- Add console logs to track navigation flow
-- Add console logs to LoadingScreen to verify onComplete is called
-- Simplify App.jsx navigation logic
+- Remove unused configLoaded variable
+- Add eslint-disable for config dependency in LoadingScreen
+- Remove display_order column dependency from memory operations
+- Simplify memory creation to use only basic columns
+- Fix memory creation to work with existing database schema
 
 Generated with [Devin](https://devin.ai)
 

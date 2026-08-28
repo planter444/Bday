@@ -896,7 +896,7 @@ const AdminDashboard = () => {
 
                     const formData = new FormData();
                     formData.append('title', title);
-                    formData.append('card_message', message);
+                    formData.append('message', message);
                     if (photoFile) formData.append('photo', photoFile);
                     if (musicFile) formData.append('music', musicFile);
 
@@ -931,7 +931,7 @@ const AdminDashboard = () => {
 
                     const formData = new FormData();
                     formData.append('title', title);
-                    formData.append('card_message', message);
+                    formData.append('message', message);
                     if (photoFile) formData.append('photo', photoFile);
                     if (musicFile) formData.append('music', musicFile);
 

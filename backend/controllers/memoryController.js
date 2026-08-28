@@ -97,9 +97,16 @@ const updateMemoryPage = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
     
+    // Only include fields that likely exist in the schema
+    const safeUpdates = {};
+    if (updates.title !== undefined) safeUpdates.title = updates.title;
+    if (updates.photo_url !== undefined) safeUpdates.photo_url = updates.photo_url;
+    if (updates.message !== undefined) safeUpdates.message = updates.message;
+    if (updates.music_url !== undefined) safeUpdates.music_url = updates.music_url;
+    
     const { data: memory, error } = await supabase
       .from('memories')
-      .update(updates)
+      .update(safeUpdates)
       .eq('id', id)
       .select()
       .single();
@@ -445,17 +452,21 @@ const createMemoryPageWithFiles = async (req, res) => {
       musicUrl = publicUrl;
     }
 
-    // Create memory page with minimal fields
+    // Create memory page with only basic fields that definitely exist
+    const memoryData = {
+      title: title || 'Memory',
+      photo_url: photoUrl,
+      message: card_message || ''
+    };
+
+    // Only add music fields if music was uploaded
+    if (musicUrl) {
+      memoryData.music_url = musicUrl;
+    }
+
     const { data: memory, error } = await supabase
       .from('memories')
-      .insert([{
-        title: title || 'Memory',
-        photo_url: photoUrl,
-        message: card_message || '',
-        music_url: musicUrl,
-        music_volume: music_volume ? parseFloat(music_volume) : 0.7,
-        music_loop: music_loop !== undefined ? music_loop : true
-      }])
+      .insert([memoryData])
       .select()
       .single();
 
