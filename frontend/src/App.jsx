@@ -46,19 +46,17 @@ const BirthdayExperienceWrapper = () => {
     />;
   }
 
-  // If on /birthday path, also show loading screen
+  // If on /birthday path without trailing slash, redirect to avoid loop
   if (location.pathname === '/birthday') {
-    return <LoadingScreen 
-      onComplete={() => navigate('initializing')} 
-      config={config} 
-    />;
+    navigate('/birthday/');
+    return null;
   }
 
   return (
     <>
       <Routes>
-        <Route path="initializing" element={<TerminalIntro onComplete={() => navigate('birthday')} config={config} />} />
-        <Route path="birthday" element={<BirthdayRoom onComplete={() => navigate('puzzle')} onSceneChange={advanceScene} config={config} />} />
+        <Route path="initializing" element={<TerminalIntro onComplete={() => navigate('room')} config={config} />} />
+        <Route path="room" element={<BirthdayRoom onComplete={() => navigate('puzzle')} onSceneChange={advanceScene} config={config} />} />
         <Route path="puzzle" element={<MatchingGame onComplete={() => navigate('memories')} />} />
         <Route path="memories" element={<MemoryGallery onComplete={() => navigate('music')} />} />
         <Route path="music" element={<MusicPlayer onComplete={() => navigate('videos')} />} />

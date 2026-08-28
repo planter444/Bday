@@ -219,7 +219,7 @@
 
 .candles {
   position: absolute;
-  top: -20px;
+  top: -5px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -231,7 +231,7 @@
 
 .candle {
   width: 16px;
-  height: 40px;
+  height: 35px;
   background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
   border-radius: 2px;
   position: relative;
@@ -240,7 +240,7 @@
 
 .flame {
   position: absolute;
-  top: -12px;
+  top: -8px;
   left: 50%;
   transform: translateX(-50%);
   width: 140%;
@@ -254,15 +254,15 @@
 /* Desktop specific adjustment */
 @media (min-width: 768px) {
   .candles {
-    top: -15px;
+    top: -8px;
   }
   
   .candle {
-    height: 35px;
+    height: 30px;
   }
   
   .flame {
-    top: -10px;
+    top: -6px;
   }
 }
 

@@ -64,7 +64,7 @@
 .table-photo {
   width: 250px;
   height: 200px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 5px;
   display: block;
 }
@@ -270,6 +270,25 @@
 .nav-button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+.continue-cute-button {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  box-shadow: 0 5px 15px var(--glow-color);
+  transition: all 0.3s ease;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.continue-cute-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px var(--glow-color);
 }
 
 .hint-text {

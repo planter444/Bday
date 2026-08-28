@@ -140,12 +140,21 @@ const MemoryGallery = ({ onComplete }) => {
             ←
           </button>
           
-          <button
-            className="nav-button interactive-element"
-            onClick={handleNext}
-          >
-            {currentIndex === memories.length - 1 ? 'Finish →' : '→'}
-          </button>
+          {currentIndex === memories.length - 1 ? (
+            <button
+              className="continue-cute-button interactive-element"
+              onClick={onComplete}
+            >
+              🎬 Play Videos 🎬
+            </button>
+          ) : (
+            <button
+              className="nav-button interactive-element"
+              onClick={handleNext}
+            >
+              →
+            </button>
+          )}
         </div>
 
         <p className="hint-text">
