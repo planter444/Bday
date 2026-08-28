@@ -15,6 +15,7 @@ const LoadingScreen = ({ onComplete, config }) => {
     }, duration);
     
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onComplete, config?.intro_duration]);
 
   // Force the text to be "Loading birthday magic..." 

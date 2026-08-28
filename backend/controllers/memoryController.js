@@ -11,8 +11,7 @@ const getMemoryPages = async (req, res) => {
   try {
     const { data: memories, error } = await supabase
       .from('memories')
-      .select('*')
-      .order('display_order', { ascending: true });
+      .select('*');
     
     if (error) {
       // Return empty array if table doesn't exist
@@ -63,7 +62,6 @@ const createMemoryPage = async (req, res) => {
   try {
     const {
       title,
-      display_order,
       photo_url,
       message,
       music_url,
@@ -71,24 +69,10 @@ const createMemoryPage = async (req, res) => {
       music_loop
     } = req.body;
     
-    // Get max display_order if not provided
-    let order = display_order;
-    if (order === undefined || order === null) {
-      const { data: maxOrder } = await supabase
-        .from('memories')
-        .select('display_order')
-        .order('display_order', { ascending: false })
-        .limit(1)
-        .single();
-      
-      order = (maxOrder?.display_order || 0) + 1;
-    }
-    
     const { data: memory, error } = await supabase
       .from('memories')
       .insert([{
-        title: title || `Memory ${order}`,
-        display_order: order,
+        title: title || 'Memory',
         photo_url: photo_url || null,
         message: message || '',
         music_url: music_url || null,
@@ -403,7 +387,7 @@ const setMemoryMusicUrl = async (req, res) => {
 // Create new memory page with file uploads
 const createMemoryPageWithFiles = async (req, res) => {
   try {
-    const { title, card_message, card_style, background_color, animation_type, music_volume, music_loop, enabled } = req.body;
+    const { title, card_message, music_volume, music_loop } = req.body;
     const photoFile = req.files?.photo?.[0];
     const musicFile = req.files?.music?.[0];
 
@@ -422,16 +406,6 @@ const createMemoryPageWithFiles = async (req, res) => {
     if (musicFile && musicFile.size > MAX_AUDIO_SIZE) {
       return res.status(400).json({ error: 'Music file size exceeds 20MB limit' });
     }
-
-    // Get max display_order
-    const { data: maxOrder } = await supabase
-      .from('memories')
-      .select('display_order')
-      .order('display_order', { ascending: false })
-      .limit(1)
-      .single();
-
-    const order = (maxOrder?.display_order || 0) + 1;
 
     // Upload photo if provided
     let photoUrl = null;
@@ -471,12 +445,11 @@ const createMemoryPageWithFiles = async (req, res) => {
       musicUrl = publicUrl;
     }
 
-    // Create memory page with essential fields only
+    // Create memory page with minimal fields
     const { data: memory, error } = await supabase
       .from('memories')
       .insert([{
-        title: title || `Memory ${order}`,
-        display_order: order,
+        title: title || 'Memory',
         photo_url: photoUrl,
         message: card_message || '',
         music_url: musicUrl,

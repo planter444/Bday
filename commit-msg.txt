@@ -1,10 +1,8 @@
-Fix navigation and add "Create & Add Another" button for memories
+Add console logging to debug navigation issue
 
-- Simplify loading screen logic to fix navigation issues
-- Remove intro timer that was causing black screen
-- Add "Create & Add Another" button in Photos section for faster memory creation
-- Add CSS for form buttons and page configuration items
-- Fix memory thumbnail styling
+- Add console logs to track navigation flow
+- Add console logs to LoadingScreen to verify onComplete is called
+- Simplify App.jsx navigation logic
 
 Generated with [Devin](https://devin.ai)
 

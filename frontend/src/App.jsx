@@ -19,7 +19,6 @@ const BirthdayExperienceWrapper = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [config, setConfig] = useState(null);
-  const [configLoaded, setConfigLoaded] = useState(false);
 
   useEffect(() => {
     fetchConfig();
@@ -32,11 +31,9 @@ const BirthdayExperienceWrapper = () => {
       const data = await response.json();
       console.log('Config fetched:', data);
       setConfig(data);
-      setConfigLoaded(true);
     } catch (error) {
       console.error('Failed to fetch config:', error);
       setConfig({});
-      setConfigLoaded(true);
     }
   };
 
