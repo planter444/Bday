@@ -7,10 +7,14 @@ const MemoryGallery = ({ onComplete }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [music, setMusic] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
   const cardRef = useRef(null);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     fetchMemories();
+    fetchMusic();
   }, []);
 
   const fetchMemories = async () => {
@@ -22,10 +26,33 @@ const MemoryGallery = ({ onComplete }) => {
       console.error('Failed to fetch memories:', error);
       // Fallback test data
       setMemories([
-        { id: 1, caption: 'Beautiful Memory 1', photo_url: 'https://via.placeholder.com/400x300/ff6b9d/ffffff?text=Memory+1', enabled: true },
-        { id: 2, caption: 'Wonderful Moment 2', photo_url: 'https://via.placeholder.com/400x300/7b2cbf/ffffff?text=Memory+2', enabled: true },
-        { id: 3, caption: 'Precious Time 3', photo_url: 'https://via.placeholder.com/400x300/c44569/ffffff?text=Memory+3', enabled: true },
+        { id: 1, caption: 'Beautiful Memory 1', photo_url: 'https://via.placeholder.com/400x300/ff6b9d/ffffff?text=Memory+1', enabled: true, message: 'This memory brings a smile to my face.' },
+        { id: 2, caption: 'Wonderful Moment 2', photo_url: 'https://via.placeholder.com/400x300/7b2cbf/ffffff?text=Memory+2', enabled: true, message: 'Every moment with you is precious.' },
+        { id: 3, caption: 'Precious Time 3', photo_url: 'https://via.placeholder.com/400x300/c44569/ffffff?text=Memory+3', enabled: true, message: 'You make every day special.' },
       ]);
+    }
+  };
+
+  const fetchMusic = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/media/music`);
+      const data = await response.json();
+      if (data && data.enabled && data.audio_url) {
+        setMusic(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch music:', error);
+    }
+  };
+
+  const toggleMusic = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
     }
   };
 
@@ -114,48 +141,47 @@ const MemoryGallery = ({ onComplete }) => {
           {String(currentIndex + 1).padStart(2, '0')} / {String(memories.length).padStart(2, '0')}
         </div>
 
-        <div 
-          className="card-container"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          onMouseMove={handleMouseMove}
-          onTouchMove={handleTouchMove}
-          onMouseLeave={() => setTilt({ x: 0, y: 0 })}
-        >
-          <div
-            ref={cardRef}
-            className={`memory-card ${isFlipped ? 'flipped' : ''}`}
-            onClick={handleCardClick}
-            style={{
-              transform: `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`
-            }}
-          >
-            <div className="card-front">
-              <img 
-                src={currentMemory.photo_url} 
-                alt={`Memory ${currentIndex + 1}`}
-                loading="lazy"
-              />
-              {currentMemory.caption && (
-                <div className="photo-caption">{currentMemory.caption}</div>
+        <div className="table-setting">
+          {/* Photo frame on table */}
+          <div className="photo-frame">
+            <img 
+              src={currentMemory.photo_url} 
+              alt={`Memory ${currentIndex + 1}`}
+              loading="lazy"
+              className="table-photo"
+            />
+            {currentMemory.caption && (
+              <div className="photo-caption">{currentMemory.caption}</div>
+            )}
+          </div>
+
+          {/* Birthday card beside photo */}
+          <div className="birthday-card">
+            <div className="card-front-text">
+              <h3>Happy Birthday!</h3>
+              <p className="card-message">{currentMemory.message || 'You are amazing!'}</p>
+              {currentMemory.date && (
+                <div className="memory-date">{currentMemory.date}</div>
               )}
             </div>
-            
-            <div className="card-back">
-              <div className="message-content">
-                <p className="message-text">{currentMemory.message || ''}</p>
-                {currentMemory.date && (
-                  <div className="memory-date">{currentMemory.date}</div>
-                )}
-                {currentMemory.location && (
-                  <div className="memory-location">📍 {currentMemory.location}</div>
-                )}
-                {currentMemory.hidden_note && (
-                  <div className="hidden-note">✨ {currentMemory.hidden_note}</div>
-                )}
-              </div>
-            </div>
           </div>
+
+          {/* Music player */}
+          {music && (
+            <div className="music-player-mini">
+              <button 
+                className="music-toggle interactive-element"
+                onClick={toggleMusic}
+              >
+                {isPlaying ? '⏸️' : '▶️'}
+              </button>
+              <audio 
+                ref={audioRef}
+                src={music.audio_url}
+                loop
+              />
+            </div>
+          )}
         </div>
 
         <div className="navigation-buttons">
@@ -176,7 +202,7 @@ const MemoryGallery = ({ onComplete }) => {
         </div>
 
         <p className="hint-text">
-          {isFlipped ? "Tap to flip back" : "Tap to flip • Swipe to navigate"}
+          Navigate through memories
         </p>
       </div>
     </div>
