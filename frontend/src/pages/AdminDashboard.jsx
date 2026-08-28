@@ -103,6 +103,12 @@ const AdminDashboard = () => {
             General
           </button>
           <button
+            className={`tab-button ${activeTab === 'pages' ? 'active' : ''}`}
+            onClick={() => setActiveTab('pages')}
+          >
+            Pages
+          </button>
+          <button
             className={`tab-button ${activeTab === 'terminal' ? 'active' : ''}`}
             onClick={() => setActiveTab('terminal')}
           >
@@ -255,6 +261,343 @@ const AdminDashboard = () => {
                 </div>
                 <button className="save-button" onClick={handleSaveConfig} disabled={saving}>
                   {saving ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'pages' && (
+            <div className="tab-content">
+              <h2>Page Configuration</h2>
+              <div className="pages-config">
+                <div className="page-config-item">
+                  <h3>Page 1: Loading Screen</h3>
+                  <div className="form-group">
+                    <label>Intro Text</label>
+                    <input
+                      type="text"
+                      value={config?.intro_text || 'Loading birthday magic...'}
+                      onChange={(e) => handleConfigChange('intro_text', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Duration (seconds)</label>
+                    <input
+                      type="number"
+                      min="2"
+                      max="30"
+                      value={(config?.intro_duration || 4000) / 1000}
+                      onChange={(e) => handleConfigChange('intro_duration', parseInt(e.target.value) * 1000)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Music</label>
+                    <select
+                      value={config?.initializing_music_enabled ? 'custom' : 'none'}
+                      onChange={(e) => handleConfigChange('initializing_music_enabled', e.target.value === 'custom')}
+                    >
+                      <option value="none">No Music</option>
+                      <option value="custom">Custom Music</option>
+                    </select>
+                  </div>
+                  {config?.initializing_music_enabled && (
+                    <div className="form-group">
+                      <label>Music URL</label>
+                      <input
+                        type="text"
+                        value={config?.initializing_music_url || ''}
+                        onChange={(e) => handleConfigChange('initializing_music_url', e.target.value)}
+                        placeholder="https://..."
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="page-config-item">
+                  <h3>Page 2: Terminal / Initializing</h3>
+                  <div className="form-group">
+                    <label>Music</label>
+                    <select
+                      value={config?.initializing_music_enabled ? 'custom' : 'none'}
+                      onChange={(e) => handleConfigChange('initializing_music_enabled', e.target.value === 'custom')}
+                    >
+                      <option value="none">No Music</option>
+                      <option value="custom">Custom Music</option>
+                    </select>
+                  </div>
+                  {config?.initializing_music_enabled && (
+                    <>
+                      <div className="form-group">
+                        <label>Music URL</label>
+                        <input
+                          type="text"
+                          value={config?.initializing_music_url || ''}
+                          onChange={(e) => handleConfigChange('initializing_music_url', e.target.value)}
+                          placeholder="https://..."
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Volume</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.1"
+                          value={config?.initializing_music_volume || 0.7}
+                          onChange={(e) => handleConfigChange('initializing_music_volume', parseFloat(e.target.value))}
+                        />
+                        <span>{Math.round((config?.initializing_music_volume || 0.7) * 100)}%</span>
+                      </div>
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={config?.initializing_music_loop !== false}
+                          onChange={(e) => handleConfigChange('initializing_music_loop', e.target.checked)}
+                        />
+                        Loop Music
+                      </label>
+                    </>
+                  )}
+                </div>
+
+                <div className="page-config-item">
+                  <h3>Page 3: Birthday Room</h3>
+                  <div className="form-group">
+                    <label>Belinda's Name</label>
+                    <input
+                      type="text"
+                      value={config?.belinda_name || ''}
+                      onChange={(e) => handleConfigChange('belinda_name', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Main Title</label>
+                    <input
+                      type="text"
+                      value={config?.main_title || ''}
+                      onChange={(e) => handleConfigChange('main_title', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Subtitle</label>
+                    <input
+                      type="text"
+                      value={config?.subtitle || ''}
+                      onChange={(e) => handleConfigChange('subtitle', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Birthday Message</label>
+                    <textarea
+                      value={config?.birthday_message || ''}
+                      onChange={(e) => handleConfigChange('birthday_message', e.target.value)}
+                      rows={4}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Continue Button Text</label>
+                    <input
+                      type="text"
+                      value={config?.continue_button_text || 'CONTINUE'}
+                      onChange={(e) => handleConfigChange('continue_button_text', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Music</label>
+                    <select
+                      value={config?.birthday_music_enabled ? 'custom' : 'none'}
+                      onChange={(e) => handleConfigChange('birthday_music_enabled', e.target.value === 'custom')}
+                    >
+                      <option value="none">No Music</option>
+                      <option value="custom">Custom Music</option>
+                    </select>
+                  </div>
+                  {config?.birthday_music_enabled && (
+                    <>
+                      <div className="form-group">
+                        <label>Music URL</label>
+                        <input
+                          type="text"
+                          value={config?.birthday_music_url || ''}
+                          onChange={(e) => handleConfigChange('birthday_music_url', e.target.value)}
+                          placeholder="https://..."
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Volume</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.1"
+                          value={config?.birthday_music_volume || 0.7}
+                          onChange={(e) => handleConfigChange('birthday_music_volume', parseFloat(e.target.value))}
+                        />
+                        <span>{Math.round((config?.birthday_music_volume || 0.7) * 100)}%</span>
+                      </div>
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={config?.birthday_music_loop !== false}
+                          onChange={(e) => handleConfigChange('birthday_music_loop', e.target.checked)}
+                        />
+                        Loop Music
+                      </label>
+                    </>
+                  )}
+                </div>
+
+                <div className="page-config-item">
+                  <h3>Page 4: Matching Game</h3>
+                  <div className="form-group">
+                    <label>Music</label>
+                    <select
+                      value={config?.puzzle_music_enabled ? 'custom' : 'none'}
+                      onChange={(e) => handleConfigChange('puzzle_music_enabled', e.target.value === 'custom')}
+                    >
+                      <option value="none">No Music</option>
+                      <option value="custom">Custom Music</option>
+                    </select>
+                  </div>
+                  {config?.puzzle_music_enabled && (
+                    <>
+                      <div className="form-group">
+                        <label>Music URL</label>
+                        <input
+                          type="text"
+                          value={config?.puzzle_music_url || ''}
+                          onChange={(e) => handleConfigChange('puzzle_music_url', e.target.value)}
+                          placeholder="https://..."
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Volume</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.1"
+                          value={config?.puzzle_music_volume || 0.7}
+                          onChange={(e) => handleConfigChange('puzzle_music_volume', parseFloat(e.target.value))}
+                        />
+                        <span>{Math.round((config?.puzzle_music_volume || 0.7) * 100)}%</span>
+                      </div>
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={config?.puzzle_music_loop !== false}
+                          onChange={(e) => handleConfigChange('puzzle_music_loop', e.target.checked)}
+                        />
+                        Loop Music
+                      </label>
+                    </>
+                  )}
+                </div>
+
+                <div className="page-config-item">
+                  <h3>Page 5: Memories Gallery</h3>
+                  <div className="form-group">
+                    <label>Music (Default for all memories)</label>
+                    <select
+                      value={config?.memories_music_enabled ? 'custom' : 'none'}
+                      onChange={(e) => handleConfigChange('memories_music_enabled', e.target.value === 'custom')}
+                    >
+                      <option value="none">No Music</option>
+                      <option value="custom">Custom Music</option>
+                    </select>
+                  </div>
+                  {config?.memories_music_enabled && (
+                    <>
+                      <div className="form-group">
+                        <label>Music URL</label>
+                        <input
+                          type="text"
+                          value={config?.memories_music_url || ''}
+                          onChange={(e) => handleConfigChange('memories_music_url', e.target.value)}
+                          placeholder="https://..."
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Volume</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.1"
+                          value={config?.memories_music_volume || 0.7}
+                          onChange={(e) => handleConfigChange('memories_music_volume', parseFloat(e.target.value))}
+                        />
+                        <span>{Math.round((config?.memories_music_volume || 0.7) * 100)}%</span>
+                      </div>
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={config?.memories_music_loop !== false}
+                          onChange={(e) => handleConfigChange('memories_music_loop', e.target.checked)}
+                        />
+                        Loop Music
+                      </label>
+                    </>
+                  )}
+                  <p className="info-text">Individual memory pages can override this music in the Photos section.</p>
+                </div>
+
+                <div className="page-config-item">
+                  <h3>Page 6: Music Player</h3>
+                  <p className="info-text">This page uses the main music configuration. Configure in General or Scene Music tabs.</p>
+                </div>
+
+                <div className="page-config-item">
+                  <h3>Page 7: Video Memories</h3>
+                  <p className="info-text">This page uses the main music configuration. Configure in General or Scene Music tabs.</p>
+                </div>
+
+                <div className="page-config-item">
+                  <h3>Page 8: Love Letter</h3>
+                  <div className="form-group">
+                    <label>Letter Title</label>
+                    <input
+                      type="text"
+                      value={config?.letter_title || ''}
+                      onChange={(e) => handleConfigChange('letter_title', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Love Letter</label>
+                    <textarea
+                      value={config?.letter || ''}
+                      onChange={(e) => handleConfigChange('letter', e.target.value)}
+                      rows={8}
+                    />
+                  </div>
+                </div>
+
+                <div className="page-config-item">
+                  <h3>Page 9: Heartbeat Analysis</h3>
+                  <div className="form-group">
+                    <label>Terminal Messages (one per line)</label>
+                    <textarea
+                      value={config?.heartbeat_messages || '> analyzing memories...\n> 10 photos found.\n> 1 beautiful girl found.\n> calculating how much she means to you...\n> ERROR\n> value exceeds measurable limits.\n> trying another method...\n> conclusion:\n> she\'s one of a kind.'}
+                      onChange={(e) => handleConfigChange('heartbeat_messages', e.target.value)}
+                      rows={10}
+                    />
+                  </div>
+                </div>
+
+                <div className="page-config-item">
+                  <h3>Page 10: Final Message</h3>
+                  <div className="form-group">
+                    <label>Final Message</label>
+                    <textarea
+                      value={config?.final_message || ''}
+                      onChange={(e) => handleConfigChange('final_message', e.target.value)}
+                      rows={6}
+                    />
+                  </div>
+                </div>
+
+                <button className="save-button" onClick={handleSaveConfig} disabled={saving}>
+                  {saving ? 'Saving...' : 'Save All Page Settings'}
                 </button>
               </div>
             </div>
