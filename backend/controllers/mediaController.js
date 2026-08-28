@@ -174,10 +174,17 @@ const getMusic = async (req, res) => {
     const { data: music, error } = await supabase
       .from('music')
       .select('*')
-      .maybeSingle(); // Use maybeSingle to handle empty results
-    
-    if (error) throw error;
-    
+      .limit(1)
+      .single();
+
+    if (error) {
+      // If no rows found, return disabled music
+      if (error.code === 'PGRST116') {
+        return res.json({ enabled: false });
+      }
+      throw error;
+    }
+
     res.json(music || { enabled: false });
   } catch (error) {
     console.error('Get music error:', error);
