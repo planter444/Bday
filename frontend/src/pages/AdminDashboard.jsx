@@ -1086,6 +1086,33 @@ const AdminDashboard = () => {
                   }}>
                     Delete Music
                   </button>
+                  <div className="upload-section">
+                    <h3>Upload New Music</h3>
+                    <input
+                      type="file"
+                      accept="audio/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          formData.append('title', music?.title || 'Belinda\'s Song');
+                          api.post('/media/music', formData, {
+                            headers: { 'Content-Type': 'multipart/form-data' }
+                          })
+                            .then(response => {
+                              setMusic(response.data.music);
+                              e.target.value = '';
+                              alert('Music uploaded successfully!');
+                            })
+                            .catch(error => {
+                              console.error('Failed to upload music:', error);
+                              alert('Failed to upload music');
+                            });
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
               )}
               {!music && (

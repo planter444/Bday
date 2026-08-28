@@ -23,6 +23,30 @@ const MemoryGallery = ({ onComplete }) => {
     fetchMusic();
   }, []);
 
+  useEffect(() => {
+    // Play music when memory changes
+    if (audioRef.current) {
+      const currentMemory = memories[currentIndex];
+      if (currentMemory && currentMemory.music_url) {
+        audioRef.current.src = currentMemory.music_url;
+        audioRef.current.play().then(() => {
+          setIsPlaying(true);
+        }).catch(err => {
+          console.error('Failed to play memory music:', err);
+          setIsPlaying(false);
+        });
+      } else if (music && music.audio_url) {
+        audioRef.current.src = music.audio_url;
+        audioRef.current.play().then(() => {
+          setIsPlaying(true);
+        }).catch(err => {
+          console.error('Failed to play global music:', err);
+          setIsPlaying(false);
+        });
+      }
+    }
+  }, [currentIndex, memories, music]);
+
   const fetchMemories = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/media/memories`);
