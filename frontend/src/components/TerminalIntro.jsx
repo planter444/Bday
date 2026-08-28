@@ -10,13 +10,21 @@ const terminalLines = [
 ];
 
 const TerminalIntro = ({ onComplete, config }) => {
-  const [lines, setLines] = useState([{ text: '> initializing birthday.exe...' }]);
+  const [lines, setLines] = useState([]);
   const [showProgress, setShowProgress] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showSpinner, setShowSpinner] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
 
   const transitionDelay = config?.intro_transition_delay || 4;
+
+  const terminalLines = [
+    { text: '> initializing birthday.exe...', delay: 800, typing_speed: 50 },
+    { text: '> identifying user...', delay: 800, typing_speed: 50 },
+    { text: '> BELINDA', delay: 800, typing_speed: 50 },
+    { text: '> today is your birthday 🎂', delay: 800, typing_speed: 50 },
+    { text: '> loading... but the magic...', delay: 500, typing_speed: 50, showProgress: true },
+  ];
 
   const animateProgress = useCallback(() => {
     let currentProgress = 0;
@@ -83,6 +91,10 @@ const TerminalIntro = ({ onComplete, config }) => {
   }, [animateProgress]);
 
   useEffect(() => {
+    // Immediately start with fallback lines
+    runTerminalSequence(terminalLines);
+    
+    // Try to fetch DB lines in background
     const fetchTerminalLines = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/terminal/lines`);
@@ -95,19 +107,22 @@ const TerminalIntro = ({ onComplete, config }) => {
             typing_speed: line.typing_speed || 50,
             showProgress: line.show_progress || false
           }));
+          setLines([]);
           runTerminalSequence(dbLines);
-        } else {
-          runTerminalSequence(terminalLines);
         }
       } catch (error) {
         console.error('Failed to fetch terminal lines:', error);
-        runTerminalSequence(terminalLines);
+        // Already using fallback, no action needed
       }
     };
 
     fetchTerminalLines();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runTerminalSequence]);
+
+  if (!mounted) {
+    return <div className="terminal-intro">Loading...</div>;
+  }
 
   return (
     <div className="terminal-intro">
@@ -127,6 +142,12 @@ const TerminalIntro = ({ onComplete, config }) => {
               )}
             </div>
           ))}
+          
+          {lines.length === 0 && (
+            <div className="terminal-line">
+              <span className="terminal-text">> initializing...</span>
+            </div>
+          )}
           
           {!isComplete && (
             <div className="terminal-line current">
