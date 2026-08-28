@@ -4,8 +4,12 @@ import './MemoryGallery.css';
 const MemoryGallery = ({ onComplete }) => {
   const [memories, setMemories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [touchStart, setTouchStart] = useState(0);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [music, setMusic] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const cardRef = useRef(null);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -52,6 +56,51 @@ const MemoryGallery = ({ onComplete }) => {
     }
   };
 
+  const handleTouchStart = (e) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    const touchEnd = e.changedTouches[0].clientX;
+    const diff = touchStart - touchEnd;
+
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && currentIndex < memories.length - 1) {
+        setCurrentIndex(prev => prev + 1);
+      } else if (diff < 0 && currentIndex > 0) {
+        setCurrentIndex(prev => prev - 1);
+      }
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      setTilt({
+        x: (x - 0.5) * 20,
+        y: (y - 0.5) * -20
+      });
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (cardRef.current && e.touches[0]) {
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = (e.touches[0].clientX - rect.left) / rect.width;
+      const y = (e.touches[0].clientY - rect.top) / rect.height;
+      setTilt({
+        x: (x - 0.5) * 20,
+        y: (y - 0.5) * -20
+      });
+    }
+  };
+
+  const handleCardClick = () => {
+    setIsFlipped(!isFlipped);
+  };
+
   const handleNext = () => {
     if (currentIndex < memories.length - 1) {
       setCurrentIndex(prev => prev + 1);
@@ -88,47 +137,48 @@ const MemoryGallery = ({ onComplete }) => {
           {String(currentIndex + 1).padStart(2, '0')} / {String(memories.length).padStart(2, '0')}
         </div>
 
-        <div className="table-setting">
-          {/* Photo frame on table */}
-          <div className="photo-frame">
-            <img 
-              src={currentMemory.photo_url} 
-              alt={`Memory ${currentIndex + 1}`}
-              loading="lazy"
-              className="table-photo"
-            />
-            {currentMemory.caption && (
-              <div className="photo-caption">{currentMemory.caption}</div>
-            )}
-          </div>
-
-          {/* Birthday card beside photo */}
-          <div className="birthday-card">
-            <div className="card-front-text">
-              <h3>Happy Birthday!</h3>
-              <p className="card-message">{currentMemory.message || 'You are amazing!'}</p>
-              {currentMemory.date && (
-                <div className="memory-date">{currentMemory.date}</div>
+        <div 
+          className="card-container"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onMouseMove={handleMouseMove}
+          onTouchMove={handleTouchMove}
+          onMouseLeave={() => setTilt({ x: 0, y: 0 })}
+        >
+          <div
+            ref={cardRef}
+            className={`memory-card ${isFlipped ? 'flipped' : ''}`}
+            onClick={handleCardClick}
+            style={{
+              transform: `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`
+            }}
+          >
+            <div className="card-front">
+              <img 
+                src={currentMemory.photo_url} 
+                alt={`Memory ${currentIndex + 1}`}
+                loading="lazy"
+              />
+              {currentMemory.caption && (
+                <div className="photo-caption">{currentMemory.caption}</div>
               )}
             </div>
-          </div>
-
-          {/* Music player */}
-          {music && (
-            <div className="music-player-mini">
-              <button 
-                className="music-toggle interactive-element"
-                onClick={toggleMusic}
-              >
-                {isPlaying ? '⏸️' : '▶️'}
-              </button>
-              <audio 
-                ref={audioRef}
-                src={music.audio_url}
-                loop
-              />
+            
+            <div className="card-back">
+              <div className="message-content">
+                <p className="message-text">{currentMemory.message || ''}</p>
+                {currentMemory.date && (
+                  <div className="memory-date">{currentMemory.date}</div>
+                )}
+                {currentMemory.location && (
+                  <div className="memory-location">📍 {currentMemory.location}</div>
+                )}
+                {currentMemory.hidden_note && (
+                  <div className="hidden-note">✨ {currentMemory.hidden_note}</div>
+                )}
+              </div>
             </div>
-          )}
+          </div>
         </div>
 
         <div className="navigation-buttons">
@@ -149,7 +199,7 @@ const MemoryGallery = ({ onComplete }) => {
         </div>
 
         <p className="hint-text">
-          Navigate through memories
+          {isFlipped ? "Tap to flip back" : "Tap to flip • Swipe to navigate"}
         </p>
       </div>
     </div>

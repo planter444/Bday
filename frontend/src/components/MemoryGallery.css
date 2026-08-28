@@ -39,100 +39,6 @@
   animation: slideUp 0.8s ease-out;
 }
 
-.table-setting {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  margin: 2rem 0;
-  padding: 2rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  animation: slideUp 1s ease-out;
-}
-
-.photo-frame {
-  position: relative;
-  padding: 10px;
-  background: linear-gradient(135deg, #8B4513, #654321);
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  transform: rotate(-2deg);
-}
-
-.table-photo {
-  width: 250px;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 5px;
-  display: block;
-}
-
-.photo-caption {
-  position: absolute;
-  bottom: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  font-size: 0.85rem;
-  white-space: nowrap;
-}
-
-.birthday-card {
-  background: linear-gradient(135deg, #fff5e6, #ffe4c4);
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  transform: rotate(3deg);
-  min-width: 200px;
-  max-width: 250px;
-}
-
-.card-front-text h3 {
-  color: var(--primary-accent);
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
-}
-
-.card-message {
-  color: #333;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin-bottom: 0.5rem;
-}
-
-.memory-date {
-  color: #666;
-  font-size: 0.8rem;
-  font-style: italic;
-}
-
-.music-player-mini {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-}
-
-.music-toggle {
-  background: var(--primary-accent);
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s;
-}
-
-.music-toggle:hover {
-  transform: scale(1.1);
-}
-
 .card-container {
   perspective: 1000px;
   margin: 0 auto 2rem;
@@ -140,7 +46,6 @@
   max-width: 350px;
   height: 450px;
   animation: slideUp 1s ease-out;
-  display: none; /* Hidden - using table-setting instead */
 }
 
 .memory-card {
@@ -295,26 +200,6 @@
 @media (max-width: 480px) {
   .gallery-title {
     font-size: 1.5rem;
-  }
-  
-  .table-setting {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  
-  .photo-frame {
-    transform: rotate(0deg);
-  }
-  
-  .table-photo {
-    width: 200px;
-    height: 160px;
-  }
-  
-  .birthday-card {
-    transform: rotate(0deg);
-    min-width: 180px;
   }
   
   .card-container {
