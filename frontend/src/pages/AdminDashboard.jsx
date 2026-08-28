@@ -78,7 +78,18 @@ const AdminDashboard = () => {
     }));
     // Save immediately
     api.put('/scenes', { scene_name: sceneName, enabled: !sceneSettings[sceneName] })
-      .catch(error => console.error('Failed to update scene:', error));
+      .then(() => {
+        // Success
+      })
+      .catch(error => {
+        console.error('Failed to update scene:', error);
+        alert('Failed to update scene: ' + (error.response?.data?.error || error.message));
+        // Revert on error
+        setSceneSettings(prev => ({
+          ...prev,
+          [sceneName]: prev[sceneName]
+        }));
+      });
   };
 
   if (loading) {
@@ -657,13 +668,24 @@ const AdminDashboard = () => {
                   </div>
                 ))}
               </div>
-              <button className="save-button" onClick={() => {
+              <button className="save-button" onClick={async () => {
                 // Save terminal lines
-                terminalLines.forEach(line => {
-                  api.put(`/terminal/lines/${line.id}`, line)
-                    .catch(error => console.error('Failed to save terminal line:', error));
+                const savePromises = terminalLines.map(line => {
+                  return api.put(`/terminal/lines/${line.id}`, line)
+                    .catch(error => {
+                      console.error('Failed to save terminal line:', error);
+                      return { error, line };
+                    });
                 });
-                alert('Terminal lines saved!');
+                
+                const results = await Promise.all(savePromises);
+                const errors = results.filter(r => r.error);
+                
+                if (errors.length > 0) {
+                  alert(`Failed to save ${errors.length} terminal line(s). Check console for details.`);
+                } else {
+                  alert('Terminal lines saved successfully!');
+                }
               }}>
                 Save Terminal Lines
               </button>
@@ -697,63 +719,16 @@ const AdminDashboard = () => {
                       <div className="form-group">
                         <label>Birthday Card Message</label>
                         <textarea
-                          value={memory.card_message || ''}
+                          value={memory.message || ''}
                           onChange={(e) => {
                             const updated = memories.map(m => 
-                              m.id === memory.id ? { ...m, card_message: e.target.value } : m
+                              m.id === memory.id ? { ...m, message: e.target.value } : m
                             );
                             setMemories(updated);
                           }}
                           placeholder="Personal message for this memory"
                           rows={3}
                         />
-                      </div>
-                      <div className="form-group">
-                        <label>Card Style</label>
-                        <select
-                          value={memory.card_style || 'classic'}
-                          onChange={(e) => {
-                            const updated = memories.map(m => 
-                              m.id === memory.id ? { ...m, card_style: e.target.value } : m
-                            );
-                            setMemories(updated);
-                          }}
-                        >
-                          <option value="classic">Classic</option>
-                          <option value="modern">Modern</option>
-                          <option value="elegant">Elegant</option>
-                          <option value="minimal">Minimal</option>
-                        </select>
-                      </div>
-                      <div className="form-group">
-                        <label>Background Color</label>
-                        <input
-                          type="color"
-                          value={memory.background_color || '#1a1a2e'}
-                          onChange={(e) => {
-                            const updated = memories.map(m => 
-                              m.id === memory.id ? { ...m, background_color: e.target.value } : m
-                            );
-                            setMemories(updated);
-                          }}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Animation Type</label>
-                        <select
-                          value={memory.animation_type || 'fade'}
-                          onChange={(e) => {
-                            const updated = memories.map(m => 
-                              m.id === memory.id ? { ...m, animation_type: e.target.value } : m
-                            );
-                            setMemories(updated);
-                          }}
-                        >
-                          <option value="fade">Fade In</option>
-                          <option value="slide">Slide</option>
-                          <option value="zoom">Zoom</option>
-                          <option value="none">None</option>
-                        </select>
                       </div>
                       <div className="form-group">
                         <label>Music URL</label>
@@ -769,49 +744,6 @@ const AdminDashboard = () => {
                           placeholder="https://..."
                         />
                       </div>
-                      <div className="form-group">
-                        <label>Music Volume</label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="1"
-                          step="0.1"
-                          value={memory.music_volume || 0.7}
-                          onChange={(e) => {
-                            const updated = memories.map(m => 
-                              m.id === memory.id ? { ...m, music_volume: parseFloat(e.target.value) } : m
-                            );
-                            setMemories(updated);
-                          }}
-                        />
-                        <span>{Math.round((memory.music_volume || 0.7) * 100)}%</span>
-                      </div>
-                      <label className="checkbox-label">
-                        <input
-                          type="checkbox"
-                          checked={memory.music_loop !== false}
-                          onChange={(e) => {
-                            const updated = memories.map(m => 
-                              m.id === memory.id ? { ...m, music_loop: e.target.checked } : m
-                            );
-                            setMemories(updated);
-                          }}
-                        />
-                        Loop Music
-                      </label>
-                      <label className="checkbox-label">
-                        <input
-                          type="checkbox"
-                          checked={memory.enabled !== false}
-                          onChange={(e) => {
-                            const updated = memories.map(m => 
-                              m.id === memory.id ? { ...m, enabled: e.target.checked } : m
-                            );
-                            setMemories(updated);
-                          }}
-                        />
-                        Enabled
-                      </label>
                       <button className="delete-button" onClick={() => {
                         if (confirm('Delete this memory page?')) {
                           api.delete(`/memories/${memory.id}`)

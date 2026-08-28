@@ -11,16 +11,15 @@ const getMemoryPages = async (req, res) => {
   try {
     const { data: memories, error } = await supabase
       .from('memories')
-      .select('*');
+      .select('*')
+      .order('created_at', { ascending: true });
     
     if (error) {
       // Return empty array if table doesn't exist
       return res.json([]);
     }
     
-    // Filter out inactive memories if the column exists
-    const activeMemories = memories.filter(m => m.is_active !== false);
-    res.json(activeMemories);
+    res.json(memories || []);
   } catch (error) {
     console.error('Get memory pages error:', error);
     // Return empty array on error
@@ -423,7 +422,7 @@ const setMemoryMusicUrl = async (req, res) => {
 // Create new memory page with file uploads
 const createMemoryPageWithFiles = async (req, res) => {
   try {
-    const { title, card_message, music_volume, music_loop } = req.body;
+    const { title, message } = req.body;
     const photoFile = req.files?.photo?.[0];
     const musicFile = req.files?.music?.[0];
 
@@ -481,14 +480,14 @@ const createMemoryPageWithFiles = async (req, res) => {
       musicUrl = publicUrl;
     }
 
-    // Create memory page with only basic fields that definitely exist
+    // Create memory page with only basic fields that exist in production database
     const memoryData = {
       title: title || 'Memory',
       photo_url: photoUrl,
-      message: card_message || ''
+      message: message || ''
     };
 
-    // Only add music fields if music was uploaded
+    // Only add music URL if music was uploaded
     if (musicUrl) {
       memoryData.music_url = musicUrl;
     }

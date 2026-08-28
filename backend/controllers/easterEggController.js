@@ -34,15 +34,32 @@ const updateEasterEggConfig = async (req, res) => {
   try {
     const updates = req.body;
     
-    const { data: easterEgg, error } = await supabase
+    // Check if easter egg config exists
+    const { data: existing } = await supabase
       .from('easter_egg')
-      .update(updates)
-      .select()
+      .select('id')
+      .limit(1)
       .single();
     
-    if (error) throw error;
+    let result;
+    if (existing) {
+      result = await supabase
+        .from('easter_egg')
+        .update(updates)
+        .eq('id', existing.id)
+        .select()
+        .single();
+    } else {
+      result = await supabase
+        .from('easter_egg')
+        .insert([updates])
+        .select()
+        .single();
+    }
     
-    res.json({ message: 'Easter egg configuration updated successfully', easterEgg });
+    if (result.error) throw result.error;
+    
+    res.json({ message: 'Easter egg configuration updated successfully', easterEgg: result.data });
   } catch (error) {
     console.error('Update Easter egg config error:', error);
     res.status(500).json({ error: 'Failed to update Easter egg configuration' });

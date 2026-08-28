@@ -133,15 +133,32 @@ const updateSceneMusic = async (req, res) => {
     if (music_loop !== undefined) updates[columns.loop] = music_loop;
     if (music_enabled !== undefined) updates[columns.enabled] = music_enabled;
 
-    const { data: config, error } = await supabase
+    // Check if config exists
+    const { data: existing } = await supabase
       .from('site_config')
-      .update(updates)
-      .select()
+      .select('id')
+      .limit(1)
       .single();
+    
+    let result;
+    if (existing) {
+      result = await supabase
+        .from('site_config')
+        .update(updates)
+        .eq('id', existing.id)
+        .select()
+        .single();
+    } else {
+      result = await supabase
+        .from('site_config')
+        .insert([updates])
+        .select()
+        .single();
+    }
 
-    if (error) throw error;
+    if (result.error) throw result.error;
 
-    res.json({ message: 'Scene music updated successfully', config });
+    res.json({ message: 'Scene music updated successfully', config: result.data });
   } catch (error) {
     console.error('Update scene music error:', error);
     res.status(500).json({ error: 'Failed to update scene music' });
@@ -195,13 +212,30 @@ const uploadSceneMusic = async (req, res) => {
       return res.status(400).json({ error: 'Invalid scene name' });
     }
 
-    const { data: config, error } = await supabase
+    // Check if config exists
+    const { data: existing } = await supabase
       .from('site_config')
-      .update({ [column]: publicUrl })
-      .select()
+      .select('id')
+      .limit(1)
       .single();
+    
+    let result;
+    if (existing) {
+      result = await supabase
+        .from('site_config')
+        .update({ [column]: publicUrl })
+        .eq('id', existing.id)
+        .select()
+        .single();
+    } else {
+      result = await supabase
+        .from('site_config')
+        .insert([{ [column]: publicUrl }])
+        .select()
+        .single();
+    }
 
-    if (error) throw error;
+    if (result.error) throw result.error;
 
     res.json({ message: 'Scene music uploaded successfully', music_url: publicUrl });
   } catch (error) {

@@ -15,6 +15,9 @@ const memoryRoutes = require('./routes/memories');
 
 const app = express();
 
+// Trust proxy for Render/production environments
+app.set('trust proxy', true);
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: false, // Disable CSP for development
@@ -23,13 +26,20 @@ app.use(helmet({
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
+  trustProxy: true, // Required for Render/production
+  standardHeaders: true, // Return rate limit info in headers
+  legacyHeaders: false,
 });
 app.use('/api/', limiter);
 
 // CORS configuration
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',') 
+  : ['https://belindawilliams.netlify.app', 'http://localhost:3000'];
+
 app.use(cors({
-  origin: ['https://belindawilliams.netlify.app', 'http://localhost:3000'],
+  origin: allowedOrigins,
   credentials: true
 }));
 

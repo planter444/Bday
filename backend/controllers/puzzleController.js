@@ -50,6 +50,7 @@ const updatePuzzleConfig = async (req, res) => {
       result = await supabase
         .from('puzzle_config')
         .update(updates)
+        .eq('id', existing.id)
         .select()
         .single();
     } else {

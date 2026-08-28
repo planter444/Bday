@@ -53,15 +53,32 @@ const updateSceneSetting = async (req, res) => {
   try {
     const { scene_name, enabled } = req.body;
     
-    const { data: scene, error } = await supabase
+    // Check if scene exists
+    const { data: existing } = await supabase
       .from('scenes')
-      .upsert({ scene_name, enabled: enabled !== false })
-      .select()
+      .select('id')
+      .eq('scene_name', scene_name)
       .single();
     
-    if (error) throw error;
+    let result;
+    if (existing) {
+      result = await supabase
+        .from('scenes')
+        .update({ enabled: enabled !== false })
+        .eq('id', existing.id)
+        .select()
+        .single();
+    } else {
+      result = await supabase
+        .from('scenes')
+        .insert([{ scene_name, enabled: enabled !== false }])
+        .select()
+        .single();
+    }
     
-    res.json({ message: 'Scene setting updated successfully', scene });
+    if (result.error) throw result.error;
+    
+    res.json({ message: 'Scene setting updated successfully', scene: result.data });
   } catch (error) {
     console.error('Update scene setting error:', error);
     res.status(500).json({ error: 'Failed to update scene setting' });

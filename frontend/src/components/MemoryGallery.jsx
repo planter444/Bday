@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './MemoryGallery.css';
 
-const MemoryGallery = ({ onComplete, onBack }) => {
+const MemoryGallery = ({ onComplete }) => {
   const [memories, setMemories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -15,9 +15,9 @@ const MemoryGallery = ({ onComplete, onBack }) => {
 
   const fetchMemories = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/media/memories`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/memories`);
       const data = await response.json();
-      setMemories(data.filter(memory => memory.enabled));
+      setMemories(data.filter(memory => memory.enabled !== false));
     } catch (error) {
       console.error('Failed to fetch memories:', error);
     }
@@ -130,23 +130,14 @@ const MemoryGallery = ({ onComplete, onBack }) => {
                 alt={`Memory ${currentIndex + 1}`}
                 loading="lazy"
               />
-              {currentMemory.caption && (
-                <div className="photo-caption">{currentMemory.caption}</div>
+              {currentMemory.title && (
+                <div className="photo-caption">{currentMemory.title}</div>
               )}
             </div>
             
             <div className="card-back">
               <div className="message-content">
-                <p className="message-text">{currentMemory.message}</p>
-                {currentMemory.date && (
-                  <div className="memory-date">{currentMemory.date}</div>
-                )}
-                {currentMemory.location && (
-                  <div className="memory-location">📍 {currentMemory.location}</div>
-                )}
-                {currentMemory.hidden_note && (
-                  <div className="hidden-note">✨ {currentMemory.hidden_note}</div>
-                )}
+                <p className="message-text">{currentMemory.message || ''}</p>
               </div>
             </div>
           </div>
