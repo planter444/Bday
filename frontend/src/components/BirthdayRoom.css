@@ -387,7 +387,11 @@
   flex-shrink: 0;
   position: relative;
   z-index: 100;
-  pointer-events: auto;
+  pointer-events: auto !important;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  min-height: 48px;
+  min-width: 120px;
 }
 
 .continue-button:hover {

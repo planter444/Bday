@@ -153,8 +153,7 @@ const MatchingGame = ({ onComplete }) => {
               onPointerDown={(e) => handlePointerDown(e, emoji)}
               style={{ cursor: isMatched(emoji) ? 'not-allowed' : 'grab' }}
             >
-              {emoji.emoji}
-              {isMatched(emoji) && <span className="match-check">✓</span>}
+              {!isMatched(emoji) && emoji.emoji}
             </div>
           ))}
         </div>
@@ -175,8 +174,7 @@ const MatchingGame = ({ onComplete }) => {
               onPointerDown={(e) => handlePointerDown(e, emoji)}
               style={{ cursor: isMatched(emoji) ? 'not-allowed' : 'grab' }}
             >
-              {emoji.emoji}
-              {isMatched(emoji) && <span className="match-check">✓</span>}
+              {!isMatched(emoji) && emoji.emoji}
             </div>
           ))}
         </div>

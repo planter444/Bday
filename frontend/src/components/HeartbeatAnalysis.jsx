@@ -6,6 +6,7 @@ const HeartbeatAnalysis = ({ onComplete, config }) => {
   const [terminalLines, setTerminalLines] = useState([]);
   const [memories, setMemories] = useState([]);
   const [showHeart, setShowHeart] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -64,8 +65,18 @@ const HeartbeatAnalysis = ({ onComplete, config }) => {
       const showNextLine = () => {
         if (currentLine < lines.length) {
           setTerminalLines(prev => [...prev, lines[currentLine]]);
-          currentLine++;
-          setTimeout(showNextLine, lines[currentLine - 1].delay);
+          
+          // If this is the final line, show fireworks immediately
+          if (lines[currentLine].isFinal) {
+            setShowFireworks(true);
+            // Wait 5 seconds after final line before transitioning to final page
+            setTimeout(() => {
+              onComplete();
+            }, 5000);
+          } else {
+            currentLine++;
+            setTimeout(showNextLine, lines[currentLine - 1].delay);
+          }
         } else {
           // After terminal sequence, fetch memories and show heart
           fetchMemories();
@@ -137,7 +148,7 @@ const HeartbeatAnalysis = ({ onComplete, config }) => {
                 {line.text}
               </div>
             ))}
-            {terminalLines.some(line => line.isFinal) && (
+            {showFireworks && (
               <div className="fireworks-container">
                 {[...Array(30)].map((_, i) => (
                   <div

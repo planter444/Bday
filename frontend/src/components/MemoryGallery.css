@@ -315,36 +315,44 @@
   .gallery-title {
     font-size: 1.5rem;
   }
-  
+
   .table-setting {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
+    width: 70%;
+    max-width: 70vw;
   }
-  
+
   .photo-frame {
     transform: rotate(0deg);
+    width: 100%;
+    padding: 8px;
   }
-  
+
   .table-photo {
-    width: 200px;
-    height: 160px;
+    width: 100%;
+    height: 70vh;
+    max-height: 70vh;
+    object-fit: cover;
   }
-  
+
   .birthday-card {
     transform: rotate(0deg);
     min-width: 180px;
+    width: 100%;
+    padding: 1rem;
   }
-  
+
   .card-container {
     max-width: 300px;
     height: 400px;
   }
-  
+
   .message-text {
     font-size: 1rem;
   }
-  
+
   .nav-button {
     width: 45px;
     height: 45px;
