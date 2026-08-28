@@ -28,7 +28,7 @@ app.use('/api/', limiter);
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
+  origin: ['https://belindawilliams.netlify.app', 'http://localhost:3000'],
   credentials: true
 }));
 
