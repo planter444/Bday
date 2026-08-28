@@ -1,8 +1,0 @@
-Remove console logs and fix terminalLines placement
-
-- Remove all console.log statements for cleaner code
-- Keep terminalLines inside component (the eslint-disable works)
-
-Generated with [Devin](https://devin.ai)
-
-Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>

@@ -97,25 +97,54 @@ const updateMemoryPage = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
     
-    // Only include fields that likely exist in the schema
-    const safeUpdates = {};
-    if (updates.title !== undefined) safeUpdates.title = updates.title;
-    if (updates.photo_url !== undefined) safeUpdates.photo_url = updates.photo_url;
-    if (updates.message !== undefined) safeUpdates.message = updates.message;
-    if (updates.music_url !== undefined) safeUpdates.music_url = updates.music_url;
+    // Only update title if it exists
+    if (updates.title !== undefined) {
+      const { error } = await supabase
+        .from('memories')
+        .update({ title: updates.title })
+        .eq('id', id);
+      
+      if (error) throw error;
+    }
     
+    // Update photo_url if it exists
+    if (updates.photo_url !== undefined) {
+      const { error } = await supabase
+        .from('memories')
+        .update({ photo_url: updates.photo_url })
+        .eq('id', id);
+      
+      if (error) throw error;
+    }
+    
+    // Update message if it exists
+    if (updates.message !== undefined) {
+      const { error } = await supabase
+        .from('memories')
+        .update({ message: updates.message })
+        .eq('id', id);
+      
+      if (error) throw error;
+    }
+    
+    // Update music_url if it exists
+    if (updates.music_url !== undefined) {
+      const { error } = await supabase
+        .from('memories')
+        .update({ music_url: updates.music_url })
+        .eq('id', id);
+      
+      if (error) throw error;
+    }
+    
+    // Fetch updated memory
     const { data: memory, error } = await supabase
       .from('memories')
-      .update(safeUpdates)
+      .select('*')
       .eq('id', id)
-      .select()
       .single();
     
     if (error) throw error;
-    
-    if (!memory) {
-      return res.status(404).json({ error: 'Memory page not found' });
-    }
     
     res.json({ message: 'Memory page updated successfully', memory });
   } catch (error) {

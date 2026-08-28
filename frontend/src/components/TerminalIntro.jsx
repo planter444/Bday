@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './TerminalIntro.css';
 
+const terminalLines = [
+  { text: '> initializing birthday.exe...', delay: 800, typing_speed: 50 },
+  { text: '> identifying user...', delay: 800, typing_speed: 50 },
+  { text: '> BELINDA', delay: 800, typing_speed: 50 },
+  { text: '> today is your birthday 🎂', delay: 800, typing_speed: 50 },
+  { text: '> loading... but the magic...', delay: 500, typing_speed: 50, showProgress: true },
+];
+
 const TerminalIntro = ({ onComplete, config }) => {
-  const [lines, setLines] = useState([]);
+  const [lines, setLines] = useState([{ text: '> initializing birthday.exe...' }]);
   const [showProgress, setShowProgress] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showSpinner, setShowSpinner] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
 
   const transitionDelay = config?.intro_transition_delay || 4;
-
-  const terminalLines = [
-    { text: '> initializing birthday.exe...', delay: 800, typing_speed: 50 },
-    { text: '> identifying user...', delay: 800, typing_speed: 50 },
-    { text: '> BELINDA', delay: 800, typing_speed: 50 },
-    { text: '> today is your birthday 🎂', delay: 800, typing_speed: 50 },
-    { text: '> loading... but the magic...', delay: 500, typing_speed: 50, showProgress: true },
-  ];
 
   const animateProgress = useCallback(() => {
     let currentProgress = 0;
