@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './MemoryGallery.css';
 
+// Helper function to adjust color brightness for gradient
+const adjustColor = (color, amount) => {
+  const hex = color.replace('#', '');
+  const num = parseInt(hex, 16);
+  const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+  const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amount));
+  const b = Math.min(255, Math.max(0, (num & 0x0000FF) + amount));
+  return `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+};
+
 const MemoryGallery = ({ onComplete }) => {
   const [memories, setMemories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -107,7 +117,13 @@ const MemoryGallery = ({ onComplete }) => {
 
         <div className="table-setting">
           {/* Photo frame on table */}
-          <div className={`photo-frame ${currentMemory.orientation === 'landscape' ? 'landscape' : 'portrait'}`} key={currentIndex}>
+          <div 
+            className={`photo-frame ${currentMemory.orientation === 'landscape' ? 'landscape' : 'portrait'}`} 
+            key={currentIndex}
+            style={{
+              background: currentMemory.frame_color ? `linear-gradient(135deg, ${currentMemory.frame_color}, ${adjustColor(currentMemory.frame_color, -30)})` : undefined
+            }}
+          >
             <img 
               src={currentMemory.photo_url} 
               alt={`Memory ${currentIndex + 1}`}
@@ -120,8 +136,19 @@ const MemoryGallery = ({ onComplete }) => {
           </div>
 
           {/* Birthday card beside photo */}
-          <div className="birthday-card">
-            <div className="card-front-text">
+          <div 
+            className="birthday-card"
+            style={{
+              background: currentMemory.card_color || undefined,
+              fontFamily: currentMemory.card_font || undefined
+            }}
+          >
+            <div 
+              className="card-front-text"
+              style={{
+                color: currentMemory.card_text_color || undefined
+              }}
+            >
               <h3>Happy Birthday!</h3>
               <p className="card-message">{currentMemory.message || 'You are amazing!'}</p>
               {currentMemory.date && (

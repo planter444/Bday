@@ -760,6 +760,64 @@ const AdminDashboard = () => {
                         </select>
                         <small>Only affects mobile display. Desktop unchanged.</small>
                       </div>
+                      <div className="form-group">
+                        <label>Frame Color</label>
+                        <input
+                          type="color"
+                          value={memory.frame_color || '#8B4513'}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, frame_color: e.target.value } : m
+                            );
+                            setMemories(updated);
+                          }}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Card Background Color</label>
+                        <input
+                          type="color"
+                          value={memory.card_color || '#fff5e6'}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, card_color: e.target.value } : m
+                            );
+                            setMemories(updated);
+                          }}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Card Font</label>
+                        <select
+                          value={memory.card_font || 'Arial'}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, card_font: e.target.value } : m
+                            );
+                            setMemories(updated);
+                          }}
+                        >
+                          <option value="Arial">Arial</option>
+                          <option value="Georgia">Georgia</option>
+                          <option value="Times New Roman">Times New Roman</option>
+                          <option value="Courier New">Courier New</option>
+                          <option value="Verdana">Verdana</option>
+                          <option value="Comic Sans MS">Comic Sans MS</option>
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label>Card Text Color</label>
+                        <input
+                          type="color"
+                          value={memory.card_text_color || '#333'}
+                          onChange={(e) => {
+                            const updated = memories.map(m => 
+                              m.id === memory.id ? { ...m, card_text_color: e.target.value } : m
+                            );
+                            setMemories(updated);
+                          }}
+                        />
+                      </div>
                       <button className="delete-button" onClick={() => {
                         if (confirm('Delete this memory page?')) {
                           api.delete(`/memories/${memory.id}`)
@@ -840,6 +898,43 @@ const AdminDashboard = () => {
                   </select>
                   <small>Only affects mobile display. Desktop unchanged.</small>
                 </div>
+                <div className="form-group">
+                  <label>Frame Color</label>
+                  <input
+                    type="color"
+                    id="new-memory-frame-color"
+                    value="#8B4513"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Card Background Color</label>
+                  <input
+                    type="color"
+                    id="new-memory-card-color"
+                    value="#fff5e6"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Card Font</label>
+                  <select
+                    id="new-memory-card-font"
+                  >
+                    <option value="Arial">Arial</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Comic Sans MS">Comic Sans MS</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Card Text Color</label>
+                  <input
+                    type="color"
+                    id="new-memory-card-text-color"
+                    value="#333"
+                  />
+                </div>
                 <div className="form-buttons">
                   <button className="add-button" onClick={() => {
                     const title = document.getElementById('new-memory-title').value;
@@ -847,6 +942,10 @@ const AdminDashboard = () => {
                     const message = document.getElementById('new-memory-message').value;
                     const musicFile = document.getElementById('new-memory-music').files[0];
                     const orientation = document.getElementById('new-memory-orientation').value;
+                    const frameColor = document.getElementById('new-memory-frame-color').value;
+                    const cardColor = document.getElementById('new-memory-card-color').value;
+                    const cardFont = document.getElementById('new-memory-card-font').value;
+                    const cardTextColor = document.getElementById('new-memory-card-text-color').value;
 
                     if (!title) {
                       alert('Please enter a title');
@@ -857,6 +956,10 @@ const AdminDashboard = () => {
                     formData.append('title', title);
                     formData.append('message', message);
                     formData.append('orientation', orientation);
+                    formData.append('frame_color', frameColor);
+                    formData.append('card_color', cardColor);
+                    formData.append('card_font', cardFont);
+                    formData.append('card_text_color', cardTextColor);
                     if (photoFile) formData.append('photo', photoFile);
                     if (musicFile) formData.append('music', musicFile);
 
@@ -870,6 +973,10 @@ const AdminDashboard = () => {
                         document.getElementById('new-memory-message').value = '';
                         document.getElementById('new-memory-music').value = '';
                         document.getElementById('new-memory-orientation').value = 'portrait';
+                        document.getElementById('new-memory-frame-color').value = '#8B4513';
+                        document.getElementById('new-memory-card-color').value = '#fff5e6';
+                        document.getElementById('new-memory-card-font').value = 'Arial';
+                        document.getElementById('new-memory-card-text-color').value = '#333';
                         alert('Memory page created successfully!');
                       })
                       .catch(error => {
@@ -885,6 +992,10 @@ const AdminDashboard = () => {
                     const message = document.getElementById('new-memory-message').value;
                     const musicFile = document.getElementById('new-memory-music').files[0];
                     const orientation = document.getElementById('new-memory-orientation').value;
+                    const frameColor = document.getElementById('new-memory-frame-color').value;
+                    const cardColor = document.getElementById('new-memory-card-color').value;
+                    const cardFont = document.getElementById('new-memory-card-font').value;
+                    const cardTextColor = document.getElementById('new-memory-card-text-color').value;
 
                     if (!title) {
                       alert('Please enter a title');
@@ -895,6 +1006,10 @@ const AdminDashboard = () => {
                     formData.append('title', title);
                     formData.append('message', message);
                     formData.append('orientation', orientation);
+                    formData.append('frame_color', frameColor);
+                    formData.append('card_color', cardColor);
+                    formData.append('card_font', cardFont);
+                    formData.append('card_text_color', cardTextColor);
                     if (photoFile) formData.append('photo', photoFile);
                     if (musicFile) formData.append('music', musicFile);
 
@@ -908,6 +1023,10 @@ const AdminDashboard = () => {
                         document.getElementById('new-memory-message').value = '';
                         document.getElementById('new-memory-music').value = '';
                         document.getElementById('new-memory-orientation').value = 'portrait';
+                        document.getElementById('new-memory-frame-color').value = '#8B4513';
+                        document.getElementById('new-memory-card-color').value = '#fff5e6';
+                        document.getElementById('new-memory-card-font').value = 'Arial';
+                        document.getElementById('new-memory-card-text-color').value = '#333';
                         alert('Memory page created successfully! Ready for next one.');
                       })
                       .catch(error => {

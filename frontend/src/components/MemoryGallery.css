@@ -444,8 +444,8 @@
   }
 
   .photo-frame.portrait .table-photo {
-    height: 35vh;
-    max-height: 35vh;
+    height: 42vh;
+    max-height: 42vh;
     object-fit: contain;
   }
 
@@ -455,8 +455,8 @@
   }
 
   .photo-frame.landscape .table-photo {
-    height: 25vh;
-    max-height: 25vh;
+    height: 30vh;
+    max-height: 30vh;
     object-fit: contain;
   }
 }
