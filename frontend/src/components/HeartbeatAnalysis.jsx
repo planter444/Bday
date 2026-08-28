@@ -57,7 +57,7 @@ const HeartbeatAnalysis = ({ onComplete, config }) => {
 
   const fetchMemories = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/memories`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/media/memories`);
       const data = await response.json();
       setMemories(data.filter(memory => memory.enabled !== false && memory.photo_url));
       

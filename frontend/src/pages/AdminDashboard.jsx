@@ -706,10 +706,10 @@ const AdminDashboard = () => {
                         <label>Page Title</label>
                         <input
                           type="text"
-                          value={memory.title || ''}
+                          value={memory.caption || ''}
                           onChange={(e) => {
                             const updated = memories.map(m => 
-                              m.id === memory.id ? { ...m, title: e.target.value } : m
+                              m.id === memory.id ? { ...m, caption: e.target.value } : m
                             );
                             setMemories(updated);
                           }}

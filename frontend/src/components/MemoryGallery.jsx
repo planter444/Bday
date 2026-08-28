@@ -15,7 +15,7 @@ const MemoryGallery = ({ onComplete }) => {
 
   const fetchMemories = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/memories`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/media/memories`);
       const data = await response.json();
       setMemories(data.filter(memory => memory.enabled !== false));
     } catch (error) {
@@ -130,14 +130,23 @@ const MemoryGallery = ({ onComplete }) => {
                 alt={`Memory ${currentIndex + 1}`}
                 loading="lazy"
               />
-              {currentMemory.title && (
-                <div className="photo-caption">{currentMemory.title}</div>
+              {currentMemory.caption && (
+                <div className="photo-caption">{currentMemory.caption}</div>
               )}
             </div>
             
             <div className="card-back">
               <div className="message-content">
                 <p className="message-text">{currentMemory.message || ''}</p>
+                {currentMemory.date && (
+                  <div className="memory-date">{currentMemory.date}</div>
+                )}
+                {currentMemory.location && (
+                  <div className="memory-location">📍 {currentMemory.location}</div>
+                )}
+                {currentMemory.hidden_note && (
+                  <div className="hidden-note">✨ {currentMemory.hidden_note}</div>
+                )}
               </div>
             </div>
           </div>

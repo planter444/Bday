@@ -96,43 +96,43 @@ const updateMemoryPage = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
     
-    // Only update title if it exists
-    if (updates.title !== undefined) {
+    // Map frontend field names to database column names
+    const dbUpdates = {};
+    if (updates.title !== undefined) dbUpdates.caption = updates.title;
+    if (updates.photo_url !== undefined) dbUpdates.photo_url = updates.photo_url;
+    if (updates.message !== undefined) dbUpdates.message = updates.message;
+    if (updates.music_url !== undefined) dbUpdates.music_url = updates.music_url;
+    
+    // Update each field individually
+    if (dbUpdates.caption !== undefined) {
       const { error } = await supabase
         .from('memories')
-        .update({ title: updates.title })
+        .update({ caption: dbUpdates.caption })
         .eq('id', id);
-      
       if (error) throw error;
     }
     
-    // Update photo_url if it exists
-    if (updates.photo_url !== undefined) {
+    if (dbUpdates.photo_url !== undefined) {
       const { error } = await supabase
         .from('memories')
-        .update({ photo_url: updates.photo_url })
+        .update({ photo_url: dbUpdates.photo_url })
         .eq('id', id);
-      
       if (error) throw error;
     }
     
-    // Update message if it exists
-    if (updates.message !== undefined) {
+    if (dbUpdates.message !== undefined) {
       const { error } = await supabase
         .from('memories')
-        .update({ message: updates.message })
+        .update({ message: dbUpdates.message })
         .eq('id', id);
-      
       if (error) throw error;
     }
     
-    // Update music_url if it exists
-    if (updates.music_url !== undefined) {
+    if (dbUpdates.music_url !== undefined) {
       const { error } = await supabase
         .from('memories')
-        .update({ music_url: updates.music_url })
+        .update({ music_url: dbUpdates.music_url })
         .eq('id', id);
-      
       if (error) throw error;
     }
     
@@ -444,6 +444,7 @@ const createMemoryPageWithFiles = async (req, res) => {
 
     // Upload photo if provided
     let photoUrl = null;
+    let storagePath = null;
     if (photoFile) {
       const fileName = `photos/memory-${Date.now()}-${photoFile.originalname}`;
       const { error: uploadError } = await supabase.storage
@@ -459,6 +460,7 @@ const createMemoryPageWithFiles = async (req, res) => {
         .from('birthday-media')
         .getPublicUrl(fileName);
       photoUrl = publicUrl;
+      storagePath = fileName;
     }
 
     // Upload music if provided
@@ -480,11 +482,14 @@ const createMemoryPageWithFiles = async (req, res) => {
       musicUrl = publicUrl;
     }
 
-    // Create memory page with only basic fields that exist in production database
+    // Create memory page - match existing database schema
     const memoryData = {
-      title: title || 'Memory',
       photo_url: photoUrl,
-      message: message || ''
+      storage_path: storagePath,
+      caption: title || 'Memory',
+      message: message || '',
+      order_index: 0,
+      enabled: true
     };
 
     // Only add music URL if music was uploaded
