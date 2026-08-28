@@ -20,7 +20,6 @@ const BirthdayExperienceWrapper = () => {
   const location = useLocation();
   const [config, setConfig] = useState(null);
   const [configLoaded, setConfigLoaded] = useState(false);
-  const [introTimerComplete, setIntroTimerComplete] = useState(false);
 
   useEffect(() => {
     fetchConfig();
@@ -39,25 +38,17 @@ const BirthdayExperienceWrapper = () => {
     }
   };
 
-  // Start minimum 4-second timer
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIntroTimerComplete(true);
-    }, 4000);
-    return () => clearTimeout(timer);
-  }, []);
-
   const advanceScene = (nextPath) => {
     navigate(nextPath);
   };
 
-  // Show loading screen at root or if loading
-  if ((location.pathname === '/' || location.pathname === '/birthday' || location.pathname === '/birthday/') && (!configLoaded || !introTimerComplete)) {
+  // Show loading screen at root while loading
+  if ((location.pathname === '/' || location.pathname === '/birthday' || location.pathname === '/birthday/') && !configLoaded) {
     return <LoadingScreen onComplete={() => navigate('/birthday/initializing')} config={config} />;
   }
 
-  // If we're on a birthday route but config is not loaded, show loading
-  if (location.pathname.startsWith('/birthday') && !configLoaded) {
+  // After loading, redirect to initializing if still on root
+  if ((location.pathname === '/' || location.pathname === '/birthday' || location.pathname === '/birthday/') && configLoaded) {
     return <LoadingScreen onComplete={() => navigate('/birthday/initializing')} config={config} />;
   }
 

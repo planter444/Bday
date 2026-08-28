@@ -882,41 +882,78 @@ const AdminDashboard = () => {
                     accept="audio/*"
                   />
                 </div>
-                <button className="add-button" onClick={() => {
-                  const title = document.getElementById('new-memory-title').value;
-                  const photoFile = document.getElementById('new-memory-photo').files[0];
-                  const message = document.getElementById('new-memory-message').value;
-                  const musicFile = document.getElementById('new-memory-music').files[0];
+                <div className="form-buttons">
+                  <button className="add-button" onClick={() => {
+                    const title = document.getElementById('new-memory-title').value;
+                    const photoFile = document.getElementById('new-memory-photo').files[0];
+                    const message = document.getElementById('new-memory-message').value;
+                    const musicFile = document.getElementById('new-memory-music').files[0];
 
-                  if (!title) {
-                    alert('Please enter a title');
-                    return;
-                  }
+                    if (!title) {
+                      alert('Please enter a title');
+                      return;
+                    }
 
-                  const formData = new FormData();
-                  formData.append('title', title);
-                  formData.append('card_message', message);
-                  if (photoFile) formData.append('photo', photoFile);
-                  if (musicFile) formData.append('music', musicFile);
+                    const formData = new FormData();
+                    formData.append('title', title);
+                    formData.append('card_message', message);
+                    if (photoFile) formData.append('photo', photoFile);
+                    if (musicFile) formData.append('music', musicFile);
 
-                  api.post('/memories/with-files', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                  })
-                    .then(response => {
-                      setMemories([...memories, response.data]);
-                      document.getElementById('new-memory-title').value = '';
-                      document.getElementById('new-memory-photo').value = '';
-                      document.getElementById('new-memory-message').value = '';
-                      document.getElementById('new-memory-music').value = '';
-                      alert('Memory page created successfully!');
+                    api.post('/memories/with-files', formData, {
+                      headers: { 'Content-Type': 'multipart/form-data' }
                     })
-                    .catch(error => {
-                      console.error('Failed to create memory:', error);
-                      alert('Failed to create memory: ' + (error.response?.data?.error || error.message));
-                    });
-                }}>
-                  Create Memory Page
-                </button>
+                      .then(response => {
+                        setMemories([...memories, response.data]);
+                        document.getElementById('new-memory-title').value = '';
+                        document.getElementById('new-memory-photo').value = '';
+                        document.getElementById('new-memory-message').value = '';
+                        document.getElementById('new-memory-music').value = '';
+                        alert('Memory page created successfully!');
+                      })
+                      .catch(error => {
+                        console.error('Failed to create memory:', error);
+                        alert('Failed to create memory: ' + (error.response?.data?.error || error.message));
+                      });
+                  }}>
+                    Create Memory Page
+                  </button>
+                  <button className="secondary-button" onClick={() => {
+                    const title = document.getElementById('new-memory-title').value;
+                    const photoFile = document.getElementById('new-memory-photo').files[0];
+                    const message = document.getElementById('new-memory-message').value;
+                    const musicFile = document.getElementById('new-memory-music').files[0];
+
+                    if (!title) {
+                      alert('Please enter a title');
+                      return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('title', title);
+                    formData.append('card_message', message);
+                    if (photoFile) formData.append('photo', photoFile);
+                    if (musicFile) formData.append('music', musicFile);
+
+                    api.post('/memories/with-files', formData, {
+                      headers: { 'Content-Type': 'multipart/form-data' }
+                    })
+                      .then(response => {
+                        setMemories([...memories, response.data]);
+                        document.getElementById('new-memory-title').value = '';
+                        document.getElementById('new-memory-photo').value = '';
+                        document.getElementById('new-memory-message').value = '';
+                        document.getElementById('new-memory-music').value = '';
+                        alert('Memory page created successfully! Ready for next one.');
+                      })
+                      .catch(error => {
+                        console.error('Failed to create memory:', error);
+                        alert('Failed to create memory: ' + (error.response?.data?.error || error.message));
+                      });
+                  }}>
+                    Create & Add Another
+                  </button>
+                </div>
               </div>
             </div>
           )}
