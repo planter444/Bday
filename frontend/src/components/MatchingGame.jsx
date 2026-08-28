@@ -16,12 +16,6 @@ const MatchingGame = ({ onComplete }) => {
     { id: 3, emoji: '👧', name: 'girl', type: 'top' },
   ];
 
-  const bottomEmojis = [
-    { id: 1, emoji: '🍌', name: 'banana', type: 'bottom' },
-    { id: 2, emoji: '🥛', name: 'milk', type: 'bottom' },
-    { id: 3, emoji: '💍', name: 'ring', type: 'bottom' },
-  ];
-
   const correctMatches = {
     'monkey': 'banana',
     'cat': 'milk',
@@ -60,7 +54,10 @@ const MatchingGame = ({ onComplete }) => {
   const handlePointerDown = (e, item) => {
     e.preventDefault();
     if (matches.includes(item.name)) return;
-    if (item.type === 'bottom' && matches.includes(Object.keys(correctMatches).find(key => correctMatches[key] === item.name))) return;
+    if (item.type === 'bottom') {
+      const matchingKey = Object.keys(correctMatches).find(key => correctMatches[key] === item.name);
+      if (matches.includes(matchingKey)) return;
+    }
 
     setDraggedItem(item);
     const rect = e.currentTarget.getBoundingClientRect();
@@ -136,7 +133,8 @@ const MatchingGame = ({ onComplete }) => {
     if (item.type === 'top') {
       return matches.includes(item.name);
     } else {
-      return matches.includes(Object.keys(correctMatches).find(key => correctMatches[key] === item.name));
+      const matchingKey = Object.keys(correctMatches).find(key => correctMatches[key] === item.name);
+      return matches.includes(matchingKey);
     }
   };
 
