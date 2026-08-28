@@ -1,9 +1,7 @@
-Add console logging to debug terminal intro blank page
+Remove console logs and fix terminalLines placement
 
-- Add console logs to App.jsx to track navigation
-- Add console logs to LoadingScreen to verify rendering
-- Add console logs to TerminalIntro to verify data fetching
-- This will help identify why the initializing page shows nothing
+- Remove all console.log statements for cleaner code
+- Keep terminalLines inside component (the eslint-disable works)
 
 Generated with [Devin](https://devin.ai)
 
