@@ -11,7 +11,7 @@ const MatchingGame = ({ onComplete }) => {
   const [wrongMatch, setWrongMatch] = useState(null);
 
   const topEmojis = [
-    { id: 1, emoji: '�', name: 'monkey', type: 'top' },
+    { id: 1, emoji: '🐵', name: 'monkey', type: 'top' },
     { id: 2, emoji: '🐱', name: 'cat', type: 'top' },
     { id: 3, emoji: '👧', name: 'girl', type: 'top' },
   ];
