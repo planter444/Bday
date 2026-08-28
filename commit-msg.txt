@@ -1,8 +1,17 @@
-Fix ESLint errors in TerminalIntro component
+Add Pages section in admin for per-page configuration
 
-- Move function definitions before use to fix no-use-before-define
-- Add animateProgress to runTerminalSequence dependencies
-- Add eslint-disable for terminalLines dependency (intentionally excluded)
+- Add new "Pages" tab in admin dashboard
+- Configure each page individually with content and music
+- Page 1: Loading screen (text, duration, music)
+- Page 2: Terminal/Initializing (music settings)
+- Page 3: Birthday room (name, title, message, music)
+- Page 4: Matching game (music settings)
+- Page 5: Memories gallery (default music)
+- Page 6-7: Music player and videos (use main config)
+- Page 8: Love letter (title, content)
+- Page 9: Heartbeat analysis (terminal messages)
+- Page 10: Final message (content)
+- Individual memory pages can override gallery music
 
 Generated with [Devin](https://devin.ai)
 

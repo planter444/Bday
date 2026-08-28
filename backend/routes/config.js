@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getConfig, updateConfig, getTheme, updateTheme, updateSceneMusic, uploadSceneMusic } = require('../controllers/configController');
 const auth = require('../middleware/auth');
-const upload = require('../middleware/upload');
+const { upload } = require('../middleware/upload');
 
 // Public routes
 router.get('/', getConfig);

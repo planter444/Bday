@@ -12,7 +12,6 @@ const getMemoryPages = async (req, res) => {
     const { data: memories, error } = await supabase
       .from('memories')
       .select('*')
-      .eq('is_active', true)
       .order('display_order', { ascending: true });
     
     if (error) {
@@ -20,7 +19,9 @@ const getMemoryPages = async (req, res) => {
       return res.json([]);
     }
     
-    res.json(memories);
+    // Filter out inactive memories if the column exists
+    const activeMemories = memories.filter(m => m.is_active !== false);
+    res.json(activeMemories);
   } catch (error) {
     console.error('Get memory pages error:', error);
     // Return empty array on error
@@ -37,12 +38,16 @@ const getMemoryPage = async (req, res) => {
       .from('memories')
       .select('*')
       .eq('id', id)
-      .eq('is_active', true)
       .single();
     
     if (error) throw error;
     
     if (!memory) {
+      return res.status(404).json({ error: 'Memory page not found' });
+    }
+    
+    // Check if memory is active (if column exists)
+    if (memory.is_active === false) {
       return res.status(404).json({ error: 'Memory page not found' });
     }
     
@@ -60,18 +65,10 @@ const createMemoryPage = async (req, res) => {
       title,
       display_order,
       photo_url,
-      background_url,
       message,
-      card_style,
-      photo_animation,
-      card_animation,
-      photo_orientation,
-      photo_position,
-      card_position,
       music_url,
       music_volume,
-      music_loop,
-      is_active
+      music_loop
     } = req.body;
     
     // Get max display_order if not provided
@@ -93,18 +90,10 @@ const createMemoryPage = async (req, res) => {
         title: title || `Memory ${order}`,
         display_order: order,
         photo_url: photo_url || null,
-        background_url: background_url || null,
         message: message || '',
-        card_style: card_style || 'butterfly',
-        photo_animation: photo_animation || 'gentle-float',
-        card_animation: card_animation || 'butterfly-reveal',
-        photo_orientation: photo_orientation || 'tilt-left',
-        photo_position: photo_position || 'center',
-        card_position: card_position || 'right',
         music_url: music_url || null,
         music_volume: music_volume || 0.7,
-        music_loop: music_loop !== undefined ? music_loop : true,
-        is_active: is_active !== undefined ? is_active : true
+        music_loop: music_loop !== undefined ? music_loop : true
       }])
       .select()
       .single();
@@ -482,25 +471,17 @@ const createMemoryPageWithFiles = async (req, res) => {
       musicUrl = publicUrl;
     }
 
-    // Create memory page
+    // Create memory page with essential fields only
     const { data: memory, error } = await supabase
       .from('memories')
       .insert([{
         title: title || `Memory ${order}`,
         display_order: order,
         photo_url: photoUrl,
-        background_url: null,
         message: card_message || '',
-        card_style: card_style || 'butterfly',
-        photo_animation: animation_type || 'gentle-float',
-        card_animation: animation_type || 'butterfly-reveal',
-        photo_orientation: 'tilt-left',
-        photo_position: 'center',
-        card_position: 'right',
         music_url: musicUrl,
         music_volume: music_volume ? parseFloat(music_volume) : 0.7,
-        music_loop: music_loop !== undefined ? music_loop : true,
-        is_active: enabled !== undefined ? enabled : true
+        music_loop: music_loop !== undefined ? music_loop : true
       }])
       .select()
       .single();
