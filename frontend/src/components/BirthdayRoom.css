@@ -210,7 +210,7 @@
 
 .candles {
   position: absolute;
-  top: -45px;
+  top: -25px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -222,7 +222,7 @@
 
 .candle {
   width: 16px;
-  height: 50px;
+  height: 45px;
   background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
   border-radius: 2px;
   position: relative;
@@ -231,7 +231,7 @@
 
 .flame {
   position: absolute;
-  top: -60%;
+  top: -15px;
   left: 50%;
   transform: translateX(-50%);
   width: 140%;

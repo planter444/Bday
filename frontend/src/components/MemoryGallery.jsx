@@ -154,46 +154,28 @@ const MemoryGallery = ({ onComplete }) => {
           </div>
         )}
 
-        <div 
-          className="card-container"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          onMouseMove={handleMouseMove}
-          onTouchMove={handleTouchMove}
-          onMouseLeave={() => setTilt({ x: 0, y: 0 })}
-        >
-          <div
-            ref={cardRef}
-            className={`memory-card ${isFlipped ? 'flipped' : ''}`}
-            onClick={handleCardClick}
-            style={{
-              transform: `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`
-            }}
-          >
-            <div className="card-front">
-              <img 
-                src={currentMemory.photo_url} 
-                alt={`Memory ${currentIndex + 1}`}
-                loading="lazy"
-              />
-              {currentMemory.caption && (
-                <div className="photo-caption">{currentMemory.caption}</div>
+        <div className="table-setting">
+          {/* Photo frame on table */}
+          <div className="photo-frame">
+            <img 
+              src={currentMemory.photo_url} 
+              alt={`Memory ${currentIndex + 1}`}
+              loading="lazy"
+              className="table-photo"
+            />
+            {currentMemory.caption && (
+              <div className="photo-caption">{currentMemory.caption}</div>
+            )}
+          </div>
+
+          {/* Birthday card beside photo */}
+          <div className="birthday-card">
+            <div className="card-front-text">
+              <h3>Happy Birthday!</h3>
+              <p className="card-message">{currentMemory.message || 'You are amazing!'}</p>
+              {currentMemory.date && (
+                <div className="memory-date">{currentMemory.date}</div>
               )}
-            </div>
-            
-            <div className="card-back">
-              <div className="message-content">
-                <p className="message-text">{currentMemory.message || ''}</p>
-                {currentMemory.date && (
-                  <div className="memory-date">{currentMemory.date}</div>
-                )}
-                {currentMemory.location && (
-                  <div className="memory-location">📍 {currentMemory.location}</div>
-                )}
-                {currentMemory.hidden_note && (
-                  <div className="hidden-note">✨ {currentMemory.hidden_note}</div>
-                )}
-              </div>
             </div>
           </div>
         </div>
@@ -216,7 +198,7 @@ const MemoryGallery = ({ onComplete }) => {
         </div>
 
         <p className="hint-text">
-          {isFlipped ? "Tap to flip back" : "Tap to flip • Swipe to navigate"}
+          Navigate through memories
         </p>
       </div>
     </div>
