@@ -18,14 +18,6 @@ const TerminalIntro = ({ onComplete, config }) => {
     { text: '> loading... but the magic...', delay: 500, typing_speed: 50, showProgress: true },
   ];
 
-  const terminalLines = [
-    { text: '> initializing birthday.exe...', delay: 800, typing_speed: 50 },
-    { text: '> identifying user...', delay: 800, typing_speed: 50 },
-    { text: '> BELINDA', delay: 800, typing_speed: 50 },
-    { text: '> today is your birthday 🎂', delay: 800, typing_speed: 50 },
-    { text: '> loading... but the magic...', delay: 500, typing_speed: 50, showProgress: true },
-  ];
-
   const animateProgress = useCallback(() => {
     let currentProgress = 0;
     const duration = 3000;
