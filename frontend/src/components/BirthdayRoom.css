@@ -149,26 +149,26 @@
 
 .cake {
   position: relative;
-  width: clamp(140px, 35vw, 280px);
-  height: clamp(130px, 32vw, 250px);
+  width: clamp(160px, 40vw, 320px);
+  height: clamp(150px, 37vw, 280px);
   transition: transform 0.1s ease-out;
   cursor: pointer;
   flex-shrink: 0;
-  animation: cakeFloat 6s ease-in-out infinite;
+  animation: cakeFloat 8s ease-in-out infinite;
 }
 
 @keyframes cakeFloat {
   0%, 100% {
-    transform: translateY(0) rotateY(0deg) rotateX(0deg);
+    transform: translateY(0) rotateY(-3deg) rotateZ(-1deg);
   }
   25% {
-    transform: translateY(-5px) rotateY(2deg) rotateX(1deg);
+    transform: translateY(-5px) rotateY(3deg) rotateZ(1deg);
   }
   50% {
-    transform: translateY(-8px) rotateY(0deg) rotateX(0deg);
+    transform: translateY(-8px) rotateY(0deg) rotateZ(0deg);
   }
   75% {
-    transform: translateY(-5px) rotateY(-2deg) rotateX(-1deg);
+    transform: translateY(-5px) rotateY(-3deg) rotateZ(-1deg);
   }
 }
 
@@ -210,18 +210,18 @@
 
 .candles {
   position: absolute;
-  top: -12%;
+  top: -10%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 3%;
-  width: 70%;
+  gap: 15%;
+  width: 80%;
   justify-content: center;
 }
 
 .candle {
-  width: 4%;
-  height: 16%;
+  width: 6%;
+  height: 18%;
   background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
   border-radius: 2px;
   position: relative;
@@ -230,11 +230,11 @@
 
 .flame {
   position: absolute;
-  top: -50%;
+  top: -60%;
   left: 50%;
   transform: translateX(-50%);
-  width: 150%;
-  height: 60%;
+  width: 140%;
+  height: 70%;
   background: linear-gradient(135deg, #ff6b35, #f7931e);
   border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   animation: flameFlicker 0.3s ease-in-out infinite alternate;

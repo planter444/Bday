@@ -122,19 +122,14 @@ const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
         </div>
 
         <div className="cake-container">
-          <div 
-            className="cake"
-            style={{
-              transform: `perspective(1000px) rotateY(${position.x * 10 - 5}deg) rotateX(${position.y * -10 + 5}deg)`
-            }}
-          >
+          <div className="cake">
             <div className="cake-base">
               <div className="cake-layer"></div>
               <div className="cake-layer middle"></div>
               <div className="cake-layer top"></div>
             </div>
             <div className="candles">
-              {[...Array(7)].map((_, i) => (
+              {[...Array(3)].map((_, i) => (
                 <div key={i} className="candle">
                   <div className="flame"></div>
                 </div>
