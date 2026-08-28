@@ -10,6 +10,7 @@ const {
   reorderPhotos,
   getMusic,
   uploadMusic,
+  updateMusic,
   deleteMusic,
   getVideos,
   uploadVideo,
