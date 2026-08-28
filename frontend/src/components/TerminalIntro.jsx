@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './TerminalIntro.css';
 
 const TerminalIntro = ({ onComplete, config }) => {
-  const [stage, setStage] = useState('loading'); // loading, typing, birthday, fireworks, complete
+  const [stage, setStage] = useState('loading'); // loading, typing, progress, circle, birthday, complete
   const [lines, setLines] = useState([]);
   const [progress, setProgress] = useState(0);
   const [showFireworks, setShowFireworks] = useState(false);
@@ -70,16 +70,20 @@ const TerminalIntro = ({ onComplete, config }) => {
       if (currentProgress >= 100) {
         currentProgress = 100;
         clearInterval(progressInterval);
-        setStage('birthday');
+        setProgress(100);
+        setStage('circle');
         setTimeout(() => {
-          setShowFireworks(true);
+          setStage('birthday');
           setTimeout(() => {
-            setStage('complete');
+            setShowFireworks(true);
             setTimeout(() => {
-              onComplete();
-            }, transitionDelay * 1000);
-          }, 2000);
-        }, 500);
+              setStage('complete');
+              setTimeout(() => {
+                onComplete();
+              }, transitionDelay * 1000);
+            }, 2000);
+          }, 500);
+        }, 4000);
       }
       setProgress(currentProgress);
     }, interval);
@@ -122,6 +126,13 @@ const TerminalIntro = ({ onComplete, config }) => {
                 <div className="progress-text">{Math.round(progress)}%</div>
               </div>
             )}
+          </div>
+        )}
+
+        {stage === 'circle' && (
+          <div className="circle-loading">
+            <div className="spinner"></div>
+            <div className="loading-text-circle">Loading memories...</div>
           </div>
         )}
 

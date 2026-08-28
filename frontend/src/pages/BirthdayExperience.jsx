@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TerminalIntro from '../components/TerminalIntro';
 import BirthdayRoom from '../components/BirthdayRoom';
 import CakePuzzle from '../components/CakePuzzle';
+import MatchingGame from '../components/MatchingGame';
 import MemoryGallery from '../components/MemoryGallery';
 import MusicPlayer from '../components/MusicPlayer';
 import VideoMemories from '../components/VideoMemories';
@@ -22,6 +23,31 @@ const BirthdayExperience = () => {
     fetchSceneSettings();
   }, []);
 
+  // Handle browser back button
+  useEffect(() => {
+    const handlePopState = (event) => {
+      const sceneOrder = [
+        'terminal',
+        'birthdayRoom',
+        'matchingGame',
+        'memoryGallery',
+        'musicPlayer',
+        'videoMemories',
+        'loveLetter',
+        'heartbeatAnalysis',
+        'finalMessage'
+      ];
+      
+      const currentIndex = sceneOrder.indexOf(currentScene);
+      if (currentIndex > 0) {
+        setCurrentScene(sceneOrder[currentIndex - 1]);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [currentScene]);
+
   const fetchConfig = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/config`);
@@ -29,6 +55,7 @@ const BirthdayExperience = () => {
       setConfig(data);
     } catch (error) {
       console.error('Failed to fetch config:', error);
+      setConfig({}); // Set empty config to allow page to load
     }
   };
 
@@ -40,6 +67,17 @@ const BirthdayExperience = () => {
       setLoading(false);
     } catch (error) {
       console.error('Failed to fetch scene settings:', error);
+      setSceneSettings({
+        terminal: true,
+        birthdayRoom: true,
+        cake: true,
+        photoMemories: true,
+        music: true,
+        videoMemories: true,
+        loveLetter: true,
+        heartbeatAnalysis: true,
+        finalScene: true
+      }); // Default to all enabled
       setLoading(false);
     }
   };
@@ -48,7 +86,7 @@ const BirthdayExperience = () => {
     const sceneOrder = [
       'terminal',
       'birthdayRoom',
-      'cakePuzzle',
+      'matchingGame',
       'memoryGallery',
       'musicPlayer',
       'videoMemories',
@@ -95,6 +133,10 @@ const BirthdayExperience = () => {
       
       {currentScene === 'cakePuzzle' && sceneSettings?.cake && (
         <CakePuzzle onComplete={advanceScene} />
+      )}
+      
+      {currentScene === 'matchingGame' && sceneSettings?.matchingGame && (
+        <MatchingGame onComplete={advanceScene} />
       )}
       
       {currentScene === 'memoryGallery' && sceneSettings?.photoMemories && (

@@ -148,6 +148,16 @@
   transition: transform 0.1s ease-out;
   cursor: pointer;
   flex-shrink: 0;
+  animation: cakeFloat 3s ease-in-out infinite;
+}
+
+@keyframes cakeFloat {
+  0%, 100% {
+    transform: translateY(0) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotateY(5deg);
+  }
 }
 
 .cake-base {
