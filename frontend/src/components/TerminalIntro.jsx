@@ -3,8 +3,6 @@ import './TerminalIntro.css';
 
 const TerminalIntro = ({ onComplete, config }) => {
   const [lines, setLines] = useState([]);
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [currentText, setCurrentText] = useState('');
   const [showProgress, setShowProgress] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showSpinner, setShowSpinner] = useState(false);
@@ -47,6 +45,7 @@ const TerminalIntro = ({ onComplete, config }) => {
             setShowProgress(true);
             setTimeout(() => {
               animateProgress();
+              // eslint-disable-next-line react-hooks/exhaustive-deps
             }, currentLine.delay);
           } else {
             lineIndex++;
@@ -57,6 +56,7 @@ const TerminalIntro = ({ onComplete, config }) => {
     };
 
     typeNextChar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const animateProgress = () => {
