@@ -1,11 +1,9 @@
-Fix navigation and memory creation to work with existing schema
+Add console logging to debug terminal intro blank page
 
-- Simplify App.jsx navigation logic
-- Remove console logs for cleaner code
-- Make memory creation use only basic columns (title, photo_url, message, music_url)
-- Make memory update only use safe columns
-- Fix puzzle config update to handle missing rows
-- Change card_message to message in frontend for database compatibility
+- Add console logs to App.jsx to track navigation
+- Add console logs to LoadingScreen to verify rendering
+- Add console logs to TerminalIntro to verify data fetching
+- This will help identify why the initializing page shows nothing
 
 Generated with [Devin](https://devin.ai)
 
