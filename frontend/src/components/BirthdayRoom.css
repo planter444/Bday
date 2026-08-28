@@ -210,19 +210,19 @@
 
 .candles {
   position: absolute;
-  top: -30px;
+  top: -45px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 15px;
-  width: 60%;
+  gap: 20px;
+  width: 80%;
   justify-content: center;
   z-index: 10;
 }
 
 .candle {
-  width: 12px;
-  height: 40px;
+  width: 16px;
+  height: 50px;
   background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
   border-radius: 2px;
   position: relative;

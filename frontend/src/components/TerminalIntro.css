@@ -102,7 +102,7 @@
 /* Mobile styling */
 @media (max-width: 480px) {
   .terminal-content {
-    font-size: 1.8rem;
+    font-size: 2rem; /* 1.5x larger than 1.3rem */
     font-weight: bold;
     padding: 1rem;
   }

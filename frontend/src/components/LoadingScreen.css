@@ -28,6 +28,23 @@
   color: var(--soft-rose);
 }
 
+/* Mobile styling */
+@media (max-width: 480px) {
+  .loading-heart {
+    font-size: 4.5rem; /* 1.5x larger */
+  }
+  
+  .loading-text {
+    font-size: 1.8rem; /* 1.5x larger */
+    font-weight: bold;
+  }
+  
+  .loading-dots span {
+    width: 15px;
+    height: 15px;
+  }
+}
+
 .loading-dots {
   display: flex;
   justify-content: center;
