@@ -140,6 +140,7 @@
   max-width: 350px;
   height: 450px;
   animation: slideUp 1s ease-out;
+  display: none; /* Hidden - using table-setting instead */
 }
 
 .memory-card {
@@ -294,6 +295,26 @@
 @media (max-width: 480px) {
   .gallery-title {
     font-size: 1.5rem;
+  }
+  
+  .table-setting {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .photo-frame {
+    transform: rotate(0deg);
+  }
+  
+  .table-photo {
+    width: 200px;
+    height: 160px;
+  }
+  
+  .birthday-card {
+    transform: rotate(0deg);
+    min-width: 180px;
   }
   
   .card-container {
