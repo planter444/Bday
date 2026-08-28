@@ -1,6 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './MatchingGame.css';
 
+const topEmojis = [
+  { id: 1, emoji: '🐵', name: 'monkey', type: 'top' },
+  { id: 2, emoji: '🐱', name: 'cat', type: 'top' },
+  { id: 3, emoji: '👧', name: 'girl', type: 'top' },
+];
+
+const correctMatches = {
+  'monkey': 'banana',
+  'cat': 'milk',
+  'girl': 'ring'
+};
+
 const MatchingGame = ({ onComplete }) => {
   const [puzzleConfig, setPuzzleConfig] = useState(null);
   const [matches, setMatches] = useState([]);
@@ -9,18 +21,6 @@ const MatchingGame = ({ onComplete }) => {
   const [draggedItem, setDraggedItem] = useState(null);
   const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
   const [wrongMatch, setWrongMatch] = useState(null);
-
-  const topEmojis = [
-    { id: 1, emoji: '🐵', name: 'monkey', type: 'top' },
-    { id: 2, emoji: '🐱', name: 'cat', type: 'top' },
-    { id: 3, emoji: '👧', name: 'girl', type: 'top' },
-  ];
-
-  const correctMatches = {
-    'monkey': 'banana',
-    'cat': 'milk',
-    'girl': 'ring'
-  };
 
   const shuffleBottom = useCallback(() => {
     const emojis = [
