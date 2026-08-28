@@ -98,49 +98,23 @@ const updateMemoryPage = async (req, res) => {
     
     // Map frontend field names to database column names
     const dbUpdates = {};
+    if (updates.caption !== undefined) dbUpdates.caption = updates.caption;
     if (updates.title !== undefined) dbUpdates.caption = updates.title;
     if (updates.photo_url !== undefined) dbUpdates.photo_url = updates.photo_url;
     if (updates.message !== undefined) dbUpdates.message = updates.message;
     if (updates.music_url !== undefined) dbUpdates.music_url = updates.music_url;
+    if (updates.orientation !== undefined) dbUpdates.orientation = updates.orientation;
+    if (updates.frame_color !== undefined) dbUpdates.frame_color = updates.frame_color;
+    if (updates.card_color !== undefined) dbUpdates.card_color = updates.card_color;
+    if (updates.card_font !== undefined) dbUpdates.card_font = updates.card_font;
+    if (updates.card_text_color !== undefined) dbUpdates.card_text_color = updates.card_text_color;
     
-    // Update each field individually
-    if (dbUpdates.caption !== undefined) {
-      const { error } = await supabase
-        .from('memories')
-        .update({ caption: dbUpdates.caption })
-        .eq('id', id);
-      if (error) throw error;
-    }
-    
-    if (dbUpdates.photo_url !== undefined) {
-      const { error } = await supabase
-        .from('memories')
-        .update({ photo_url: dbUpdates.photo_url })
-        .eq('id', id);
-      if (error) throw error;
-    }
-    
-    if (dbUpdates.message !== undefined) {
-      const { error } = await supabase
-        .from('memories')
-        .update({ message: dbUpdates.message })
-        .eq('id', id);
-      if (error) throw error;
-    }
-    
-    if (dbUpdates.music_url !== undefined) {
-      const { error } = await supabase
-        .from('memories')
-        .update({ music_url: dbUpdates.music_url })
-        .eq('id', id);
-      if (error) throw error;
-    }
-    
-    // Fetch updated memory
+    // Update all fields at once
     const { data: memory, error } = await supabase
       .from('memories')
-      .select('*')
+      .update(dbUpdates)
       .eq('id', id)
+      .select()
       .single();
     
     if (error) throw error;
@@ -422,7 +396,7 @@ const setMemoryMusicUrl = async (req, res) => {
 // Create new memory page with file uploads
 const createMemoryPageWithFiles = async (req, res) => {
   try {
-    const { title, message } = req.body;
+    const { title, message, orientation, frame_color, card_color, card_font, card_text_color } = req.body;
     const photoFile = req.files?.photo?.[0];
     const musicFile = req.files?.music?.[0];
 
@@ -489,7 +463,12 @@ const createMemoryPageWithFiles = async (req, res) => {
       caption: title || 'Memory',
       message: message || '',
       order_index: 0,
-      enabled: true
+      enabled: true,
+      orientation: orientation || 'portrait',
+      frame_color: frame_color || '#8B4513',
+      card_color: card_color || '#fff5e6',
+      card_font: card_font || 'Arial',
+      card_text_color: card_text_color || '#333'
     };
 
     // Only add music URL if music was uploaded
