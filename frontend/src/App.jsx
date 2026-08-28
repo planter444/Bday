@@ -70,14 +70,14 @@ function App() {
         <Routes>
           {/* Public birthday experience */}
           <Route path="/birthday/*" element={<BirthdayExperienceWrapper />} />
-          <Route path="/" element={<Navigate to="/birthday" replace />} />
+          <Route path="/" element={<BirthdayExperienceWrapper />} />
           
           {/* Admin routes */}
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           
           {/* Catch all - redirect to birthday experience */}
-          <Route path="*" element={<Navigate to="/birthday" replace />} />
+          <Route path="*" element={<BirthdayExperienceWrapper />} />
         </Routes>
       </div>
     </Router>

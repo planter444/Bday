@@ -1,0 +1,12 @@
+Fix flow and styling issues
+
+- Root route now goes directly to loading screen (no redirect)
+- Terminal typing slowed down (100ms per char, 1200ms delay between lines)
+- Removed DB fetch that was causing text duplication
+- BirthdayRoom already has 3 candles (confirmed in code)
+- Fixed BirthdayRoom button to navigate to 'puzzle' instead of 'matchingGame'
+- Added --text-color variable to index.css for MatchingGame visibility
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>

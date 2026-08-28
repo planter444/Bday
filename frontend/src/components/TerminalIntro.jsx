@@ -2,11 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './TerminalIntro.css';
 
 const terminalLines = [
-  { text: '> initializing birthday.exe...', delay: 800, typing_speed: 50 },
-  { text: '> identifying user...', delay: 800, typing_speed: 50 },
-  { text: '> BELINDA', delay: 800, typing_speed: 50 },
-  { text: '> today is your birthday 🎂', delay: 800, typing_speed: 50 },
-  { text: '> loading... but the magic...', delay: 500, typing_speed: 50, showProgress: true },
+  { text: '> initializing birthday.exe...', delay: 1200, typing_speed: 100 },
+  { text: '> identifying user...', delay: 1200, typing_speed: 100 },
+  { text: '> BELINDA', delay: 1200, typing_speed: 100 },
+  { text: '> today is your birthday 🎂', delay: 1200, typing_speed: 100 },
+  { text: '> loading... but the magic...', delay: 800, typing_speed: 100, showProgress: true },
 ];
 
 const TerminalIntro = ({ onComplete, config }) => {
@@ -73,7 +73,9 @@ const TerminalIntro = ({ onComplete, config }) => {
             }, currentLine.delay);
           } else {
             lineIndex++;
-            setTimeout(typeNextChar, currentLine.delay);
+            if (lineIndex < sequenceLines.length) {
+              setTimeout(typeNextChar, currentLine.delay);
+            }
           }
         }
       }
@@ -84,29 +86,7 @@ const TerminalIntro = ({ onComplete, config }) => {
 
   useEffect(() => {
     runTerminalSequence(terminalLines);
-    
-    const fetchTerminalLines = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/terminal/lines`);
-        const data = await response.json();
-        
-        if (data && data.length > 0) {
-          const dbLines = data.filter(line => line.enabled).map(line => ({
-            text: line.text,
-            delay: line.delay || 800,
-            typing_speed: line.typing_speed || 50,
-            showProgress: line.show_progress || false
-          }));
-          setLines([]);
-          runTerminalSequence(dbLines);
-        }
-      } catch (error) {
-        console.error('Failed to fetch terminal lines:', error);
-      }
-    };
-
-    fetchTerminalLines();
-  }, [runTerminalSequence]);
+  }, []);
 
   return (
     <div className="terminal-intro">
