@@ -148,15 +148,21 @@
   transition: transform 0.1s ease-out;
   cursor: pointer;
   flex-shrink: 0;
-  animation: cakeFloat 3s ease-in-out infinite;
+  animation: cakeFloat 4s ease-in-out infinite;
 }
 
 @keyframes cakeFloat {
   0%, 100% {
-    transform: translateY(0) rotateY(0deg);
+    transform: translateY(0) rotateY(0deg) rotateX(0deg);
+  }
+  25% {
+    transform: translateY(-8px) rotateY(3deg) rotateX(2deg);
   }
   50% {
-    transform: translateY(-10px) rotateY(5deg);
+    transform: translateY(-12px) rotateY(0deg) rotateX(0deg);
+  }
+  75% {
+    transform: translateY(-8px) rotateY(-3deg) rotateX(-2deg);
   }
 }
 
@@ -250,10 +256,11 @@
 .cake-hint {
   text-align: center;
   margin-top: 1.5rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--soft-rose);
-  opacity: 0.8;
+  opacity: 0.9;
   animation: pulse 2s ease-in-out infinite;
+  font-style: italic;
 }
 
 .balloons {

@@ -70,7 +70,7 @@ const BirthdayExperience = () => {
       setSceneSettings({
         terminal: true,
         birthdayRoom: true,
-        cake: true,
+        matchingGame: true,
         photoMemories: true,
         music: true,
         videoMemories: true,
@@ -135,7 +135,7 @@ const BirthdayExperience = () => {
         <CakePuzzle onComplete={advanceScene} />
       )}
       
-      {currentScene === 'matchingGame' && sceneSettings?.matchingGame && (
+      {currentScene === 'matchingGame' && (
         <MatchingGame onComplete={advanceScene} />
       )}
       

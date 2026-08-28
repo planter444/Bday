@@ -2,28 +2,23 @@ import React, { useState, useEffect } from 'react';
 import './TerminalIntro.css';
 
 const TerminalIntro = ({ onComplete, config }) => {
-  const [stage, setStage] = useState('loading'); // loading, typing, progress, circle, birthday, complete
   const [lines, setLines] = useState([]);
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [showProgress, setShowProgress] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [showFireworks, setShowFireworks] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
 
-  const transitionDelay = config?.intro_transition_delay || 4; // Default 4 seconds, configurable
+  const transitionDelay = config?.intro_transition_delay || 4;
 
   useEffect(() => {
-    // Stage 1: Loading screen with heart and dots (5 seconds)
-    const loadingTimer = setTimeout(() => {
-      setStage('typing');
-      startTyping();
-    }, 5000);
-
-    return () => clearTimeout(loadingTimer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const startTyping = () => {
     const terminalLines = [
       { text: '> initializing birthday.exe...', delay: 800, typing_speed: 50 },
-      { text: '> loading birthday magic...', delay: 800, typing_speed: 50 },
+      { text: '> identifying user...', delay: 800, typing_speed: 50 },
+      { text: '> BELINDA', delay: 800, typing_speed: 50 },
+      { text: '> today is your birthday 🎂', delay: 800, typing_speed: 50 },
+      { text: '> loading... but the magic...', delay: 500, typing_speed: 50, showProgress: true },
     ];
 
     let lineIndex = 0;
@@ -35,7 +30,7 @@ const TerminalIntro = ({ onComplete, config }) => {
         const currentLine = terminalLines[lineIndex];
         
         if (charIndex === 0) {
-          typedLines.push({ text: '' });
+          typedLines.push({ text: '', showProgress: currentLine.showProgress });
           setLines([...typedLines]);
         }
 
@@ -46,23 +41,28 @@ const TerminalIntro = ({ onComplete, config }) => {
           setTimeout(typeNextChar, currentLine.typing_speed);
         } else {
           charIndex = 0;
-          lineIndex++;
-          setTimeout(typeNextChar, currentLine.delay);
+          
+          // Check if this line should show progress bar
+          if (currentLine.showProgress) {
+            setShowProgress(true);
+            setTimeout(() => {
+              animateProgress();
+            }, currentLine.delay);
+          } else {
+            lineIndex++;
+            setTimeout(typeNextChar, currentLine.delay);
+          }
         }
-      } else {
-        // Start progress bar
-        setStage('progress');
-        animateProgress();
       }
     };
 
     typeNextChar();
-  };
+  }, []);
 
   const animateProgress = () => {
     let currentProgress = 0;
-    const duration = 2000; // 2 seconds
-    const interval = 20;
+    const duration = 3000; // 3 seconds
+    const interval = 30;
     const increment = 100 / (duration / interval);
 
     const progressInterval = setInterval(() => {
@@ -71,18 +71,15 @@ const TerminalIntro = ({ onComplete, config }) => {
         currentProgress = 100;
         clearInterval(progressInterval);
         setProgress(100);
-        setStage('circle');
+        setShowProgress(false);
+        setShowSpinner(true);
+        
+        // Show spinner for 4 seconds
         setTimeout(() => {
-          setStage('birthday');
+          setIsComplete(true);
           setTimeout(() => {
-            setShowFireworks(true);
-            setTimeout(() => {
-              setStage('complete');
-              setTimeout(() => {
-                onComplete();
-              }, transitionDelay * 1000);
-            }, 2000);
-          }, 500);
+            onComplete();
+          }, transitionDelay * 1000);
         }, 4000);
       }
       setProgress(currentProgress);
@@ -93,55 +90,33 @@ const TerminalIntro = ({ onComplete, config }) => {
     <div className="terminal-intro">
       <div className="terminal-screen">
         <div className="scanlines"></div>
-        
-        {stage === 'loading' && (
-          <div className="loading-screen">
-            <div className="heart-emoji">❤️</div>
-            <div className="loading-text">birthday magic loading</div>
-            <div className="loading-dots">
-              <span>.</span>
-              <span>.</span>
-              <span>.</span>
-            </div>
-          </div>
-        )}
-
-        {(stage === 'typing' || stage === 'progress') && (
-          <div className="terminal-content">
-            {lines.map((line, index) => (
-              <div key={index} className="terminal-line">
-                <span className="terminal-text">{line.text}</span>
-              </div>
-            ))}
-            {stage === 'typing' && (
-              <div className="terminal-line current">
-                <span className="cursor">█</span>
-              </div>
-            )}
-            {stage === 'progress' && (
-              <div className="progress-container">
-                <div className="progress-bar">
-                  <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+        <div className="terminal-content">
+          {lines.map((line, index) => (
+            <div key={index} className="terminal-line">
+              <span className="terminal-text">{line.text}</span>
+              {line.showProgress && showProgress && (
+                <div className="progress-section">
+                  <div className="progress-bar-terminal">
+                    <div className="progress-fill-terminal" style={{ width: `${progress}%` }}></div>
+                  </div>
+                  <span className="progress-text-terminal">{Math.round(progress)}%</span>
                 </div>
-                <div className="progress-text">{Math.round(progress)}%</div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          ))}
+          
+          {!isComplete && (
+            <div className="terminal-line current">
+              <span className="cursor">█</span>
+            </div>
+          )}
 
-        {stage === 'circle' && (
-          <div className="circle-loading">
-            <div className="spinner"></div>
-            <div className="loading-text-circle">Loading memories...</div>
-          </div>
-        )}
-
-        {stage === 'birthday' && (
-          <div className="birthday-screen">
-            <h1 className="birthday-message">Happy Birthday, BELINDA! 🎂</h1>
-            {showFireworks && <div className="fireworks">🎆 🎇 ✨ 🎆 🎇 ✨</div>}
-          </div>
-        )}
+          {showSpinner && (
+            <div className="spinner-container">
+              <div className="spinner"></div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

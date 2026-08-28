@@ -141,7 +141,7 @@ const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
               ))}
             </div>
           </div>
-          <p className="cake-hint">There might be something hidden here… 👀</p>
+          <p className="cake-hint">There might be something hidden here.</p>
         </div>
 
         <div className="balloons">
@@ -178,9 +178,9 @@ const BirthdayRoom = ({ config, onComplete, onSceneChange }) => {
 
         <button 
           className="continue-button interactive-element"
-          onClick={() => onSceneChange('cakePuzzle')}
+          onClick={() => onSceneChange('matchingGame')}
         >
-          Continue →
+          CONTINUE
         </button>
       </div>
 

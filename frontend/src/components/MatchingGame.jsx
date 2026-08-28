@@ -6,9 +6,10 @@ const MatchingGame = ({ onComplete }) => {
   const [selectedBottom, setSelectedBottom] = useState(null);
   const [matches, setMatches] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [wrongMatch, setWrongMatch] = useState(false);
 
   const topEmojis = [
-    { id: 1, emoji: '🐵', name: 'monkey' },
+    { id: 1, emoji: '�', name: 'monkey' },
     { id: 2, emoji: '🐱', name: 'cat' },
     { id: 3, emoji: '👧', name: 'girl' },
   ];
@@ -26,12 +27,15 @@ const MatchingGame = ({ onComplete }) => {
   };
 
   const handleTopClick = (emoji) => {
+    if (matches.includes(emoji.name)) return;
     setSelectedTop(emoji);
     setSelectedBottom(null);
+    setWrongMatch(false);
   };
 
   const handleBottomClick = (emoji) => {
     if (!selectedTop) return;
+    if (matches.includes(correctMatches[Object.keys(correctMatches).find(key => correctMatches[key] === emoji.name)])) return;
     
     setSelectedBottom(emoji);
     
@@ -44,49 +48,59 @@ const MatchingGame = ({ onComplete }) => {
         setShowSuccess(true);
         setTimeout(() => {
           onComplete();
-        }, 3000);
+        }, 2000);
       }
     } else {
+      setWrongMatch(true);
       setTimeout(() => {
         setSelectedTop(null);
         setSelectedBottom(null);
-      }, 1000);
+        setWrongMatch(false);
+      }, 500);
     }
   };
 
   return (
     <div className="matching-game">
       <div className="game-container">
-        <h2 className="game-title">Match me to unveil the next face</h2>
+        <h2 className="game-title">Match the emojis to proceed to the next page.</h2>
         
         <div className="emojis-row top-row">
           {topEmojis.map((emoji) => (
             <div
               key={emoji.id}
-              className={`emoji-item ${selectedTop?.id === emoji.id ? 'selected' : ''} ${matches.includes(emoji.name) ? 'matched' : ''}`}
-              onClick={() => !matches.includes(emoji.name) && handleTopClick(emoji)}
+              className={`emoji-item ${selectedTop?.id === emoji.id ? 'selected' : ''} ${matches.includes(emoji.name) ? 'matched' : ''} ${wrongMatch && selectedTop?.id === emoji.id ? 'wrong' : ''}`}
+              onClick={() => handleTopClick(emoji)}
             >
               {emoji.emoji}
+              {matches.includes(emoji.name) && <span className="match-check">✓</span>}
             </div>
           ))}
+        </div>
+
+        <div className="instruction-arrow">
+          <div className="arrow-down">↓</div>
+          <p className="instruction-text">choose their match</p>
+          <div className="arrow-down">↓</div>
         </div>
 
         <div className="emojis-row bottom-row">
           {bottomEmojis.map((emoji) => (
             <div
               key={emoji.id}
-              className={`emoji-item ${selectedBottom?.id === emoji.id ? 'selected' : ''} ${matches.includes(correctMatches[Object.keys(correctMatches).find(key => correctMatches[key] === emoji.name)]) ? 'matched' : ''}`}
-              onClick={() => !matches.includes(correctMatches[Object.keys(correctMatches).find(key => correctMatches[key] === emoji.name)]) && handleBottomClick(emoji)}
+              className={`emoji-item ${selectedBottom?.id === emoji.id ? 'selected' : ''} ${matches.includes(correctMatches[Object.keys(correctMatches).find(key => correctMatches[key] === emoji.name)]) ? 'matched' : ''} ${wrongMatch && selectedBottom?.id === emoji.id ? 'wrong' : ''}`}
+              onClick={() => handleBottomClick(emoji)}
             >
               {emoji.emoji}
+              {matches.includes(correctMatches[Object.keys(correctMatches).find(key => correctMatches[key] === emoji.name)]) && <span className="match-check">✓</span>}
             </div>
           ))}
         </div>
 
         {showSuccess && (
           <div className="success-screen">
-            <h3>🎉 Perfect Match! 🎉</h3>
-            <p>Happy Birthday, Belinda!</p>
+            <h3>🎉 Congratulations! 🎉</h3>
+            <p>You found the way in. ❤️</p>
           </div>
         )}
       </div>
