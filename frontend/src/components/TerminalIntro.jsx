@@ -120,10 +120,6 @@ const TerminalIntro = ({ onComplete, config }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runTerminalSequence]);
 
-  if (!mounted) {
-    return <div className="terminal-intro">Loading...</div>;
-  }
-
   return (
     <div className="terminal-intro">
       <div className="terminal-screen">
