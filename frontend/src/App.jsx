@@ -27,8 +27,10 @@ const BirthdayExperienceWrapper = () => {
 
   const fetchConfig = async () => {
     try {
+      console.log('Fetching config...');
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/config`);
       const data = await response.json();
+      console.log('Config fetched:', data);
       setConfig(data);
       setConfigLoaded(true);
     } catch (error) {
@@ -39,17 +41,20 @@ const BirthdayExperienceWrapper = () => {
   };
 
   const advanceScene = (nextPath) => {
+    console.log('Advancing to:', nextPath);
     navigate(nextPath);
   };
 
-  // Show loading screen at root while loading
-  if ((location.pathname === '/' || location.pathname === '/birthday' || location.pathname === '/birthday/') && !configLoaded) {
-    return <LoadingScreen onComplete={() => navigate('/birthday/initializing')} config={config} />;
-  }
-
-  // After loading, redirect to initializing if still on root
-  if ((location.pathname === '/' || location.pathname === '/birthday' || location.pathname === '/birthday/') && configLoaded) {
-    return <LoadingScreen onComplete={() => navigate('/birthday/initializing')} config={config} />;
+  // If on root path, show loading screen
+  if (location.pathname === '/' || location.pathname === '/birthday' || location.pathname === '/birthday/') {
+    console.log('Showing loading screen for path:', location.pathname);
+    return <LoadingScreen 
+      onComplete={() => {
+        console.log('LoadingScreen complete, navigating to /birthday/initializing');
+        navigate('/birthday/initializing');
+      }} 
+      config={config} 
+    />;
   }
 
   return (

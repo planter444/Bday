@@ -1,7 +1,10 @@
-Fix upload middleware import in media routes
+Fix navigation and add "Create & Add Another" button for memories
 
-- Destructure upload from middleware/upload in media.js
-- Fixes TypeError: upload.single is not a function
+- Simplify loading screen logic to fix navigation issues
+- Remove intro timer that was causing black screen
+- Add "Create & Add Another" button in Photos section for faster memory creation
+- Add CSS for form buttons and page configuration items
+- Fix memory thumbnail styling
 
 Generated with [Devin](https://devin.ai)
 

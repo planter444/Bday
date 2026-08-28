@@ -7,7 +7,10 @@ const LoadingScreen = ({ onComplete, config }) => {
   // Auto-advance after intro duration
   React.useEffect(() => {
     const duration = config?.intro_duration || 4000;
+    console.log('LoadingScreen: Duration:', duration, 'Config:', config);
+    
     const timer = setTimeout(() => {
+      console.log('LoadingScreen: Calling onComplete');
       if (onComplete) onComplete();
     }, duration);
     
